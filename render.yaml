@@ -3,7 +3,7 @@ services:
 - type: web
   name: blog_project
   runtime: python
-  repo: https://github.com/OluwamomiAkinbote/Seven-rem
+  repo: https://github.com/OluwamomiAkinbote/Babylon.git
   plan: free
   envVars:
   - key: WEB_CONCURRENCY
