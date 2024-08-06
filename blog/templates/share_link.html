@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ post.title }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{{ post.title }}" />
+    <meta property="og:description" content="{{ post.summary }}" />
+    <meta property="og:image" content="{{ absolute_image_url }}" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:type" content="article" />
+   
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ post.title }}" />
+    <meta name="twitter:description" content="{{ post.summary }}" />
+    <meta property="og:image" content="{{ absolute_image_url }}" />
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
+  
+
+    <!-- Additional Meta Tags for LinkedIn -->
+    <meta property="linkedin:creator" content="Your LinkedIn Profile" />
+    <meta property="linkedin:author" content="Your LinkedIn Profile" />
+</head>
+<body>
+    <!-- Your body content here -->
+
+    <!-- templates/share_links.html -->
+    <h2 class="text-xl font-semibold mt-4">Share this post:</h2>
+    <div class="flex space-x-4 mt-2">
+        <a href="https://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ post.title }}" target="_blank" class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
+            <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&quote={{ post.title }}" target="_blank" class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank" class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://api.whatsapp.com/send?text={{ post.title }}%20{{ request.build_absolute_uri }}" target="_blank" class="text-green-500 hover:text-green-700 p-3 rounded-full bg-green-100 hover:bg-green-200">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+</body>
+</html>

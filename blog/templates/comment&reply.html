@@ -1,0 +1,47 @@
+<!-- blog_detail.html -->
+
+<div class="bg-white p-4 my-6 rounded-md">
+    <h3 class="text-lg font-semibold text-green-800 mb-4">Comments</h3>
+    {% for comment in comments %}
+        <div class="mb-4">
+            <p class="text-sm text-gray-600 tracking-wide"><strong>{{ comment.author_name }}</strong> on {{ comment.date_posted }}</p>
+            <p class="text-gray-800">{{ comment.text }}</p>
+            
+            <!-- Display replies for each comment -->
+            {% for reply in comment.replies.all %}
+                <div class="ml-4 mt-2 bg-gray-100 p-2 rounded-md">
+                    <p class="text-sm text-gray-600 tracking-wide"><strong>{{ reply.author_name }}</strong> on {{ reply.date_posted }}</p>
+                    <p class="text-gray-800">{{ reply.text }}</p>
+                </div>
+            {% empty %}
+                <p>No replies yet.</p>
+            {% endfor %}
+            
+            <!-- Form to add a reply -->
+            <div class="mt-2">
+                <form method="POST" action="{% url 'add_reply' comment.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_comment_id" value="{{ comment.id }}">
+                    <input type="text" name="author_name" placeholder="Your Name" class="w-full p-2 mb-2 border rounded-md">
+                    <input type="email" name="author_email" placeholder="Your Email" class="w-full p-2 mb-2 border rounded-md">
+                    <textarea name="text" placeholder="Your Reply" class="w-full p-2 mb-2 border rounded-md"></textarea>
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">Post Reply</button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+    
+    <!-- Form to add a new comment -->
+    <div class="mt-4">
+        <h4 class="text-md font-semibold text-green-700 mb-2">Leave a Comment</h4>
+        <form method="POST" action="{% url 'add_comment' post.id %}">
+            {% csrf_token %}
+            <input type="text" name="author_name" placeholder="Your Name" class="w-full p-2 mb-2 border rounded-md">
+            <input type="email" name="author_email" placeholder="Your Email" class="w-full p-2 mb-2 border rounded-md">
+            <textarea name="text" placeholder="Your Comment" class="w-full p-2 mb-2 border rounded-md"></textarea>
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">Post Comment</button>
+        </form>
+    </div>
+</div>

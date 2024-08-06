@@ -1,0 +1,30 @@
+<body >
+    <div class="section">
+        <div class="heading">
+            <h2>VIDEOS</h2>
+        </div>
+        <div class="line">
+            <div class="highlight"></div>
+        </div>
+    </div>
+    
+    <div class="video px-2 py-4 bg-gray-300">
+        <!-- heading section -->
+        <div class="video-posts grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            {% for video in video_posts %}
+                <div class="video-item border rounded-lg p-4">
+                    {% if video.video_file %}
+                        <video width="100%" controls>
+                            <source src="{{ video.video_file.url }}" type="{{ video.video_file.content_type }}">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% endif %}
+                    <div class="mt-2">
+                        <h3 class="text-lg font-semibold">{{ video.title }}</h3>
+                        <p class="text-sm text-gray-600">{{ video.description }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>

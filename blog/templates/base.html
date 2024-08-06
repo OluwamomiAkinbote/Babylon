@@ -1,0 +1,61 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ post.title }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script> 
+{% tailwind_css %}
+</head>
+<body class="font-poppins">
+    <div class="z-50 fixed w-full">
+
+        {% block content %}
+          {% include 'header.html' %}
+        {% endblock %}
+    </div>
+
+    
+    
+    <main class="container mx-auto py-8">
+        <div class="mt-32">
+            {% block hero_posts %}
+                <!-- Default latest news content -->
+            {% endblock %}
+        </div>
+        
+        <div class="">
+            {% block latest_news %}
+            <!-- Default latest news content -->
+            {% endblock %}
+        </div>
+        <div class="">
+            {% block global_news %}
+              {% include 'global_news.html' %}
+            {% endblock %}
+        </div>
+        <div class="">
+            {% block sports %}
+             {% include 'sports.html' %}
+            {% endblock %}
+        </div>
+        <div class="">
+            {% block videos %}
+              {% include 'videos.html' %}
+            {% endblock %}
+        </div>
+       
+    </main>
+
+    <!-- footer -->
+
+    <div class="footer">
+        {% block footer %}
+          {% include 'footer.html' %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

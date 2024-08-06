@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="container mx-auto my-8 px-4">
+        <h1 class="text-4xl font-bold text-center mb-8">{{ category.name }}</h1>
+        
+        {% if posts %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for post in posts %}
+                    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h2 class="text-[1rem] font-semibold">{{ post.title | title }}</h2>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-500 text-[0.5rem]">{{ post.content| safe |truncatewords:20 }}</p>
+                            <a href="{% url 'blog_detail' pk=post.pk %}" class="text-indigo-600 hover:text-indigo-800 font-semibold">Read more</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center text-gray-500">No posts available in this category.</p>
+        {% endif %}
+    </div>
+    
+</body>
+</html>

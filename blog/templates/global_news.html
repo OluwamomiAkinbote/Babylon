@@ -1,0 +1,44 @@
+{% load static %}
+
+<div class="global_news px-2 py-4 bg-white">
+    <!-- heading section -->
+    <div class="section">
+        <div class="heading">
+            <h2>GLOBAL NEWS</h2>
+        </div>
+        <div class="line">
+            <div class="highlight"></div>
+        </div>
+    </div>
+   
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for post in global_news_posts %}
+        <div class="relative">
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+            {% else %}
+                <p>No Image available</p>
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/[0.90] to-transparent
+            flex items-center justify-center opacity-100 transition duration-300">
+                <div class="text-left text-gray-100 pt-10 px-4">
+                    <h3 class="text-lg font-bold">{{ post.title|truncatechars:70 }}</h3>
+                    <div class="meta text-sm text-gray-100 flex items-center mt-2">
+                        <p class="text-gray-100">
+                            <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                            <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                        </p>
+                    </div>
+                    <a href="{% url 'blog_detail' post.id %}" class="mt-2 inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    updatePostDates('.post-date');  // Initialize date updating for global news section
+});
+</script>

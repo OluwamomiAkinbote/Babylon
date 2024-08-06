@@ -1,0 +1,84 @@
+<footer class="bg-gray-950 text-white py-8">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- About Section -->
+            <div>
+                <h3 class="text-xl font-semibold mb-4">About Us</h3>
+                <p class="text-gray-400">Welcome to our blog! We provide insightful articles on a wide range of topics. Stay tuned for regular updates and in-depth content.</p>
+            </div>
+            <!-- Navigation Section -->
+            <div>
+                <h3 class="text-xl font-semibold mb-4">Navigation</h3>
+                <ul>
+                    <li><a href="{% url 'index' %}" class="text-gray-400 hover:text-white">Home</a></li>
+                    {% for category in navbar_categories %}
+                        <li><a href="{% url 'category_list' category.slug %}" class="text-gray-400 hover:text-white">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- Newsletter Subscription Section -->
+            <div>
+                <h3 class="text-xl font-semibold mb-4">Newsletter</h3>
+                <p class="text-gray-400 mb-4">Subscribe to our newsletter to get the latest updates straight to your inbox.</p>
+                <form id="subscriptionForm" action="{% url 'subscribe' %}" method="post" onsubmit="handleSubmit(event)">
+                    {% csrf_token %}
+                    <input type="email" name="email" id="email" placeholder="Your email" class="w-full p-2 mb-4 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-white">
+                    <button type="submit" class="w-full p-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-semibold">Subscribe</button>
+                </form>
+                <div id="subscriptionMessage" class="mt-4 text-green-500"></div> <!-- Placeholder for subscription message -->
+            </div>
+        </div>
+        <div class="mt-8 border-t border-gray-700 pt-4 text-center">
+            <!-- Social Media Links -->
+            <div class="flex justify-center space-x-4 mb-4">
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+            <p class="text-gray-400">© 2024 My Blog. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function handleSubmit(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        // Get form data
+        const formData = new FormData(event.target);
+
+        // Send form data using fetch API
+        fetch(event.target.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Display success message
+            document.getElementById('subscriptionMessage').textContent = 'Thank you for subscribing!';
+            // Optionally clear the form fields after successful subscription
+            document.getElementById('email').value = '';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('subscriptionMessage').textContent = 'Error subscribing. Please try again later.';
+        });
+    }
+</script>

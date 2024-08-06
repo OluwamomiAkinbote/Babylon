@@ -1,0 +1,75 @@
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Hero Section</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[name="carousel"] {
+            display: none;
+        }
+        input[name="carousel"]:nth-of-type(1):checked ~ .carousel-item:nth-of-type(1),
+        input[name="carousel"]:nth-of-type(2):checked ~ .carousel-item:nth-of-type(2),
+        input[name="carousel"]:nth-of-type(3):checked ~ .carousel-item:nth-of-type(3),
+        input[name="carousel"]:nth-of-type(4):checked ~ .carousel-item:nth-of-type(4),
+        input[name="carousel"]:nth-of-type(5):checked ~ .carousel-item:nth-of-type(5),
+        input[name="carousel"]:nth-of-type(6):checked ~ .carousel-item:nth-of-type(6) {
+            display: block;
+        }
+        .carousel-item {
+            display: none;
+        }
+        .carousel-control label {
+            border: 2px solid white;
+            background-color: transparent;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .carousel-control label:hover {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+   
+    <section class="relative bg-gray-100 ">
+        <div class="container mx-auto">
+            <div class="relative">
+                <!-- Radio Buttons for Carousel Control -->
+                {% for i in hero_posts %}
+                <input type="radio" name="carousel" id="carousel-{{ forloop.counter }}" {% if forloop.first %}checked{% endif %}>
+                {% endfor %}
+                
+                <!-- Carousel Items -->
+                {% for post in hero_posts %}
+                <div class="carousel-item">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full md:h-96 sm:h-64 object-cover">
+                    {% else %}
+                    <img src="https://via.placeholder.com/800x400" alt="Placeholder image" class="w-full h-96 object-cover">
+                    {% endif %}
+                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center">
+                        <div class="text-white p-8">
+                            <span class="bg-red-500 px-2 py-1 text-sm uppercase">{{post.category}}</span>
+                            <h1 class="md:text-2xl sm:text-xl font-bold mt-4">{{ post.title }}</h1>
+                            <p class="mt-2">By {{ post.author }} <span class="text-gray-400">{{ post.published_date }}</span></p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Carousel Controls -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 carousel-control">
+                    {% for i in hero_posts %}
+                    <label for="carousel-{{ forloop.counter }}"></label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    
+</body>
+</html>

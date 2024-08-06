@@ -1,0 +1,114 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body class="m-0 p-0">
+    <div class="bg-white shadow">
+        <!-- First Container: Social Links, Logo, and Search Bar -->
+        <div class="py-4 flex justify-between items-center px-6 hidden sm:flex">
+            <!-- Social Links -->
+            <div class="social-links flex space-x-4 text-gray-900">
+                <a href="https://www.facebook.com" target="_blank" class="border border-gray-300 rounded-full p-2 hover:bg-blue-50 transition">
+                    <i class="fab fa-facebook-f text-blue-600"></i>
+                </a>
+                <a href="https://www.x.com" target="_blank" class="border border-gray-300 rounded-full p-2 hover:bg-blue-50 transition">
+                    <i class="fab fa-x-twitter text-blue-400"></i>
+                </a>
+                <a href="https://www.instagram.com" target="_blank" class="border border-gray-300 rounded-full p-2 hover:bg-pink-50 transition">
+                    <i class="fab fa-instagram text-pink-600"></i>
+                </a>
+            </div>
+            <!-- Logo -->
+            <div class="logo">
+                <h1 class="text-xl font-bold">Seven Rem</h1>
+            </div>
+            <!-- Search Bar -->
+            <div class="search flex">
+                <input id="search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="search-button" class="bg-blue-500 text-white rounded-r-md py-2 px-4 hover:bg-blue-600">Search</button>
+            </div>
+        </div>
+        <!-- navbar on lg screen -->
+        <div class="navbar md:flex hidden justify-between items-center text-gray-900 border-t border-b border-gray-900 px-6 py-2 font-semibold mb-4">
+            <div class="home">
+                <a href="/">Home</a>
+            </div>
+            <div class="category">
+                <ul class="flex space-x-4 capitalize">
+                    {% for category in navbar_categories %}
+                    <li class="hover:underline hover:text-red-800 translate-x-1 px-2 py-2">
+                        <a href="{% url 'category_list' category.slug %}">{{ category.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+
+        <!-- Navigation: Menu Bar -->
+        <nav class="text-gray-900 border-t border-b border-gray-900 flex justify-between items-center  sm:hidden p-4">
+            <button id="menu-button" class="text-2xl font-bold">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <h1 class="text-xl font-bold">Seven Rem</h1>
+            </div>
+            <button id="search-toggle" class="text-2xl">
+                <i class="fas fa-search"></i>
+            </button>
+        </nav>
+
+        <!-- Category Container -->
+        <div id="category-container" class="hidden bg-white absolute left-0 py-2 w-48 border rounded shadow-lg sm:hidden">
+            <ul class="flex flex-col space-y-2 capitalize">
+                {% for category in navbar_categories %}
+                <li class="hover:underline hover:text-blue-500 transition px-4 py-2">
+                    <a href="{% url 'category_list' category.slug %}">{{ category.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Search Container -->
+        <div id="search-container" class="hidden bg-white absolute left-0  py-2 w-full border-t border-gray-300 sm:hidden px-6">
+            <div class="search flex w-full">
+                <input id="mobile-search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="mobile-search-button" class="bg-blue-500 text-white rounded-r-md py-2 px-4 hover:bg-blue-600">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+          function toggleNavbarVisibility() {
+        const navbar = document.querySelector('.navbar');
+        if (window.innerWidth < 657) {
+            navbar.style.display = 'none';
+        } else {
+            navbar.style.display = 'flex';
+        }
+    }
+
+    // Initial check
+    document.addEventListener('DOMContentLoaded', toggleNavbarVisibility);
+
+    // Check on window resize
+    window.addEventListener('resize', toggleNavbarVisibility);
+        document.getElementById('menu-button').addEventListener('click', function () {
+            let categoryContainer = document.getElementById('category-container');
+            if (categoryContainer.classList.contains('hidden')) {
+                categoryContainer.classList.remove('hidden');
+            } else {
+                categoryContainer.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('search-toggle').addEventListener('click', function () {
+            let searchContainer = document.getElementById('search-container');
+            if (searchContainer.classList.contains('hidden')) {
+                searchContainer.classList.remove('hidden');
+            } else {
+                searchContainer.classList.add('hidden');
+            }
+        });
+    </script>
+</body>

@@ -1,0 +1,22 @@
+/* styles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .heading {
+        @apply text-sm font-semibold;
+    }
+
+    .section {
+        @apply flex flex-col justify-center mb-4 gap-1;
+    }
+
+    .line {
+        @apply bg-gray-300 w-full h-0.5;
+    }
+
+    .highlight {
+        @apply bg-red-700 h-0.5 w-6;
+    }
+}

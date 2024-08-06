@@ -1,0 +1,18 @@
+# Exported from Render on 2024-08-05T22:19:05Z
+services:
+- type: web
+  name: blog_project
+  runtime: python
+  repo: https://github.com/OluwamomiAkinbote/Seven-rem
+  plan: free
+  envVars:
+  - key: WEB_CONCURRENCY
+    sync: false
+  - key: SECRET_KEY
+    sync: false
+  - key: DATABASE_URL
+    sync: false
+  region: oregon
+  buildCommand: ./build.sh
+  startCommand: python -m uvicorn blog_project.asgi:application
+version: "1"

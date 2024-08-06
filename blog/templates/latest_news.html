@@ -1,0 +1,114 @@
+{% load static %}
+
+<head>
+    <script src="{% static 'js/date-utils.js' %}"></script>
+    <style>
+        .list-disc-red li::marker {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="px-2 py-4 bg-white">
+    <!-- heading section -->
+    <div class="section">
+        <div class="heading">
+            <h2>LATEST NEWS</h2>
+        </div>
+        <div class="line">
+            <div class="highlight"></div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Main Post -->
+        <div class="col-span-1 md:col-span-3 lg:col-span-1 main_post">
+            {% if main_post %}
+                <div class="single_post mb-6">
+                    <div class="relative">
+                        {% if main_post.image %}
+                            <img src="{{ main_post.image.url }}" alt="{{ main_post.image.alt_text }}" class="w-full h-auto rounded-lg">
+                        {% else %}
+                            <p>No Image Available</p>
+                        {% endif %}
+                        <span class="absolute bottom-0 left-0 bg-red-600 text-white text-xs px-2 py-1">NEWS</span>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'blog_detail' main_post.id %}" class="text-xl font-semibold hover:underline">{{ main_post.title|truncatechars:80 }}</a>
+                        <div class="meta text-xs text-gray-600 flex items-center gap-2 mt-2">
+                            <div>
+                                <p>BY {{ main_post.author }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">
+                                    <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                                    <span class="post-date" data-date="{{ main_post.date|date:'U' }}"></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="font-open-sans font-[400] md:text-sm">
+                            <p class="text-gray-800 mt-2">{{ main_post.content | safe |truncatechars:150 }}</p>
+                            <a href="{% url 'blog_detail' main_post.id %}" class="text-red-600 hover:underline mt-4 block rounded-md shadow w-2/4 p-2 capitalize font-semibold bg-gray-200">READ MORE</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Other Posts -->
+        <div class="col-span-1 other_posts grid grid-cols-1 gap-4">
+            {% for post in page_obj_non_exclusive %}
+                <div class="flex items-center justify-center mb-1 border-b">
+                    <div class="w-2/3 mr-4">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-auto">
+                        {% else %}
+                            <p>No Image Available</p>
+                        {% endif %}
+                    </div>
+                    <div class="md:w-2/3 sm:w-full">
+                        <a href="{% url 'blog_detail' post.id %}" class="sm:text-[0.9rem] font-semibold hover:underline">{{ post.title|truncatechars:40 }}</a>
+                        <div class="meta text-xs text-gray-600 flex items-center mt-2">
+                            <p class="text-gray-600">
+                                <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Latest News List -->
+        <div class="col-span-1 latest_news_list border-t">
+            <ul class="list-disc list-inside list-disc-red">
+                {% for post in page_obj_exclusive %}
+                    <li class="mb-2 border-b pb-2">
+                        <a href="{% url 'blog_detail' post.id %}" class="sm:text-[0.9rem] font-semibold hover:underline tracking-wide">{{ post.title|truncatechars:80 }}</a>
+                        <!-- date -->
+                        <div class="meta text-xs text-gray-600 flex items-center mt-2">
+                            <p class="text-gray-600">
+                                <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                            </p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination controls -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    updatePostDates('.post-date');  // Initialize date updating
+
+    setInterval(function() {
+        updatePostDates('.post-date');  // Update dates every second
+    }, 1000);
+});
+</script>
+
+</body>
