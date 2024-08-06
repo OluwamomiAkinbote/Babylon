@@ -23,6 +23,7 @@ django-polymorphic==3.1.0
 django-tailwind==3.8.0
 easy-thumbnails==2.8.5
 gunicorn==22.0.0
+h11==0.14.0
 humanize==4.9.0
 idna==3.7
 Jinja2==3.1.4
@@ -35,6 +36,7 @@ pillow==10.3.0
 psycopg2-binary==2.9.9
 Pygments==2.18.0
 python-dateutil==2.9.0.post0
+python-decouple==3.8
 python-slugify==8.0.4
 PyYAML==6.0.1
 reportlab==4.2.2
@@ -50,5 +52,6 @@ types-python-dateutil==2.9.0.20240316
 typing_extensions==4.12.2
 tzdata==2024.1
 urllib3==2.2.2
+uvicorn==0.30.5
 webencodings==0.5.1
 whitenoise==6.7.0
