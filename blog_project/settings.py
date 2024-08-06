@@ -17,8 +17,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,10 +35,10 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_ckeditor_5',
-    'mptt',                  # django-mptt is a dependency for django-filer
-    'polymorphic',           # polymorphic is a dependency for django-filer
-    'easy_thumbnails',       # easy-thumbnails is required by django-filer
-    'filer',                 
+    'mptt',
+    'polymorphic',
+    'easy_thumbnails',
+    'filer',
     'django_adminlte',
     'django_adminlte_theme',
 ]
@@ -55,7 +53,6 @@ CKEDITOR_5_CONFIGS = {
         'skin': 'moono-lisa',
         'extra_plugins': ','.join([
             'uploadimage',  # the upload image feature
-            # your extra plugins
         ]),
     },
 }
@@ -64,11 +61,8 @@ JAZZMIN_SETTINGS = {
     'site_title': 'Seven Rem',
     'site_header': 'Seven Rem',
     'welcome_sign': 'Welcome to Seven Rem Amin!',
-    # Optional: Change the theme
     'theme': 'material',  # 'light', 'dark', 'transparent', or 'material'
-    # Optional: Customize menu items
-    'navigation_menu': 'your_app.admin_menu.CustomMenu',  # Custom menu class
-    # Optional: Customize branding
+    'navigation_menu': 'your_app.admin_menu.CustomMenu',
     'site_logo': 'path/to/your/logo.png',
     'site_logo_color': '#fff',
 }
@@ -93,24 +87,22 @@ NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
-
-ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'blog_project.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-         'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -165,19 +157,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = '/static/'
 
-# Add the directory where your static files are located
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
 if not DEBUG:
-    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
-    # and renames the files with unique names for each version to support long-term caching
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
+else:
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
