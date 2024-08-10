@@ -14,15 +14,13 @@
     <meta property="og:image" content="{{ absolute_image_url }}" />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:type" content="article" />
-   
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{ post.title }}" />
     <meta name="twitter:description" content="{{ post.summary }}" />
-    <meta property="og:image" content="{{ absolute_image_url }}" />
+    <meta name="twitter:image" content="{{ absolute_image_url }}" />
     <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
-  
 
     <!-- Additional Meta Tags for LinkedIn -->
     <meta property="linkedin:creator" content="Your LinkedIn Profile" />
@@ -32,20 +30,27 @@
     <!-- Your body content here -->
 
     <!-- templates/share_links.html -->
-    <h2 class="text-xl font-semibold mt-4">Share this post:</h2>
     <div class="flex space-x-4 mt-2">
-        <a href="https://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ post.title }}" target="_blank" class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
-            <i class="fab fa-twitter"></i>
-        </a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&quote={{ post.title }}" target="_blank" class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
-            <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank" class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
-            <i class="fab fa-linkedin-in"></i>
-        </a>
-        <a href="https://api.whatsapp.com/send?text={{ post.title }}%20{{ request.build_absolute_uri }}" target="_blank" class="text-green-500 hover:text-green-700 p-3 rounded-full bg-green-100 hover:bg-green-200">
-            <i class="fab fa-whatsapp"></i>
-        </a>
+        <div class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
+            <a href="https://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ post.title }}&image={{ absolute_image_url }}" target="_blank">
+                <i class="fab fa-twitter"></i>
+            </a>
+        </div>
+        <div class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&quote={{ post.title }}" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+        </div>
+        <div class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
+            <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+        <div class="text-green-500 hover:text-green-700 p-3 rounded-full bg-green-100 hover:bg-green-200">
+            <a href="https://api.whatsapp.com/send?text={{ post.title }}%20{{ request.build_absolute_uri }}" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </div>
     </div>
 </body>
 </html>

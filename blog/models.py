@@ -5,6 +5,8 @@ from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
+from django.contrib.auth.models import User
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -69,6 +71,17 @@ class Comment(models.Model):
     author_email = models.EmailField(blank=True, null=True)
     text = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
+    likes_count = models.PositiveIntegerField(default=0)
+    liked_by = models.ManyToManyField(User, related_name='liked_comments', blank=True)
+
+    def toggle_like(self, user):
+        if self.liked_by.filter(id=user.id).exists():
+            self.liked_by.remove(user)
+            self.likes_count -= 1
+        else:
+            self.liked_by.add(user)
+            self.likes_count += 1
+        self.save()
 
     def __str__(self):
         return f'Comment by {self.author_name} on {self.post}'

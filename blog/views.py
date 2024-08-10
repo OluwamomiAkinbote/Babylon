@@ -9,6 +9,9 @@ import random
 from .models import Subscription
 from .forms import SubscriptionForm
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+import json
+
 
 def index(request):
     exclusive_category = None
@@ -18,7 +21,7 @@ def index(request):
     try:
         # Fetching the exclusive category by its name
         exclusive_category = Category.objects.get(name='Exclusive')
-        exclusive_posts = BlogPost.objects.filter(category=exclusive_category)
+        exclusive_posts = BlogPost.objects.filter(category=exclusive_category).order_by('-date')
     except Category.DoesNotExist:
         exclusive_posts = []
 
@@ -119,13 +122,12 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-
-def blog_detail(request, pk):
-    post = get_object_or_404(BlogPost, pk=pk)
+def blog_detail(request, slug):
+    post = get_object_or_404(BlogPost, slug=slug)
     comments = post.comments.filter(parent_comment=None)  # Fetch top-level comments only
 
-    related_posts = BlogPost.objects.filter(category=post.category).exclude(pk=pk)[:5]
-    all_other_posts = BlogPost.objects.exclude(category=post.category).exclude(pk=pk)
+    related_posts = BlogPost.objects.filter(category=post.category).exclude(slug=slug)[:5]
+    all_other_posts = BlogPost.objects.exclude(category=post.category).exclude(slug=slug)
     recommended_posts = random.sample(list(all_other_posts), min(len(all_other_posts), 5))
 
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
@@ -145,7 +147,7 @@ def blog_detail(request, pk):
                 new_comment = form.save(commit=False)
                 new_comment.post = post
                 new_comment.save()
-            return redirect('blog_detail', pk=post.pk)
+            return redirect('blog_detail', slug=post.slug)
     else:
         form = CommentForm()
 
@@ -156,11 +158,13 @@ def blog_detail(request, pk):
         'navbar_categories': navbar_categories,
         'related_posts': related_posts,
         'recommended_posts': recommended_posts,
-        'absolute_image-url':absolute_image_url
+        'absolute_image_url': absolute_image_url
     })
 
-def add_comment(request, post_id):
-    post = get_object_or_404(BlogPost, pk=post_id)
+
+
+def add_comment(request, slug):
+    post = get_object_or_404(BlogPost, slug=slug)
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -168,12 +172,11 @@ def add_comment(request, post_id):
             new_comment = form.save(commit=False)
             new_comment.post = post
             new_comment.save()
-            return redirect('blog_detail', pk=post.pk)  # Redirect to the post detail page
+            return redirect('blog_detail', slug=post.slug)  # Redirect to the post detail page using slug
     else:
         form = CommentForm()
 
-    # Handle form errors or display the form again with errors
-    return redirect('blog_detail', pk=post.pk)  # Redirect
+    return redirect('blog_detail', slug=post.slug)  # Redirect to the post detail page using slug
 
 
 def add_reply(request, comment_id):
@@ -186,11 +189,34 @@ def add_reply(request, comment_id):
             new_reply.post = parent_comment.post  # Assuming Comment has a ForeignKey to BlogPost
             new_reply.parent_comment = parent_comment
             new_reply.save()
-            return redirect('blog_detail', pk=parent_comment.post.pk)  # Redirect to post detail page
+            return redirect('blog_detail', slug=parent_comment.post.slug)  # Redirect to post detail page using slug
     else:
         form = CommentForm()
 
-    return redirect('blog_detail', pk=parent_comment.post.pk) 
+    return redirect('blog_detail', slug=parent_comment.post.slug) 
+
+@login_required
+def like_comment(request, comment_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'You must be logged in to like comments.'}, status=403)
+
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        liked = data.get('liked', False)
+        
+        if liked:
+            if request.user not in comment.liked_by.all():
+                comment.liked_by.add(request.user)
+                comment.likes_count += 1
+        else:
+            if request.user in comment.liked_by.all():
+                comment.liked_by.remove(request.user)
+                comment.likes_count -= 1
+        
+        comment.save()
+        return JsonResponse({'likes_count': comment.likes_count})
 
 def category_list(request, slug):
     category = get_object_or_404(Category, slug=slug)

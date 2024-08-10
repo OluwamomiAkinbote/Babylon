@@ -16,6 +16,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -119,6 +120,18 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'django_blog_rd98',
+        'USER': 'myuser',
+        'PASSWORD': 'nLzYH5bENpwecYC17YKC6B32hjMWqct0',
+        'HOST': 'dpg-cqjsvuggph6c739duh90-a.oregon-postgres.render.com',
+        'PORT': '5432',
+    }
+}
+
 
 DATABASES = {
     'default': dj_database_url.config(default=config('DATABASE_URL'))

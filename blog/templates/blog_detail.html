@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{% static 'js/date-utils.js' %}"></script>
+    
     
     {% tailwind_css %}
 </head>
@@ -43,7 +43,7 @@
                 </div>
                 
                 <div class="mt-4 text-gray-800 text-[1rem] font-open-sans font-[400]">
-                    {{ post.content|safe }}
+                    {{ post.content|safe |linebreaks }}
                 </div>
                 <!-- Comments section -->
                 <div class="comment">
@@ -71,10 +71,10 @@
                                     <img src="{{ related_post.image.url }}" alt="{{ related_post.image.alt_text }}" class="w-20 h-20 mr-4 object-cover">
                                 {% endif %}
                                 <div>
-                                    <a href="{% url 'blog_detail' related_post.id %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ related_post.title|truncatechars:50|title }}</a>
+                                    <a href="{% url 'blog_detail' related_post.id %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ related_post.title|truncatechars:80|title }}</a>
                                     <div class="meta text-xs text-gray-600 flex items-center mt-2">
                                         <p class="text-gray-600">
-                                            <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                                            <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
                                             <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
                                         </p>
                                     </div>
@@ -103,10 +103,10 @@
                                     <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 mr-4 object-cover">
                                 {% endif %}
                                 <div>
-                                    <a href="{% url 'blog_detail' post.id %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:50|title }}</a>
+                                    <a href="{% url 'blog_detail' post.id %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:80|title }}</a>
                                     <div class="meta text-xs text-gray-600 flex items-center mt-2">
                                         <p class="text-gray-600">
-                                            <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                                            <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
                                             <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
                                         </p>
                                     </div>
@@ -128,13 +128,40 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            updatePostDates('.post-date');  // Initialize date updating
-        
-            setInterval(function() {
-                updatePostDates('.post-date');  // Update dates every second
-            }, 1000);
-        });
+  document.addEventListener('DOMContentLoaded', function() {
+    updatePostDates('.post-date');  // Initialize date updating
+
+    setInterval(function() {
+        updatePostDates('.post-date');  // Update dates every second
+    }, 1000);
+});
+
+function updatePostDates(selector) {
+    var postDates = document.querySelectorAll(selector);
+    console.log('Updating post dates for elements:', postDates); // Debugging output
+    postDates.forEach(function(postDate) {
+        var dateElement = postDate.getAttribute('data-date');
+        console.log('Original data-date attribute:', dateElement); // Debugging output
+        var date = new Date(parseInt(dateElement) * 1000);  // Convert UNIX timestamp to milliseconds
+        var currentDate = new Date();
+        var secondsAgo = Math.floor((currentDate - date) / 1000);
+
+        if (secondsAgo < 60) {
+            postDate.textContent = secondsAgo + ' seconds ago';
+        } else if (secondsAgo < 3600) {
+            var minutesAgo = Math.floor(secondsAgo / 60);
+            postDate.textContent = minutesAgo + ' minutes ago';
+        } else if (secondsAgo < 86400) {
+            var hoursAgo = Math.floor(secondsAgo / 3600);
+            postDate.textContent = hoursAgo + ' hours ago';
+        } else {
+            // Default to the original date format if more than 24 hours ago
+            postDate.textContent = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        }
+        console.log('Updated post date text:', postDate.textContent); // Debugging output
+    });
+}
+
     </script>
     
 </body>

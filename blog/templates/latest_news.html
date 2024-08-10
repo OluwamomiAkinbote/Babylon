@@ -1,7 +1,7 @@
 {% load static %}
 
 <head>
-    <script src="{% static 'js/date-utils.js' %}"></script>
+   
     <style>
         .list-disc-red li::marker {
             color: red;
@@ -35,21 +35,21 @@
                         <span class="absolute bottom-0 left-0 bg-red-600 text-white text-xs px-2 py-1">NEWS</span>
                     </div>
                     <div class="mt-4">
-                        <a href="{% url 'blog_detail' main_post.id %}" class="text-xl font-semibold hover:underline">{{ main_post.title|truncatechars:80 }}</a>
+                        <a href="{% url 'blog_detail' main_post.slug %}" class="text-xl font-semibold hover:underline">{{ main_post.title|truncatechars:80 }}</a>
                         <div class="meta text-xs text-gray-600 flex items-center gap-2 mt-2">
                             <div>
                                 <p>BY {{ main_post.author }}</p>
                             </div>
                             <div>
                                 <p class="text-gray-600">
-                                    <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                                    <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
                                     <span class="post-date" data-date="{{ main_post.date|date:'U' }}"></span>
                                 </p>
                             </div>
                         </div>
                         <div class="font-open-sans font-[400] md:text-sm">
                             <p class="text-gray-800 mt-2">{{ main_post.content | safe |truncatechars:150 }}</p>
-                            <a href="{% url 'blog_detail' main_post.id %}" class="text-red-600 hover:underline mt-4 block rounded-md shadow w-2/4 p-2 capitalize font-semibold bg-gray-200">READ MORE</a>
+                            <a href="{% url 'blog_detail' main_post.slug %}" class="text-red-600 hover:underline mt-4 block rounded-md shadow w-2/4 p-2 capitalize font-semibold bg-gray-200">READ MORE</a>
                         </div>
                     </div>
                 </div>
@@ -60,18 +60,18 @@
         <div class="col-span-1 other_posts grid grid-cols-1 gap-4">
             {% for post in page_obj_non_exclusive %}
                 <div class="flex items-center justify-center mb-1 border-b">
-                    <div class="w-2/3 mr-4">
-                        {% if post.image %}
-                            <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-auto">
-                        {% else %}
-                            <p>No Image Available</p>
-                        {% endif %}
-                    </div>
+                    <!-- image -->
+                    {% if post.image %}
+                       <img src="{{ post.image.url }}" alt="{{post.image.alt_text }}" class="w-20 h-20 mr-4 object-cover">
+                    {% else %}
+                        <p>No Image Available</p>
+                    {% endif %}
+                    <!-- content -->
                     <div class="md:w-2/3 sm:w-full">
-                        <a href="{% url 'blog_detail' post.id %}" class="sm:text-[0.9rem] font-semibold hover:underline">{{ post.title|truncatechars:40 }}</a>
+                        <a href="{% url 'blog_detail' post.slug %}" class="sm:text-[0.9rem] font-semibold hover:underline">{{ post.title|truncatechars:80 }}</a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <p class="text-gray-600">
-                                <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                                <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
                                 <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
                             </p>
                         </div>
@@ -85,11 +85,11 @@
             <ul class="list-disc list-inside list-disc-red">
                 {% for post in page_obj_exclusive %}
                     <li class="mb-2 border-b pb-2">
-                        <a href="{% url 'blog_detail' post.id %}" class="sm:text-[0.9rem] font-semibold hover:underline tracking-wide">{{ post.title|truncatechars:80 }}</a>
+                        <a href="{% url 'blog_detail' post.slug %}" class="sm:text-[0.9rem] font-semibold hover:underline tracking-wide">{{ post.title|truncatechars:100 }}</a>
                         <!-- date -->
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <p class="text-gray-600">
-                                <i class="far fa-clock text-red-500 text-[0.6rem]"></i>
+                                <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
                                 <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
                             </p>
                         </div>
@@ -100,7 +100,7 @@
     </div>
 </div>
 
-<!-- Pagination controls -->
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     updatePostDates('.post-date');  // Initialize date updating
@@ -109,6 +109,32 @@ document.addEventListener('DOMContentLoaded', function() {
         updatePostDates('.post-date');  // Update dates every second
     }, 1000);
 });
-</script>
 
+function updatePostDates(selector) {
+    var postDates = document.querySelectorAll(selector);
+    console.log('Updating post dates for elements:', postDates); // Debugging output
+    postDates.forEach(function(postDate) {
+        var dateElement = postDate.getAttribute('data-date');
+        console.log('Original data-date attribute:', dateElement); // Debugging output
+        var date = new Date(parseInt(dateElement) * 1000);  // Convert UNIX timestamp to milliseconds
+        var currentDate = new Date();
+        var secondsAgo = Math.floor((currentDate - date) / 1000);
+
+        if (secondsAgo < 60) {
+            postDate.textContent = secondsAgo + ' seconds ago';
+        } else if (secondsAgo < 3600) {
+            var minutesAgo = Math.floor(secondsAgo / 60);
+            postDate.textContent = minutesAgo + ' minutes ago';
+        } else if (secondsAgo < 86400) {
+            var hoursAgo = Math.floor(secondsAgo / 3600);
+            postDate.textContent = hoursAgo + ' hours ago';
+        } else {
+            // Default to the original date format if more than 24 hours ago
+            postDate.textContent = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        }
+        console.log('Updated post date text:', postDate.textContent); // Debugging output
+    });
+}
+
+</script>
 </body>
