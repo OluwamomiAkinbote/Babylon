@@ -29,7 +29,7 @@
                             <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
                         </p>
                     </div>
-                    <a href="{% url 'blog_detail' post.id %}" class="mt-2 inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Read More</a>
+                    <a href="{% url 'blog_detail' post.slug %}" class="mt-2 inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Read More</a>
                 </div>
             </div>
         </div>

@@ -19,7 +19,7 @@
                         </div>
                         <div class="p-4">
                             <p class="text-gray-500 text-[0.5rem]">{{ post.content| safe |truncatewords:20 }}</p>
-                            <a href="{% url 'blog_detail' pk=post.pk %}" class="text-indigo-600 hover:text-indigo-800 font-semibold">Read more</a>
+                            <a href="{% url 'blog_detail' post.slug %}" class="text-indigo-600 hover:text-indigo-800 font-semibold">Read more</a>
                         </div>
                     </div>
                 {% endfor %}

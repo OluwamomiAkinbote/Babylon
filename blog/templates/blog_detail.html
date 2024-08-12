@@ -21,7 +21,7 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <!-- Blog details -->
             <div class="p-6 sm:col-span-2">
-                <h1 class="text-4xl font-bold text-gray-950">{{ post.title|title }}</h1>
+                <h1 class="md:text-4xl sm:text-3xl font-bold text-gray-950">{{ post.title|title }}</h1>
                 <div class="flex justify-between items-center mt-2">
                     <div>
                         <p class="text-sm text-gray-700">By {{ post.author }} | {{ post.date }}</p>
@@ -42,7 +42,7 @@
 
                 </div>
                 
-                <div class="mt-4 text-gray-800 text-[1rem] font-open-sans font-[400]">
+                <div class="mt-4 text-gray-800 md: text-[1rem] font-open-sans font-[400]">
                     {{ post.content|safe |linebreaks }}
                 </div>
                 <!-- Comments section -->
@@ -71,7 +71,7 @@
                                     <img src="{{ related_post.image.url }}" alt="{{ related_post.image.alt_text }}" class="w-20 h-20 mr-4 object-cover">
                                 {% endif %}
                                 <div>
-                                    <a href="{% url 'blog_detail' related_post.id %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ related_post.title|truncatechars:80|title }}</a>
+                                    <a href="{% url 'blog_detail' related_post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ related_post.title|truncatechars:80|title }}</a>
                                     <div class="meta text-xs text-gray-600 flex items-center mt-2">
                                         <p class="text-gray-600">
                                             <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
@@ -103,7 +103,7 @@
                                     <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 mr-4 object-cover">
                                 {% endif %}
                                 <div>
-                                    <a href="{% url 'blog_detail' post.id %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:80|title }}</a>
+                                    <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:80|title }}</a>
                                     <div class="meta text-xs text-gray-600 flex items-center mt-2">
                                         <p class="text-gray-600">
                                             <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
