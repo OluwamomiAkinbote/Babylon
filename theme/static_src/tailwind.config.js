@@ -39,7 +39,7 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                'poppins': ['Poppins', 'sans-serif'],
+                'libre franklin': ['Libre Franklin', 'sans-serif'],
                 'open-sans': ['Open Sans', 'sans-serif'],
             },
             screens: {
@@ -50,6 +50,11 @@ module.exports = {
                 'xl': '1280px',   // Extra large screen
                 '2xl': '1536px',  // 2x extra large screen
             },
+            spacing: {
+                '30': '7.5rem',  // Custom class for 120px width
+                '21.5': '5.375rem'  // Custom class for 86px height
+              },
+            
         },
     },
     plugins: [

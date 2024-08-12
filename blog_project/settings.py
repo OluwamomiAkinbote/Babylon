@@ -33,9 +33,7 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'django.contrib.humanize',
-    'ckeditor',
-    'ckeditor_uploader',
-    'django_ckeditor_5',
+    'tinymce',
     'mptt',
     'polymorphic',
     'easy_thumbnails',
@@ -44,19 +42,16 @@ INSTALLED_APPS = [
     'django_adminlte_theme',
 ]
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
 
-CKEDITOR_5_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 300,
-        'width': '100%',
-        'skin': 'moono-lisa',
-        'extra_plugins': ','.join([
-            'uploadimage',  # the upload image feature
-        ]),
-    },
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 360,
+    'width': '100%',
+    'menubar': 'file edit view insert format tools table help',
+    'plugins': 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table directionality emoticons template paste textpattern',
+    'toolbar': 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
+    'content_css': 'default',
 }
+
 
 JAZZMIN_SETTINGS = {
     'site_title': 'Seven Rem',

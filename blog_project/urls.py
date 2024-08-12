@@ -9,8 +9,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')), 
     path("__reload__/", include("django_browser_reload.urls")),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('filer/', include('filer.urls')),
+    path('tinymce/', include('tinymce.urls')),
   
 ]
 

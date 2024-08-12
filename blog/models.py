@@ -6,7 +6,7 @@ from ckeditor.fields import RichTextField
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
 from django.contrib.auth.models import User
-
+from tinymce.models import HTMLField
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -49,7 +49,7 @@ class Video(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=500, unique=True)
-    content = RichTextField()
+    content = HTMLField()
     date = models.DateTimeField(auto_now_add=True)
     original_date = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
