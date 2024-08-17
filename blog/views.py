@@ -95,7 +95,7 @@ def blog_detail(request, slug):
     recommended_posts = random.sample(list(all_other_posts), min(len(all_other_posts), 5))
 
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
-    absolute_image_url = request.build_absolute_uri(post.image.url) if post.image else None
+
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -122,7 +122,7 @@ def blog_detail(request, slug):
         'navbar_categories': navbar_categories,
         'related_posts': related_posts,
         'recommended_posts': recommended_posts,
-        'absolute_image_url': absolute_image_url
+    
     })
 
 

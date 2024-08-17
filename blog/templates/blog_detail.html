@@ -7,21 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    
     {% tailwind_css %}
 </head>
-<body class="bg-white">
+<body class="bg-white font-bitter">
     <div class="mx-auto">
-        <div>
+        <div class="relative z-20">
+            <!-- Header Section -->
             {% block content %}
                 {% include 'header.html' %}
             {% endblock %}
         </div>
+    
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <!-- Blog details -->
             <div class="p-6 sm:col-span-2">
-                <h1 class="md:text-4xl sm:text-3xl font-bold text-gray-950">{{ post.title|title }}</h1>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-950 leading-tight">
+                    {{ post.title|title }}
+                </h1>
                 <div class="flex justify-between items-center mt-2">
                     <div>
                         <p class="text-sm text-gray-700">By {{ post.author }} | {{ post.date }}</p>
@@ -35,14 +37,12 @@
                     {% endif %}
                 </div>
                 <!-- Share links -->
-
                 <div class="flex space-x-4 mt-2">
-
                     {% include 'share_link.html' %}
-
                 </div>
                 
-                <div class="mt-4 text-gray-800 md: text-[1rem] font-open-sans font-[400]">
+                <!-- Content -->
+                <div class="mt-4 text-gray-800 text-sm sm:text-base md:text-lg leading-relaxed">
                     {{ post.content|safe |linebreaks }}
                 </div>
                 <!-- Comments section -->
@@ -58,7 +58,7 @@
                     <!-- heading -->
                     <div class="section flex-row items-center">
                         <div class="heading">
-                            <h2 class="text-xs font-bold">Related</h2>
+                            <h2 class="text-xs font-bold uppercase">Related</h2>
                         </div>
                         <div class="line">
                             <div class="highlight"></div>
@@ -75,7 +75,7 @@
                                     <div class="meta text-xs text-gray-600 flex items-center mt-2">
                                         <p class="text-gray-600">
                                             <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
-                                            <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                                            <span class="post-date" data-date="{{ related_post.date|date:'U' }}"></span>
                                         </p>
                                     </div>
                                 </div>
@@ -90,7 +90,7 @@
                     <!-- heading -->
                     <div class="section flex-row items-center">
                         <div class="heading">
-                            <h2 class="text-xs font-bold">Recommended</h2>
+                            <h2 class="text-xs font-bold uppercase">Recommended</h2>
                         </div>
                         <div class="line">
                             <div class="highlight"></div>

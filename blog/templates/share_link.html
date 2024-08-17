@@ -8,23 +8,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="{{ post.title }}" />
-    <meta property="og:description" content="{{ post.summary }}" />
-    <meta property="og:image" content="{{ absolute_image_url }}" />
-    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:type" content="article" />
+  <!-- Open Graph Meta Tags -->
+<meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="Daily Intel Newspapers - ...Breaking News, Nigerian News, Nigerian newspapers, Entertainment, Videos, Sports, Business and Politics." />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ post.title }}" />
+<meta property="og:description" content="{{ post.content }}" />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="og:image" content="{{ post.image.url }}" />
+<meta property="og:image:secure_url" content="{{ post.image.url }}" />
+<meta property="og:image:width" content="300" />
+<meta property="og:image:height" content="300" />
+<meta property="article:published_time" content="{{ post.date_published }}" />
+<meta property="article:modified_time" content="{{ post.date_modified }}" />
+<meta property="article:publisher" content="https://www.facebook.com/DailyIntelNewspaper" />
 
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{{ post.title }}" />
-    <meta name="twitter:description" content="{{ post.summary }}" />
-    <meta name="twitter:image" content="{{ absolute_image_url }}" />
-    <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@dailyintelnews" />
+<meta name="twitter:title" content="{{ post.title }}" />
+<meta name="twitter:description" content="{{ post.content }}" />
+<meta name="twitter:image" content="{{ post.image.url }}" />
+<meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
+<meta name="twitter:creator" content="@dailyintelnews" />
 
-    <!-- Additional Meta Tags for LinkedIn -->
-    <meta property="linkedin:creator" content="Your LinkedIn Profile" />
-    <meta property="linkedin:author" content="Your LinkedIn Profile" />
+<!-- Additional Meta Tags for LinkedIn -->
+<meta property="linkedin:creator" content="Your LinkedIn Profile" />
+<meta property="linkedin:author" content="Your LinkedIn Profile" />
+
 </head>
 <body>
     <!-- Your body content here -->
@@ -32,7 +43,7 @@
     <!-- templates/share_links.html -->
     <div class="flex space-x-4 mt-2">
         <div class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
-            <a href="https://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ post.title }}&image={{ absolute_image_url }}" target="_blank">
+            <a href="https://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ post.title }}&image={{  post.image.url  }}" target="_blank">
                 <i class="fab fa-twitter"></i>
             </a>
         </div>

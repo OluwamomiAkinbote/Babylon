@@ -60,13 +60,13 @@
                 {% for post in non_exclusive_posts %}
                     <div class="flex items-center justify-center mb-1 border-b">
                         {% if post.image %}
-                        <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-[7.5rem] h-[5.375rem] mr-4 object-cover">
+                        <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-[120px] h-[86px] mr-4 object-cover">
 
                         {% else %}
                             <p>No Image Available</p>
                         {% endif %}
                         <div class="md:w-2/3 sm:w-full">
-                            <a href="{% url 'blog_detail' post.slug %}" class="sm:text-[0.93rem] font-semibold hover:underline tracking-tight">{{ post.title|truncatechars:80 }}</a>
+                            <a href="{% url 'blog_detail' post.slug %}" class="sm:text-[15px] font-semibold hover:underline tracking-tight">{{ post.title|truncatechars:80 }}</a>
                             <div class="meta text-xs text-gray-600 flex items-center mt-2">
                                 <p class="text-gray-600">
                                     <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
@@ -83,7 +83,7 @@
                 <ul class="list-disc list-inside list-disc-red">
                     {% for post in exclusive_posts %}
                         <li class="mb-2 border-b pb-2">
-                            <a href="{% url 'blog_detail' post.slug %}" class="sm:text-[0.93rem] font-semibold hover:underline tracking-tight">{{ post.title|truncatechars:100 }}</a>
+                            <a href="{% url 'blog_detail' post.slug %}" class="sm:text-[15px] font-semibold hover:underline tracking-tight">{{ post.title|truncatechars:100 }}</a>
                             <div class="meta text-xs text-gray-600 flex items-center mt-2">
                                 <p class="text-gray-600">
                                     <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>

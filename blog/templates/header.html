@@ -3,7 +3,7 @@
 </head>
 
 <body class="m-0 p-0">
-    <div class="bg-white shadow">
+    <div class="bg-white shadow relative z-20">
         <!-- First Container: Social Links, Logo, and Search Bar -->
         <div class="py-4 flex justify-between items-center px-6 hidden sm:flex">
             <!-- Social Links -->
@@ -46,7 +46,7 @@
         
 
         <!-- Navigation: Menu Bar -->
-        <nav class="text-gray-900 border-t border-b border-gray-900 flex justify-between items-center  sm:hidden p-4">
+        <nav class="text-gray-900 border-t border-b border-gray-900 flex justify-between items-center sm:hidden p-4">
             <button id="menu-button" class="text-2xl font-bold">
                 <i class="fas fa-bars"></i>
             </button>
@@ -59,10 +59,13 @@
         </nav>
 
         <!-- Category Container -->
-        <div id="category-container" class="hidden bg-white absolute left-0 py-2 w-48 border rounded shadow-lg sm:hidden">
+        <div id="category-container" class="hidden bg-white absolute left-0 py-2 w-48  rounded shadow-lg sm:hidden">
             <ul class="flex flex-col space-y-2 capitalize">
+                <li class="hover:underline hover:text-blue-500 transition px-4 py-2 border-b border-gray-300">
+                    <a href="/">Home</a>
+                </li>
                 {% for category in navbar_categories %}
-                <li class="hover:underline hover:text-blue-500 transition px-4 py-2">
+                <li class="hover:underline hover:text-blue-500 transition px-4 py-2 border-b border-gray-300">
                     <a href="{% url 'category_list' category.slug %}">{{ category.name }}</a>
                 </li>
                 {% endfor %}
@@ -70,7 +73,7 @@
         </div>
 
         <!-- Search Container -->
-        <div id="search-container" class="hidden bg-white absolute left-0  py-2 w-full border-t border-gray-300 sm:hidden px-6">
+        <div id="search-container" class="hidden bg-white absolute left-0 py-2 w-full border-t border-gray-300 sm:hidden px-6">
             <div class="search flex w-full">
                 <input id="mobile-search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <button id="mobile-search-button" class="bg-blue-500 text-white rounded-r-md py-2 px-4 hover:bg-blue-600">Search</button>
@@ -79,36 +82,29 @@
     </div>
 
     <script>
-          function toggleNavbarVisibility() {
-        const navbar = document.querySelector('.navbar');
-        if (window.innerWidth < 657) {
-            navbar.style.display = 'none';
-        } else {
-            navbar.style.display = 'flex';
+        function toggleNavbarVisibility() {
+            const navbar = document.querySelector('.navbar');
+            if (window.innerWidth < 657) {
+                navbar.style.display = 'none';
+            } else {
+                navbar.style.display = 'flex';
+            }
         }
-    }
 
-    // Initial check
-    document.addEventListener('DOMContentLoaded', toggleNavbarVisibility);
+        // Initial check
+        document.addEventListener('DOMContentLoaded', toggleNavbarVisibility);
 
-    // Check on window resize
-    window.addEventListener('resize', toggleNavbarVisibility);
+        // Check on window resize
+        window.addEventListener('resize', toggleNavbarVisibility);
+
         document.getElementById('menu-button').addEventListener('click', function () {
             let categoryContainer = document.getElementById('category-container');
-            if (categoryContainer.classList.contains('hidden')) {
-                categoryContainer.classList.remove('hidden');
-            } else {
-                categoryContainer.classList.add('hidden');
-            }
+            categoryContainer.classList.toggle('hidden');
         });
 
         document.getElementById('search-toggle').addEventListener('click', function () {
             let searchContainer = document.getElementById('search-container');
-            if (searchContainer.classList.contains('hidden')) {
-                searchContainer.classList.remove('hidden');
-            } else {
-                searchContainer.classList.add('hidden');
-            }
+            searchContainer.classList.toggle('hidden');
         });
     </script>
 </body>

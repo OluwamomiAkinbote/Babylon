@@ -39,8 +39,9 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                'libre franklin': ['Libre Franklin', 'sans-serif'],
-                'open-sans': ['Open Sans', 'sans-serif'],
+                cheltenham: ['"ITC Cheltenham Std"', 'serif'],
+                helvetica: ['Helvetica', 'sans-serif'],
+                bitter: ['Bitter', 'serif'],
             },
             screens: {
                 'xs': '345px',    // Extra small screen
@@ -51,8 +52,8 @@ module.exports = {
                 '2xl': '1536px',  // 2x extra large screen
             },
             spacing: {
-                '30': '7.5rem',  // Custom class for 120px width
-                '21.5': '5.375rem'  // Custom class for 86px height
+                '30': '120px',  // Custom class for 120px width
+                '21.5': '86px'  // Custom class for 86px height
               },
             
         },
