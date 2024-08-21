@@ -1,67 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>{{ post.title }}</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Share Button -->
+<button id="share-button" class="relative flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
+    <span>Share</span>
+    <i class="fas fa-share-alt"></i>
+</button>
 
-  <!-- Open Graph Meta Tags -->
-<meta property="og:locale" content="en_US" />
-<meta property="og:site_name" content="Daily Intel Newspapers - ...Breaking News, Nigerian News, Nigerian newspapers, Entertainment, Videos, Sports, Business and Politics." />
-<meta property="og:type" content="article" />
-<meta property="og:title" content="{{ post.title }}" />
-<meta property="og:description" content="{{ post.content }}" />
-<meta property="og:url" content="{{ request.build_absolute_uri }}" />
-<meta property="og:image" content="{{ post.image.url }}" />
-<meta property="og:image:secure_url" content="{{ post.image.url }}" />
-<meta property="og:image:width" content="300" />
-<meta property="og:image:height" content="300" />
-<meta property="article:published_time" content="{{ post.date_published }}" />
-<meta property="article:modified_time" content="{{ post.date_modified }}" />
-<meta property="article:publisher" content="https://www.facebook.com/DailyIntelNewspaper" />
-
-<!-- Twitter Card Meta Tags -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@dailyintelnews" />
-<meta name="twitter:title" content="{{ post.title }}" />
-<meta name="twitter:description" content="{{ post.content }}" />
-<meta name="twitter:image" content="{{ post.image.url }}" />
-<meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
-<meta name="twitter:creator" content="@dailyintelnews" />
-
-<!-- Additional Meta Tags for LinkedIn -->
-<meta property="linkedin:creator" content="Your LinkedIn Profile" />
-<meta property="linkedin:author" content="Your LinkedIn Profile" />
-
-</head>
-<body>
-    <!-- Your body content here -->
-
-    <!-- templates/share_links.html -->
-    <div class="flex space-x-4 mt-2">
-        <div class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
-            <a href="https://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ post.title }}&image={{  post.image.url  }}" target="_blank">
-                <i class="fab fa-twitter"></i>
-            </a>
-        </div>
-        <div class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&quote={{ post.title }}" target="_blank">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-        </div>
-        <div class="text-blue-500 hover:text-blue-700 p-3 rounded-full bg-blue-100 hover:bg-blue-200">
-            <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank">
-                <i class="fab fa-linkedin-in"></i>
-            </a>
-        </div>
-        <div class="text-green-500 hover:text-green-700 p-3 rounded-full bg-green-100 hover:bg-green-200">
-            <a href="https://api.whatsapp.com/send?text={{ post.title }}%20{{ request.build_absolute_uri }}" target="_blank">
-                <i class="fab fa-whatsapp"></i>
-            </a>
-        </div>
+<!-- Dropdown Menu -->
+<div id="share-dropdown" class="hidden absolute mx-6 left-0 w-48 bg-white shadow-lg rounded border border-gray-200 z-10">
+    <div class="p-4">
+        <a id="twitter-share" href="#" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-500 hover:bg-blue-100"><i class="fab fa-twitter"></i> Twitter</a>
+        <a id="facebook-share" href="#" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-600 hover:bg-blue-100"><i class="fab fa-facebook-f"></i> Facebook</a>
+        <a id="linkedin-share" href="#" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-700 hover:bg-blue-100"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+        <a id="whatsapp-share" href="#" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-green-500 hover:bg-green-100"><i class="fab fa-whatsapp"></i> WhatsApp</a>
     </div>
-</body>
-</html>
+</div>
+
+<!-- JavaScript for Dynamic Share Links -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const shareButton = document.getElementById('share-button');
+        const shareDropdown = document.getElementById('share-dropdown');
+
+        shareButton.addEventListener('click', function () {
+            shareDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!shareButton.contains(event.target) && !shareDropdown.contains(event.target)) {
+                shareDropdown.classList.add('hidden');
+            }
+        });
+
+        function updateShareLinks(title, url) {
+            const encodedTitle = encodeURIComponent(title);
+            const encodedUrl = encodeURIComponent(url);
+
+            document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
+            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+            document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?url=${encodedUrl}&title=${encodedTitle}`;
+            document.getElementById('whatsapp-share').href = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
+        }
+
+        updateShareLinks('{{ post.title }}', '{{ request.build_absolute_uri }}');
+    });
+</script>

@@ -35,7 +35,7 @@ class VideoAdmin(admin.ModelAdmin):
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('email', 'date_subscribed')  # Customize this to display the fields you want
+    list_display = ('email', 'name','date_subscribed')  # Customize this to display the fields you want
     search_fields = ('email',)  # Add fields that you want to be searchable
     list_filter = ('date_subscribed',)  # Add fields to filter by
 

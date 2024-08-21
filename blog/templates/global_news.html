@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="global_news px-2 py-4 bg-white">
+<div class="global_news px-2 py-4 bg-white font-helvetica">
     <!-- heading section -->
     <div class="section">
         <div class="heading">
@@ -10,26 +10,26 @@
             <div class="highlight"></div>
         </div>
     </div>
-   
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for post in global_news_posts %}
-        <div class="relative">
+        <div class="relative bg-white rounded-lg shadow-lg overflow-hidden">
             {% if post.image %}
                 <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
             {% else %}
-                <p>No Image available</p>
+                <p class="text-center py-8">No Image available</p>
             {% endif %}
-            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/[0.90] to-transparent
-            flex items-center justify-center opacity-100 transition duration-300">
-                <div class="text-left text-gray-100 pt-10 px-4">
-                    <h3 class="text-lg font-bold">{{ post.title|truncatechars:70 }}</h3>
-                    <div class="meta text-sm text-gray-100 flex items-center mt-2">
-                        <p class="text-gray-100">
-                            <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 to-transparent flex items-end p-4">
+                <div class="text-left text-white w-full">
+                    <h3 class="text-lg md:text-xl font-bold">{{ post.title|truncatechars:70 }}</h3>
+                    <div class="meta text-sm flex justify-between items-center mt-2">
+                        <div class="date flex items-center space-x-1">
+                            <i class="fas fa-clock text-red-500 text-xs"></i>
                             <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
-                        </p>
+                        </div>
+                        <a href="{% url 'blog_detail' post.slug %}" class="inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Read More</a>
                     </div>
-                    <a href="{% url 'blog_detail' post.slug %}" class="mt-2 inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Read More</a>
                 </div>
             </div>
         </div>
@@ -71,5 +71,4 @@ function updatePostDates(selector) {
         console.log('Updated post date text:', postDate.textContent); // Debugging output
     });
 }
-
 </script>

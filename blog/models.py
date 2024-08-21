@@ -91,8 +91,9 @@ class Comment(models.Model):
 
 
 class Subscription(models.Model):
-    email = models.EmailField(unique=True)
-    date_subscribed = models.DateTimeField(default=timezone.now)
+    name = models.CharField(max_length=100, default='Anonymous')  # Adding a default value
+    email = models.EmailField(unique=True, max_length=100)
+    date_subscribed = models.DateTimeField('Date created', default=timezone.now)
 
     def __str__(self):
         return self.email

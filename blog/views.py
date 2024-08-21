@@ -11,7 +11,10 @@ from .forms import SubscriptionForm
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import json
-
+from django.contrib import messages
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 
 def index(request):
     exclusive_category = None
@@ -187,14 +190,34 @@ def category_list(request, slug):
     posts = BlogPost.objects.filter(category=category)
     return render(request, 'category_list.html', {'category': category, 'posts': posts})
 
-
 def subscribe(request):
     if request.method == 'POST':
-        form = SubscriptionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'message': 'Thank you for subscribing!'})
-        else:
-            return JsonResponse({'error': form.errors}, status=400)
-    else:
-        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+        name = request.POST.get('name', None)
+        email = request.POST.get('email', None)
+
+        # Validate the input
+        if not name or not email:
+            return JsonResponse({'error': "Please provide a valid name and email to subscribe."}, status=400)
+
+        # Check if the email is already associated with a registered user
+        if get_user_model().objects.filter(email=email).exists():
+            return JsonResponse({'error': f"The email {email} is already associated with a registered user. Please log in to subscribe or unsubscribe."}, status=400)
+
+        # Check if the email is already subscribed
+        if Subscription.objects.filter(email=email).exists():
+            return JsonResponse({'error': f"The email {email} is already subscribed."}, status=400)
+
+        # Validate the email format
+        try:
+            validate_email(email)
+        except ValidationError as e:
+            return JsonResponse({'error': e.messages[0]}, status=400)
+
+        # Create and save the subscription
+        Subscription.objects.create(name=name, email=email)
+        return JsonResponse({'success': True, 'message': f'Thank you, {name}! You have successfully subscribed with the email {email}.'})
+
+    # If the request is not POST, return an error
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+

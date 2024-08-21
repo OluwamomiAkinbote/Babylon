@@ -28,4 +28,4 @@ class CommentForm(forms.ModelForm):
 class SubscriptionForm(forms.ModelForm):
     class Meta:
         model = Subscription
-        fields = ['email']
+        fields = ['name','email']

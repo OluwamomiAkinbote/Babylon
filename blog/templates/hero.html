@@ -37,7 +37,7 @@
    
     <section class="relative bg-gray-100 ">
         <div class="container mx-auto">
-            <div class="relative">
+            <div class="relative font-helvetica">
                 <!-- Radio Buttons for Carousel Control -->
                 {% for i in hero_posts %}
                 <input type="radio" name="carousel" id="carousel-{{ forloop.counter }}" {% if forloop.first %}checked{% endif %}>
@@ -51,11 +51,11 @@
                     {% else %}
                     <img src="https://via.placeholder.com/800x400" alt="Placeholder image" class="w-full h-96 object-cover">
                     {% endif %}
-                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center">
+                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center ">
                         <div class="text-white p-8">
                             <span class="bg-red-500 px-2 py-1 text-sm uppercase font-bold">3 days ago</span>
-                            <h1 class="md:text-2xl sm:text-xl font-bold mt-4 w-2/3">{{ post.title }}</h1>
-                            <p class="mt-2">By {{ post.author }} <span class="text-gray-400">{{ post.published_date }}</span></p>
+                            <h1 class="md:text-5xl sm:text-3xl font-bold mt-4 md:w-3/5 sm:w-2/4 leading-8 mb-4">{{ post.title }}</h1>
+                            <p class="mt-2">By {{ post.author }} <span class="text-gray-400 font-[300]">{{ post.published_date }}</span></p>
                         </div>
                     </div>
                 </div>

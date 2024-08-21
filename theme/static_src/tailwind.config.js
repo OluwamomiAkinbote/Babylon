@@ -42,7 +42,9 @@ module.exports = {
                 cheltenham: ['"ITC Cheltenham Std"', 'serif'],
                 helvetica: ['Helvetica', 'sans-serif'],
                 bitter: ['Bitter', 'serif'],
+                poppins: ['Poppins', 'sans-serif'],
             },
+            
             screens: {
                 'xs': '345px',    // Extra small screen
                 'sm': '445px',    // Small screen
