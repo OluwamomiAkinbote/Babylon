@@ -35,19 +35,14 @@
             <div class="p-6 sm:col-span-2">
 
                 <!-- breadcrumb -->
-                <nav class="mb-8 text-xs font-poppins" aria-label="Breadcrumb">
-                    <ol class="list-none p-0 inline-flex">
+                <nav class="mb-4 text-xs sm:text-sm md:text-base font-poppins" aria-label="Breadcrumb">
+                    <ol class="list-none p-0 flex flex-wrap">
                         <li class="flex items-center">
                             <a href="{% url 'index' %}" class="text-gray-700 hover:text-gray-900">Home</a>
                             <i class="fas fa-angle-double-right mx-2 text-gray-950"></i>
                         </li>
-                
                         <li class="flex items-center">
                             <a href="{% url 'category_list' post.category.slug %}" class="text-gray-700 hover:text-gray-900">{{ post.category.name }}</a>
-                            <i class="fas fa-angle-double-right mx-2 text-gray-950"></i>
-                        </li>
-                        <li class="flex items-center text-gray-500">
-                            {{ post.title|truncatechars:40 }}
                         </li>
                     </ol>
                 </nav>
@@ -56,24 +51,27 @@
 
 
                 <!-- heading -->
-                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-helvetica leading-5 font-bold text-gray-950 mb-5">
+                <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold font-helvetica text-gray-900 mb-3 leading-tight sm:leading-none">
                     {{ post.title|title }}
                 </h1>
-                <div class="flex justify-between items-center mt-2 font-poppins">
-                    <div class="flex items-center space-x-4 font-medium text-gray-700 mt-4">
+                
+                
+                <div class="flex justify-between items-center  font-poppins">
+                    <div class="flex flex-col sm:flex-row items-center sm:space-x-4 font-medium text-gray-700 ">
                         <!-- Author Info -->
-                        <div class="flex items-center justify-center space-x-2">
-                            <p class="capitalize ">by</p>
-                            <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
+                        <div class="flex items-center justify-center space-x-2 sm:mb-0 mb-2">
+                            <p class="capitalize text-sm sm:text-base">by</p>
+                            <div class="w-5 h-5  rounded-full overflow-hidden bg-gray-200">
                                 <img src="{% static 'images/headshot 2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
                             </div>
-                            <p class="font-semibold text-gray-900">Scodynate News</p>
+                            <p class="font-semibold text-gray-900 text-sm sm:text-base">Scodynate News</p>
                         </div>
                         <!-- Date Info -->
-                        <div class="text-gray-600">
+                        <div class="text-gray-600 text-sm sm:text-base">
                             <p>{{ post.date }}</p>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="relative my-4">
                     {% if post.image %}
