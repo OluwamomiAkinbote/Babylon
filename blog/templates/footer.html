@@ -1,10 +1,13 @@
-<!-- Footer Template -->
+{% load static %}
 <footer class="bg-gray-950 text-white py-8">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- About Section -->
             <div>
-                <h3 class="text-xl font-semibold mb-4">About Us</h3>
+                <div class="logo">
+                    <img src="{% static 'images/logofooter.png' %}" alt="Logo" class="h-12 w-auto md:h-16 lg:h-20 object-contain">
+                </div>
+                
                 <p class="text-gray-400">Welcome to our blog! We provide insightful articles on a wide range of topics. Stay tuned for regular updates and in-depth content.</p>
             </div>
             <!-- Navigation Section -->

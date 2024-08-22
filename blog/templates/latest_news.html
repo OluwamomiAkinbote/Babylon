@@ -1,16 +1,16 @@
 {% load static %}
 
 <head>
-   
     <style>
         .list-disc-red li::marker {
             color: rgb(70, 9, 9);
         }
     </style>
 </head>
+
 <body>
     <div class="px-2 py-4 bg-white">
-        <!-- heading section -->
+        <!-- Heading Section -->
         <div class="section">
             <div class="heading">
                 <h2>LATEST NEWS</h2>
@@ -19,10 +19,10 @@
                 <div class="highlight"></div>
             </div>
         </div>
-    
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 ">
             <!-- Main Post -->
-            <div class="col-span-1 md:col-span-3 lg:col-span-1 main_post">
+            <div class="col-span-1 md:col-span-3 lg:col-span-1 main_post mt-4 pt-4">
                 {% if main_post %}
                     <div class="single_post mb-6">
                         <div class="relative">
@@ -34,7 +34,7 @@
                             <span class="absolute bottom-0 left-0 bg-red-600 text-white text-xs px-2 py-1">NEWS</span>
                         </div>
                         <div class="mt-4">
-                            <a href="{% url 'blog_detail' main_post.slug %}" class="text-xl font-semibold hover:underline">{{ main_post.title|truncatechars:80 }}</a>
+                            <a href="{% url 'blog_detail' main_post.slug %}" class="text-lg font-semibold hover:underline">{{ main_post.title|truncatechars:80 }}</a>
                             <div class="meta text-xs text-gray-600 flex items-center gap-2 mt-2">
                                 <div>
                                     <p>BY {{ main_post.author }}</p>
@@ -54,19 +54,18 @@
                     </div>
                 {% endif %}
             </div>
-    
-            <!-- Other Posts -->
-            <div class="col-span-1 other_posts grid grid-cols-1 gap-4">
-                {% for post in non_exclusive_posts %}
-                    <div class="flex items-center justify-center mb-1 border-b">
-                        {% if post.image %}
-                        <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-[120px] h-[86px] mr-4 object-cover">
 
+            <!-- Other Posts -->
+            <div class="col-span-1 other_posts grid grid-cols-1 gap-4 mt-4 pt-4">
+                {% for post in non_exclusive_posts %}
+                    <div class="flex items-center justify-center border-b">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-[120px] h-[86px] mr-4 object-cover">
                         {% else %}
-                            <p>No Image Available</p>
+                            <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class="w-[120px] h-[86px] mr-4 object-cover">
                         {% endif %}
                         <div class="md:w-2/3 sm:w-full">
-                            <a href="{% url 'blog_detail' post.slug %}" class="sm:text-[15px] font-semibold hover:underline tracking-tight">{{ post.title|truncatechars:80 }}</a>
+                            <a href="{% url 'blog_detail' post.slug %}" class="text-[14px] font-semibold hover:underline">{{ post.title|truncatechars:80 }}</a>
                             <div class="meta text-xs text-gray-600 flex items-center mt-2">
                                 <p class="text-gray-600">
                                     <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
@@ -77,62 +76,60 @@
                     </div>
                 {% endfor %}
             </div>
-    
-            <!-- Latest News List -->
-            <div class="col-span-1 latest_news_list border-t">
-                <ul class="list-disc list-inside list-disc-red">
-                    {% for post in exclusive_posts %}
-                        <li class="mb-2 border-b pb-2">
-                            <a href="{% url 'blog_detail' post.slug %}" class="sm:text-[15px] font-semibold hover:underline tracking-tight">{{ post.title|truncatechars:100 }}</a>
+
+            <!-- Exclusive Posts -->
+            <div class="col-span-1 latest_news_list border-t-2 mt-4 pt-4 border-gray-950">
+                {% for post in exclusive_posts %}
+                    <div class="flex items-start mb-2 border-b pb-2">
+                        <div class="w-3 h-3 rounded-full overflow-hidden border-2 bg-white border-green-800 shadow-sm mr-4">
+                            <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <a href="{% url 'blog_detail' post.slug %}" class="text-[14px] font-semibold hover:underline block">{{ post.title|truncatechars:100 }}</a>
                             <div class="meta text-xs text-gray-600 flex items-center mt-2">
-                                <p class="text-gray-600">
-                                    <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
-                                    <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
-                                </p>
+                                <i class="fas fa-clock text-red-500 text-[0.6rem] mr-1"></i>
+                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
                             </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePostDates('.post-date');  // Initialize date updating
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    updatePostDates('.post-date');  // Initialize date updating
+            setInterval(function() {
+                updatePostDates('.post-date');  // Update dates every second
+            }, 1000);
+        });
 
-    setInterval(function() {
-        updatePostDates('.post-date');  // Update dates every second
-    }, 1000);
-});
+        function updatePostDates(selector) {
+            var postDates = document.querySelectorAll(selector);
+            console.log('Updating post dates for elements:', postDates); // Debugging output
+            postDates.forEach(function(postDate) {
+                var dateElement = postDate.getAttribute('data-date');
+                console.log('Original data-date attribute:', dateElement); // Debugging output
+                var date = new Date(parseInt(dateElement) * 1000);  // Convert UNIX timestamp to milliseconds
+                var currentDate = new Date();
+                var secondsAgo = Math.floor((currentDate - date) / 1000);
 
-function updatePostDates(selector) {
-    var postDates = document.querySelectorAll(selector);
-    console.log('Updating post dates for elements:', postDates); // Debugging output
-    postDates.forEach(function(postDate) {
-        var dateElement = postDate.getAttribute('data-date');
-        console.log('Original data-date attribute:', dateElement); // Debugging output
-        var date = new Date(parseInt(dateElement) * 1000);  // Convert UNIX timestamp to milliseconds
-        var currentDate = new Date();
-        var secondsAgo = Math.floor((currentDate - date) / 1000);
-
-        if (secondsAgo < 60) {
-            postDate.textContent = secondsAgo + ' seconds ago';
-        } else if (secondsAgo < 3600) {
-            var minutesAgo = Math.floor(secondsAgo / 60);
-            postDate.textContent = minutesAgo + ' minutes ago';
-        } else if (secondsAgo < 86400) {
-            var hoursAgo = Math.floor(secondsAgo / 3600);
-            postDate.textContent = hoursAgo + ' hours ago';
-        } else {
-            // Default to the original date format if more than 24 hours ago
-            postDate.textContent = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                if (secondsAgo < 60) {
+                    postDate.textContent = secondsAgo + ' seconds ago';
+                } else if (secondsAgo < 3600) {
+                    var minutesAgo = Math.floor(secondsAgo / 60);
+                    postDate.textContent = minutesAgo + ' minutes ago';
+                } else if (secondsAgo < 86400) {
+                    var hoursAgo = Math.floor(secondsAgo / 3600);
+                    postDate.textContent = hoursAgo + ' hours ago';
+                } else {
+                    // Default to the original date format if more than 24 hours ago
+                    postDate.textContent = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                }
+                console.log('Updated post date text:', postDate.textContent); // Debugging output
+            });
         }
-        console.log('Updated post date text:', postDate.textContent); // Debugging output
-    });
-}
-
-</script>
+    </script>
 </body>
