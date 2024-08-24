@@ -1,0 +1,38 @@
+{% load static %}
+<body class="min-h-screen flex flex-col">
+    <div class="section">
+        <div class="heading">
+            <h2>RECENT NEWS</h2>
+        </div>
+        <div class="line">
+            <div class="highlight"></div>
+        </div>
+    </div>
+    
+    <div class="flex-grow">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-4">
+            {% for post in posts_from_five_days_ago %}
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-[200px] object-cover">
+                    {% else %}
+                        <img src="{% static 'images/Breakingnews.png' %}" alt="Breaking News" class="w-full h-[200px] object-cover">
+                    {% endif %}
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">
+                            {{ post.date | date:"F j, Y" }}
+                        </div>
+                        <h3 class="text-md font-semibold text-gray-800">{{ post.title }}</h3>
+                        <a href="{% url 'blog_detail' post.slug %}" class="inline-block mt-4 text-indigo-500 hover:underline">Read More</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="flex justify-center items-center mt-8">
+        <a href="{% url 'more_stories' %}" class="inline-block bg-indigo-500 text-white py-2 px-6 rounded-full hover:bg-indigo-600 transition duration-300">
+            See More Stories
+        </a>
+    </div>
+</body>

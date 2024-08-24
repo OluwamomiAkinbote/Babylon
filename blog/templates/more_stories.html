@@ -1,0 +1,91 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>More Stories</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="relative mx-auto">
+        <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
+            <!-- Header Section -->
+            {% block content %}
+                {% include 'header.html' %}
+            {% endblock %}
+        </header>   
+
+<div class="container mx-auto ">
+    <div class="flex flex-wrap -mx-4">
+        <!-- Main Content -->
+        <div class="w-full lg:w-8/12 px-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ">
+                {% for post in page_obj %}
+                    <div class="bg-white transition-shadow duration-300 border-b border-gray-950">
+                        <a href="{% url 'blog_detail' post.slug %}">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class= "w-full h-48 object-cover mb-4">
+                            {% else %}
+                                <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class= "w-full h-48 object-cover mb-4">
+                            {% endif %}
+                            
+                        </a>
+                        <div class="px-2">
+                            <h2 class="text-md font-bold mb-2 text-gray-800 hover:text-gray-600">
+                                <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                            </h2>
+                            <p class="text-gray-600 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
+                            <p class="text-gray-700 text-base leading-relaxed">{{ post.summary }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-8 flex justify-between items-center">
+                <p class="text-sm text-gray-700">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </p>
+                <nav class="inline-flex -space-x-px">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 border rounded-l-lg text-sm text-gray-700 bg-white hover:bg-gray-100">Previous</a>
+                    {% endif %}
+                    {% for page_num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == page_num %}
+                            <span class="px-3 py-2 border text-sm text-white bg-blue-500">{{ page_num }}</span>
+                        {% else %}
+                            <a href="?page={{ page_num }}" class="px-3 py-2 border text-sm text-gray-700 bg-white hover:bg-gray-100">{{ page_num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-2 border rounded-r-lg text-sm text-gray-700 bg-white hover:bg-gray-100">Next</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="w-full lg:w-4/12 px-4">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Trending Now</h2>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="#" class="flex items-center space-x-3">
+                            <img src="https://via.placeholder.com/80" alt="Trending story" class="w-20 h-16 object-cover rounded-lg">
+                            <div>
+                                <p class="text-gray-700 text-sm font-medium">Trending Story Title Goes Here</p>
+                                <p class="text-gray-500 text-xs">August 24, 2024</p>
+                            </div>
+                        </a>
+                    </li>
+                    <!-- Repeat for other trending stories -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

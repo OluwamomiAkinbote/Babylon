@@ -16,25 +16,24 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 
+
 def index(request):
     exclusive_category = None
     global_news_category = None
     videos_category = None
 
     try:
-        # Fetching the exclusive category by its name
         exclusive_category = Category.objects.get(name='Exclusive')
         exclusive_posts = BlogPost.objects.filter(category=exclusive_category).order_by('-date')[:5]
     except Category.DoesNotExist:
         exclusive_posts = []
 
     try:
-        # Fetching the global news category by its name
         global_news_category = Category.objects.get(name='Global News')
         global_news_posts = BlogPost.objects.filter(category=global_news_category).order_by('-date')[:6]
     except Category.DoesNotExist:
         global_news_posts = []
-    
+
     try: 
         videos_category = Category.objects.get(name='Videos')
         video_posts = Video.objects.filter(category=videos_category).order_by('-title')
@@ -52,6 +51,9 @@ def index(request):
         tech_posts = BlogPost.objects.filter(category=tech_category).order_by('-date')[:6]
     except Category.DoesNotExist:
         tech_posts = []
+
+    five_days_ago = timezone.now() - timedelta(days=5)
+    posts_from_five_days_ago = BlogPost.objects.filter(date__gte=five_days_ago).order_by('-date')[:12]
 
     all_posts = BlogPost.objects.all().order_by('-date')
     three_days_ago = timezone.now() - timedelta(days=3)
@@ -78,6 +80,7 @@ def index(request):
         'non_exclusive_posts': non_exclusive_posts[:4],  # Limit to 4 posts
         'exclusive_posts': exclusive_posts,
         'global_news_posts': global_news_posts,
+        'posts_from_five_days_ago': posts_from_five_days_ago,
         'categories': categories,
         'navbar_categories': navbar_categories,
         'video_posts': video_posts,
@@ -86,6 +89,29 @@ def index(request):
     }
 
     return render(request, 'index.html', context)
+
+
+
+
+def more_stories(request):
+    # Get the current date
+    today = timezone.now().date()
+    
+    # Filter posts to exclude today's posts
+    posts = BlogPost.objects.filter(date__lt=today).order_by('-date')
+    
+    # Paginate the filtered posts
+    paginator = Paginator(posts, 18)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Get all categories
+    categories = Category.objects.all()
+    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+    
+    return render(request, 'more_stories.html', {'page_obj': page_obj, 'categories': categories, 'navbar_categories': navbar_categories})
+
+
 
 
 
