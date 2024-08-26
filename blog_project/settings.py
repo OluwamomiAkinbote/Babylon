@@ -21,6 +21,8 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'colorfield',
+    'admin_interface',
     'django.contrib.admin',
     'jazzmin',
     'django.contrib.auth',
@@ -55,13 +57,48 @@ TINYMCE_DEFAULT_CONFIG = {
 
 
 JAZZMIN_SETTINGS = {
-    'site_title': 'Seven Rem',
-    'site_header': 'Seven Rem',
-    'welcome_sign': 'Welcome to Seven Rem Amin!',
-    'theme': 'material',  # 'light', 'dark', 'transparent', or 'material'
-    'navigation_menu': 'your_app.admin_menu.CustomMenu',
-    'site_logo': 'path/to/your/logo.png',
-    'site_logo_color': '#fff',
+    # Title to be displayed in the browser's title bar
+    'site_title': 'Seven Rem Admin',
+
+    # Title to be displayed on the login page and at the top of the admin interface
+    'site_header': 'Seven Rem Administration',
+
+    # Text to be displayed on the welcome sign on the dashboard
+    'welcome_sign': 'Welcome to Seven Rem Admin Panel!',
+
+    # Set the theme for the admin interface
+    'theme': 'material',  # Options: 'light', 'dark', 'transparent', 'material'
+
+    # Path to the logo image to be used in the admin interface
+    'site_logo': 'your_app/static/images/logo.png',  # Ensure this path is correct
+
+    # Set the color for the site logo (if applicable)
+    'site_logo_color': '#fff',  # Change if the logo should have a specific color filter
+
+    # Custom navigation menu (optional)
+    'navigation_menu': 'your_app.admin_menu.CustomMenu',  # Customize this if needed
+
+    # Hide the default sidebar and replace it with a custom one
+    'hide_sidebar': False,
+
+    # Links for the user menu (e.g., documentation, profile, etc.)
+    'user_menu_links': [
+        {'name': 'Support', 'url': 'https://support.yoursite.com', 'new_window': True},
+        {'name': 'Profile', 'url': '/admin/auth/user/', 'new_window': False},
+    ],
+
+    # Enable user avatar in the user menu
+    'show_user_avatar': True,
+
+    # Set custom top menu links
+    'topmenu_links': [
+        {'name': 'Home', 'url': 'admin:index', 'permissions': ['auth.view_user']},
+        {'name': 'Your App', 'url': '/admin/your_app/modelname/', 'permissions': ['your_app.view_modelname']},
+    ],
+
+    # Customize the appearance of the footer
+    'show_ui_builder': False,
+    'changeform_format': 'collapsible',  # 'single' or 'collapsible' for fieldsets
 }
 
 TAILWIND_APP_NAME = 'theme'
@@ -93,6 +130,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'blog_project.urls'
 

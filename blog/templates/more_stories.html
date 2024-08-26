@@ -8,7 +8,7 @@
     <title>More Stories</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class=" bg-white text-gray-900">
     <div class="relative mx-auto">
         <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
             <!-- Header Section -->
@@ -18,6 +18,7 @@
         </header>   
 
 <div class="container mx-auto ">
+    <h2 class="capitalize font-poppins font-bold text-4xl mb-8">more latest stories</h2>
     <div class="flex flex-wrap -mx-4">
         <!-- Main Content -->
         <div class="w-full lg:w-8/12 px-4">
@@ -26,18 +27,17 @@
                     <div class="bg-white transition-shadow duration-300 border-b border-gray-950">
                         <a href="{% url 'blog_detail' post.slug %}">
                             {% if post.image %}
-                                <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class= "w-full h-48 object-cover mb-4">
+                                <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class= "w-full h-44 object-cover mb-4">
                             {% else %}
-                                <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class= "w-full h-48 object-cover mb-4">
+                                <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class= "w-full h-44 object-cover mb-4">
                             {% endif %}
                             
                         </a>
                         <div class="px-2">
-                            <h2 class="text-md font-bold mb-2 text-gray-800 hover:text-gray-600">
+                            <h2 class="text-sm font-bold mb-2 text-gray-800 hover:text-gray-600">
                                 <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
                             </h2>
                             <p class="text-gray-600 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
-                            <p class="text-gray-700 text-base leading-relaxed">{{ post.summary }}</p>
                         </div>
                     </div>
                 {% endfor %}
