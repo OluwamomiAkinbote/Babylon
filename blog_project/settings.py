@@ -56,39 +56,13 @@ TINYMCE_DEFAULT_CONFIG = {
 
 
 JAZZMIN_SETTINGS = {
-    # Title for the site
-    'site_title': 'Scodynate News',
-
-    # Header for the site
-    'site_header': 'Scodynate News Admin',
-
-    # Welcome message on the admin dashboard
-    'welcome_sign': 'Welcome to the Scodynate News Admin Panel!',
-
-    # Theme options: 'light', 'dark', 'transparent', or 'material'
-    'theme': 'material',
-
-    # Path to the custom navigation menu if you have one
+    'site_title': 'ScodynateNews',
+    'site_header': 'Scodynate New',
+    'welcome_sign': 'Welcome to Scodynate News Amin!',
+    'theme': 'material',  # 'light', 'dark', 'transparent', or 'material'
     'navigation_menu': 'your_app.admin_menu.CustomMenu',
-
-    # Path to the logo image displayed in the admin panel
-    'site_logo': '/static/images/logoheader.png',
-
-    # Color of the logo in the admin panel
-    'site_logo_color': '#ffffff',
-
-    # Customizing the layout and appearance of the admin panel
-    'custom_css': '/static/css/custom_admin.css',  # Path to a custom CSS file for further customization
-    'custom_js': '/static/js/custom_admin.js',  # Path to a custom JS file for additional functionalities
-
-    # Enabling or disabling certain features in the admin interface
-    'show_sidebar': True,  # Show the sidebar in the admin interface
-    'show_navigation': True,  # Show the navigation menu
-    'show_search': True,  # Show the search bar
-    'search_fields': ['name', 'email', 'title'],  # Fields to include in the search functionality
-
-    # Customizing the footer text
-    'footer_text': '© 2024 Scodynate News. All rights reserved.',
+    'site_logo': 'path//images/logoheader.png',
+    'site_logo_color': '#fff',
 }
 
 TAILWIND_APP_NAME = 'theme'
