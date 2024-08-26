@@ -5,6 +5,19 @@
 </head>
 
 <body class="m-0 p-0">
+    <!-- top_bar.html -->
+    <div class="top-bar text-xs p-4 bg-gray-950 text-white flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+        <div class="datetime flex items-center space-x-2">
+            <i class="fas fa-calendar-day"></i>
+            <span>{{ current_time|date:"F j, Y | g:i a" }}</span>
+        </div>
+        <div class="email flex items-center space-x-2">
+            <i class="fas fa-envelope"></i>
+            <span>{{ email }}</span>
+        </div>
+    </div>
+
+
     <div class="bg-white shadow-md relative z-20 backdrop-blur-md bg-opacity-75">
         <!-- First Container: Social Links, Logo, and Search Bar -->
         <div class="py-4 flex justify-between items-center px-6 hidden sm:flex">

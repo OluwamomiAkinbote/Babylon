@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from random import choice, sample
 from .models import BlogPost, Category, Comment, Media, Video
-from datetime import timedelta
+from datetime import timedelta, datetime
 from .forms import CommentForm
 import random
 from .models import Subscription
@@ -86,6 +86,8 @@ def index(request):
         'video_posts': video_posts,
         'sport_posts': sport_posts,
         'tech_posts': tech_posts,
+        'current_time': datetime.now(),
+        'email': 'info@scodynatenews.com', 
     }
 
     return render(request, 'index.html', context)
@@ -108,8 +110,15 @@ def more_stories(request):
     # Get all categories
     categories = Category.objects.all()
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
-    
-    return render(request, 'more_stories.html', {'page_obj': page_obj, 'categories': categories, 'navbar_categories': navbar_categories})
+    context = {
+        'page_obj': page_obj, 
+        'categories': categories, 
+        'navbar_categories': navbar_categories,
+        'current_time': datetime.now(),
+        'email': 'info@scodynatenews.com',
+
+    }
+    return render(request, 'more_stories.html', context )
 
 
 
@@ -151,6 +160,8 @@ def blog_detail(request, slug):
         'navbar_categories': navbar_categories,
         'related_posts': related_posts,
         'recommended_posts': recommended_posts,
+        'current_time': datetime.now(),
+        'email': 'info@scodynatenews.com', 
     
     })
 

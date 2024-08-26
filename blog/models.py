@@ -48,7 +48,7 @@ class Video(models.Model):
     
 
 class BlogPost(models.Model):
-    title = models.CharField(max_length=500, unique=True)
+    title = models.TextField(blank=True, null=True)
     content = HTMLField()
     date = models.DateTimeField(auto_now_add=True)
     original_date = models.DateTimeField(default=timezone.now)
