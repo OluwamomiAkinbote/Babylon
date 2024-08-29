@@ -92,7 +92,9 @@ def index(request):
 
     return render(request, 'index.html', context)
 
-
+def video_detail(request, slug):
+    video = get_object_or_404(Video, slug=slug)
+    return render(request, 'video_details.html', {'video': video})
 
 
 def more_stories(request):
@@ -157,11 +159,11 @@ def blog_detail(request, slug):
         'post': post,
         'comments': comments,
         'form': form,
-        'navbar_categories': navbar_categories,
         'related_posts': related_posts,
         'recommended_posts': recommended_posts,
         'current_time': datetime.now(),
         'email': 'info@scodynatenews.com', 
+        'navbar_categories': navbar_categories,
     
     })
 
@@ -257,4 +259,15 @@ def subscribe(request):
     # If the request is not POST, return an error
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
-
+def search_view(request):
+    query = request.GET.get('query', '')
+    results = BlogPost.objects.filter(title__icontains=query)  
+    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+    context = {
+        'results': results, 
+        'query': query,
+        'current_time': datetime.now(),
+        'email': 'info@scodynatenews.com', 
+        'navbar_categories': navbar_categories,
+    }
+    return render(request, 'search_results.html', context)

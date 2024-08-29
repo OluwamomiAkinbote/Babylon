@@ -40,9 +40,12 @@
             
             <!-- Search Bar -->
             <div class="search flex">
-                <input id="search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button id="search-button" class="bg-blue-500 text-white rounded-r-md py-2 px-4 hover:bg-blue-600">Search</button>
+                <div class="search flex">
+                    <input id="search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 outline-none focus:ring-0">
+                    <button id="search-button" class="bg-[#10AA6A] text-white rounded-r-md py-2 px-4 hover:bg-green-800 focus:outline-none focus:ring-0">Search</button>
+                </div>
             </div>
+            
         </div>
         <!-- navbar on lg screen -->
         <div class="navbar md:flex hidden justify-between items-center text-gray-900 border-t border-b border-gray-900 px-6 py-2 font-semibold mb-4">
@@ -98,8 +101,8 @@
             </div>
         </div>
     </div>
-
     <script>
+        // Function to toggle the visibility of the navbar based on screen width
         function toggleNavbarVisibility() {
             const navbar = document.querySelector('.navbar');
             if (window.innerWidth < 657) {
@@ -108,21 +111,38 @@
                 navbar.style.display = 'flex';
             }
         }
-
+    
         // Initial check
         document.addEventListener('DOMContentLoaded', toggleNavbarVisibility);
-
+    
         // Check on window resize
         window.addEventListener('resize', toggleNavbarVisibility);
-
+    
+        // Toggle category container visibility
         document.getElementById('menu-button').addEventListener('click', function () {
             let categoryContainer = document.getElementById('category-container');
             categoryContainer.classList.toggle('hidden');
         });
-
+    
+        // Toggle search container visibility
         document.getElementById('search-toggle').addEventListener('click', function () {
             let searchContainer = document.getElementById('search-container');
             searchContainer.classList.toggle('hidden');
         });
+    
+        // Handle search functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchButton = document.getElementById('search-button');
+            const searchInput = document.getElementById('search-input');
+    
+            searchButton.addEventListener('click', function () {
+                const query = searchInput.value.trim();
+                if (query) {
+                    window.location.href = `/search/?query=${encodeURIComponent(query)}`;
+                }
+            });
+        });
     </script>
+    
+    
 </body>

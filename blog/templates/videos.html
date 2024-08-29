@@ -1,30 +1,99 @@
-<body >
-    <div class="section">
-        <div class="heading">
-            <h2>VIDEOS</h2>
-        </div>
-        <div class="line">
-            <div class="highlight"></div>
-        </div>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video List</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Heading -->
+    <div class="text-center py-8">
+        <h1 class="text-3xl font-bold text-gray-900">Video List</h1>
     </div>
     
-    <div class="video px-2 py-4 bg-gray-300">
-        <!-- heading section -->
-        <div class="video-posts grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <!-- Swiper Carousel -->
+    <div class="swiper-container container mx-auto px-4">
+        <div class="swiper-wrapper">
             {% for video in video_posts %}
-                <div class="video-item border rounded-lg p-4">
-                    {% if video.video_file %}
-                        <video width="100%" controls>
-                            <source src="{{ video.video_file.url }}" type="{{ video.video_file.content_type }}">
-                            Your browser does not support the video tag.
-                        </video>
-                    {% endif %}
-                    <div class="mt-2">
-                        <h3 class="text-lg font-semibold">{{ video.title }}</h3>
-                        <p class="text-sm text-gray-600">{{ video.description }}</p>
+                <div class="swiper-slide p-4">
+                    <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                        <img class="w-full h-48 object-cover cursor-pointer" data-video-src="{{ video.video_file.url }}" alt="{{ video.title }}">
+                        <div class="p-4 text-center">
+                            <p class="text-lg font-semibold text-gray-800">{{ video.title }}</p>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Navigation -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
     </div>
+
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var swiper = new Swiper('.swiper-container', {
+                slidesPerView: 1,
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+
+            // Generate thumbnails and handle redirection
+            const thumbnails = document.querySelectorAll('.swiper-slide img');
+
+            thumbnails.forEach(thumbnail => {
+                const videoUrl = thumbnail.getAttribute('data-video-src');
+                const video = document.createElement('video');
+                video.src = videoUrl;
+
+                video.addEventListener('loadeddata', function() {
+                    if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        const width = video.videoWidth;
+                        const height = video.videoHeight;
+                        canvas.width = width;
+                        canvas.height = height;
+                        context.drawImage(video, 0, 0, width, height);
+                        thumbnail.src = canvas.toDataURL('image/jpeg');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.swiper-slide').forEach(item => {
+                item.addEventListener('click', function() {
+                    const videoTitle = this.querySelector('p').textContent;
+                    window.location.href = `/videos/${videoTitle}/`;
+                });
+            });
+        });
+    </script>
 </body>
+</html>

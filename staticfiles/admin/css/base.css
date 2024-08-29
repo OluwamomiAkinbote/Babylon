@@ -6,7 +6,7 @@
 html[data-theme="light"],
 :root {
     --primary: #79aec8;
-    --secondary: #417690;
+    --secondary: #10AA6A;
     --accent: #f5dd5d;
     --primary-fg: #fff;
 
@@ -20,9 +20,9 @@ html[data-theme="light"],
     --header-bg: var(--secondary);
     --header-link-color: var(--primary-fg);
 
-    --breadcrumbs-fg: #c4dce8;
+    --breadcrumbs-fg: #cebb11;
     --breadcrumbs-link-fg: var(--body-bg);
-    --breadcrumbs-bg: #264b5d;
+    --breadcrumbs-bg: #051f2c;
 
     --link-fg: #417893;
     --link-hover-color: #036;
@@ -881,6 +881,7 @@ a.deletelink:focus, a.deletelink:hover {
 #footer {
     clear: both;
     padding: 10px;
+    color: #264b5d;
 }
 
 /* COLUMN TYPES */
@@ -908,7 +909,6 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 /* HEADER */
-
 #header {
     width: auto;
     height: auto;
@@ -916,12 +916,14 @@ a.deletelink:focus, a.deletelink:hover {
     justify-content: space-between;
     align-items: center;
     padding: 10px 40px;
-    background: var(--header-bg);
-    color: var(--header-color);
+    background: #F0F0F0;
+    /* background: var(--header-bg);
+    color: var(--header-color); */
 }
 
 #header a:link, #header a:visited, #logout-form button {
-    color: var(--header-link-color);
+    /* color: var(--header-link-color); */
+    color: #000;
 }
 
 #header a:focus , #header a:hover {
@@ -938,13 +940,17 @@ a.deletelink:focus, a.deletelink:hover {
     margin-inline-end: 20px;
     font-weight: 300;
     font-size: 1.5rem;
-    color: var(--header-branding-color);
+    color: #7a1f1f;
+    /* color: var(--header-branding-color); */
 }
 
 #site-name a:link, #site-name a:visited {
-    color: var(--accent);
+    color: var(--secondary);
 }
-
+#logo{
+    height: 3rem;
+    width: auto;
+}
 #branding h2 {
     padding: 0 10px;
     font-size: 0.875rem;
@@ -966,17 +972,24 @@ a.deletelink:focus, a.deletelink:hover {
     border: 0;
     cursor: pointer;
     font-family: var(--font-family-primary);
+    font-weight: 700;
+    border-radius: 5%; /* Makes the button round */
+    padding: 10px 15px; /* Adjust padding to control the size */
+    background-color: #228B22; /* Optional: Add a background color */
+    color: white; /* Optional: Add text color */
 }
+
 
 #user-tools {
     float: right;
     margin: 0 0 0 20px;
     text-align: right;
+    color: var(--secondary);
+    font-weight: 400;
+    padding: 0;
 }
 
 #user-tools, #logout-form button{
-    padding: 0;
-    font-weight: 300;
     font-size: 0.6875rem;
     letter-spacing: 0.5px;
     text-transform: uppercase;

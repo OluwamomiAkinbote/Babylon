@@ -36,15 +36,16 @@ class Video(models.Model):
     description = models.TextField(blank=True, null=True)
     video_file = FilerFileField(null=True, blank=True, related_name="video_files", on_delete=models.SET_NULL)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None, related_name='videos')
+    slug = models.SlugField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.category:
-            video_category, created = Category.objects.get_or_create(name='Videos')
-            self.category = video_category
+        if not self.slug:
+            self.slug = slugify(self.title)
         super(Video, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title
+
     
 
 class BlogPost(models.Model):

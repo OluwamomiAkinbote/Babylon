@@ -4,7 +4,9 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('subscribe/', views.subscribe, name='subscribe'),
+    path('search/', views.search_view, name='search_view'),
     path('category/<slug:slug>/', views.category_list, name='category_list'),
+    path('videos/<slug:slug>/', views.video_detail, name='video_detail'),
     path('<slug:slug>/comment/', views.add_comment, name='add_comment'),
     path('comment/<int:comment_id>/reply/', views.add_reply, name='add_reply'),
     path('like_comment/<int:comment_id>/', views.like_comment, name='like_comment'),

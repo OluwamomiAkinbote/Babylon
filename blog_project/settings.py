@@ -1,7 +1,9 @@
 from pathlib import Path
-import os
 from decouple import config, Csv
 import dj_database_url
+import os
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,13 +25,13 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
 
     'django.contrib.admin',
+    'blog',
     'jazzmin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog',
     'tailwind',
     'theme',
     'django_browser_reload',
@@ -117,17 +119,6 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_blog_rd98',
-        'USER': 'myuser',
-        'PASSWORD': 'nLzYH5bENpwecYC17YKC6B32hjMWqct0',
-        'HOST': 'dpg-cqjsvuggph6c739duh90-a.oregon-postgres.render.com',
-        'PORT': '5432',
-    }
-}
 
 
 DATABASES = {
