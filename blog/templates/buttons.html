@@ -1,0 +1,156 @@
+<head>
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{% if post.title %}{{ post.title }}{% else %}{{ trend.title }}{% endif %}">
+    <meta property="og:description" content="{% if post.excerpt %}{{ post.excerpt }}{% else %}{{ trend.excerpt }}{% endif %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="{% if post.image %}{{ post.image.url }}{% else %}{{ trend.image.url }}{% endif %}">
+    <meta property="og:site_name" content="Your Website Name">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% if post.title %}{{ post.title }}{% else %}{{ trend.title }}{% endif %}">
+    <meta name="twitter:description" content="{% if post.excerpt %}{{ post.excerpt }}{% else %}{{ trend.excerpt }}{% endif %}">
+    <meta name="twitter:image" content="{% if post.image %}{{ post.image.url }}{% else %}{{ trend.image.url }}{% endif %}">
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:site" content="@YourTwitterHandle">
+</head>
+
+<div class="flex flex-wrap items-center justify-start mb-2 space-x-4">
+    <!-- Share Button -->
+    <div class="relative">
+        <button id="share-button" class="px-4 py-2 bg-black border border-gray-700 text-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-200 text-xs sm:text-sm md:text-base">
+            <i class="fas fa-share-alt"></i>
+            <span class="ml-2">Share</span>
+        </button>
+    </div>
+
+    <!-- Font-Size Change Button -->
+    <div class="relative">
+        <button id="fontChangeButton" class="px-4 py-2 bg-black border border-gray-700 text-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-200 text-xs sm:text-sm md:text-base">
+            <i class="fas fa-font mr-2"></i>
+        </button>
+        <div id="fontSizeChangeText" class="hidden absolute whitespace-nowrap top-full left-0 mt-1 px-2 py-1 bg-black text-gray-50 text-xs rounded-md shadow-md">Change Font-Size</div>
+    </div>
+
+    <!-- Text Size Change Button -->
+    <div class="relative">
+        <button id="textSizeChangeButton" class="px-4 py-2 bg-black border border-gray-700 text-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-200 text-xs sm:text-sm md:text-base">
+            <i class="fas fa-text-height mr-2"></i>
+        </button>
+        <div id="textSizeChangeText" class="hidden absolute whitespace-nowrap top-full left-0 mt-1 px-2 py-1 bg-black text-gray-50 text-xs rounded-md shadow-md">Change Text Size</div>
+    </div>
+</div>
+
+<!-- Links Dropdown -->
+<div id="share-dropdown" class="hidden absolute mx-4 left-0 w-44 bg-white shadow-md rounded border border-gray-200 z-10">
+    <div class="p-2 text-xs">
+        <!-- Twitter Share -->
+        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-500 hover:bg-blue-100">
+            <i class="fab fa-x-twitter text-xs mr-2"></i> X(Twitter)
+        </a>
+        <!-- Facebook Share -->
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-600 hover:bg-blue-100">
+            <i class="fab fa-facebook-f text-xs mr-2"></i> Facebook
+        </a>
+        <!-- LinkedIn Share -->
+        <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-700 hover:bg-blue-100">
+            <i class="fab fa-linkedin-in text-xs mr-2"></i> LinkedIn
+        </a>
+        <!-- WhatsApp Share -->
+        <a href="https://api.whatsapp.com/send?text={% if post.title %}{{ post.title }}{% else %}{{ trend.title }}{% endif %}%20{{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-green-500 hover:bg-green-100">
+            <i class="fab fa-whatsapp text-xs mr-2"></i> WhatsApp
+        </a>
+        <!-- Copy Headline and Link -->
+        <button id="copy-link-button" onclick="copyLink()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+            <i class="fas fa-link text-xs mr-2"></i> Copy Link
+        </button>
+        <!-- Hidden confirmation message -->
+        <span id="copy-confirmation" class="hidden text-green-500 text-sm ml-2">Link copied!</span>
+    </div>
+</div>
+
+<script>
+    function copyLink() {
+        const headline = "{% if post.title %}{{ post.title }}{% elif video.title %}{{ video.title }}{% else %}{{ trend.title }}{% endif %}";
+
+        const link = window.location.href;
+        const combinedText = `${headline}\n${link}`;
+
+        const tempInput = document.createElement('textarea');
+        tempInput.value = combinedText;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+
+        const confirmation = document.getElementById('copy-confirmation');
+        confirmation.classList.remove('hidden');
+
+        const button = document.getElementById('copy-link-button');
+        button.innerHTML = '<i class="fas fa-link text-xs mr-2"></i> Copied!';
+
+        setTimeout(function() {
+            confirmation.classList.add('hidden');
+            button.innerHTML = '<i class="fas fa-link text-xs mr-2"></i> Copy Link';
+        }, 2000);
+    }
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const shareButton = document.getElementById('share-button');
+    const shareDropdown = document.getElementById('share-dropdown');
+
+    shareButton.addEventListener('click', function () {
+        shareDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!shareButton.contains(event.target) && !shareDropdown.contains(event.target)) {
+            shareDropdown.classList.add('hidden');
+        }
+    });
+
+    const contentContainer = document.getElementById("contentContainer");
+    const fontChangeButton = document.getElementById("fontChangeButton");
+    const textSizeChangeButton = document.getElementById("textSizeChangeButton");
+
+    const fonts = ["Poppins", "Roboto", "Arial", "Georgia", "Helvetica", "Times New Roman"];
+    let currentFontIndex = 0;
+
+    const textSizes = ["text-sm", "text-base", "text-lg", "text-xl"];
+    let currentTextSizeIndex = 1;
+
+    fontChangeButton.addEventListener("click", function () {
+        currentFontIndex = (currentFontIndex + 1) % fonts.length;
+        contentContainer.style.fontFamily = fonts[currentFontIndex];
+    });
+
+    textSizeChangeButton.addEventListener("click", function () {
+        textSizes.forEach(size => contentContainer.classList.remove(size));
+        currentTextSizeIndex = (currentTextSizeIndex + 1) % textSizes.length;
+        contentContainer.classList.add(textSizes[currentTextSizeIndex]);
+    });
+
+    const fontSizeChangeText = document.getElementById("fontSizeChangeText");
+    const textSizeChangeText = document.getElementById("textSizeChangeText");
+
+    fontChangeButton.addEventListener("mouseenter", function () {
+        fontSizeChangeText.classList.remove("hidden");
+    });
+
+    fontChangeButton.addEventListener("mouseleave", function () {
+        fontSizeChangeText.classList.add("hidden");
+    });
+
+    textSizeChangeButton.addEventListener("mouseenter", function () {
+        textSizeChangeText.classList.remove("hidden");
+    });
+
+    textSizeChangeButton.addEventListener("mouseleave", function () {
+        textSizeChangeText.classList.add("hidden");
+    });
+});
+</script>

@@ -1,16 +1,15 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('subscribe/', views.subscribe, name='subscribe'),
     path('search/', views.search_view, name='search_view'),
-    path('category/<slug:slug>/', views.category_list, name='category_list'),
-    path('videos/<slug:slug>/', views.video_detail, name='video_detail'),
-    path('<slug:slug>/comment/', views.add_comment, name='add_comment'),
-    path('comment/<int:comment_id>/reply/', views.add_reply, name='add_reply'),
-    path('like_comment/<int:comment_id>/', views.like_comment, name='like_comment'),
-    path('more_stories/', views.more_stories, name='more_stories'),  # New path for "More Stories"
+    path('get-suggestions/', views.get_suggestions, name='get_suggestions'),
+    path('more_stories/', views.more_stories, name='more_stories'),  
     path('<slug:slug>/', views.blog_detail, name='blog_detail'),
+     path('trend/<slug:slug>/', views.trend_detail, name='trend_detail'),
+    path('category/<slug:slug>/', views.category_list, name='category_list'),
+    path('videos/<slug:slug>/', views.video_detail, name='video_details'),
 ]
 

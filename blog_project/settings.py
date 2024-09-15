@@ -1,6 +1,5 @@
 from pathlib import Path
 from decouple import config, Csv
-import dj_database_url
 import os
 
 
@@ -25,13 +24,13 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
 
     'django.contrib.admin',
-    'blog',
     'jazzmin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'blog',
     'tailwind',
     'theme',
     'django_browser_reload',
@@ -44,7 +43,10 @@ INSTALLED_APPS = [
     'django_adminlte',
     'django_adminlte_theme',
     'django_celery_beat',
+    'django.contrib.sites', 
 ]
+
+SITE_ID = 1
 
 
 TINYMCE_DEFAULT_CONFIG = {
@@ -117,14 +119,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_project.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
 
 
 DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'scodynate',
+        'USER': 'root',  # Default MySQL user for XAMPP
+        'PASSWORD': '',  # Default password for MySQL in XAMPP
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -150,9 +157,9 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_TZ = True 
+# USE_I18N = True
 
-USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -176,10 +183,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'

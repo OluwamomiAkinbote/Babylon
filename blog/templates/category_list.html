@@ -1,36 +1,167 @@
+{% load static tailwind_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
+    <meta name="description" content="Explore the latest articles in the {{ category.name }} category on Scodynate News. Stay updated with expert insights and detailed coverage on {{ category.name }} topics." />
+    <meta name="keywords" content="Scodynate News, {{ category.name }}, {{ category.name }} news, latest {{ category.name }} updates" />
+
+
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <title>Scodynate News | Category | {{ category.name }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container mx-auto my-8 px-4">
-        <h1 class="text-4xl font-bold text-center mb-8">{{ category.name }}</h1>
-
-
-
-        
-        {% if posts %}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% for post in posts %}
-                    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h2 class="text-[1rem] font-semibold">{{ post.title | title }}</h2>
-                        </div>
-                        <div class="p-4">
-                            <p class="text-gray-500 text-[0.5rem]">{{ post.content| safe |truncatewords:20 }}</p>
-                            <a href="{% url 'blog_detail' post.slug %}" class="text-indigo-600 hover:text-indigo-800 font-semibold">Read more</a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="text-center text-gray-500">No posts available in this category.</p>
-        {% endif %}
+<body class="bg-white text-gray-900">
+    <div class="relative mx-auto">
+        <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
+            <!-- Header Section -->
+            {% block content %}
+                {% include 'header.html' %}
+            {% endblock %}
+        </header>
     </div>
-    
+
+    <div class="container mx-auto">
+        <h2 class="capitalize font-poppins font-bold text-4xl mb-8">{{ category.name }}</h2>
+
+        <div class="flex flex-wrap -mx-4">
+            <!-- Main Content -->
+            <div class="w-full lg:w-8/12 px-4">
+                {% if page_obj %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for post in page_obj %}
+                            <div class="bg-white transition-shadow duration-300  overflow-hidden">
+                                {% if post.video_file %}
+                                    <!-- Display video post -->
+                                    <div class="snap-center flex-shrink-0 w-full bg-black border-gray-300 rounded-md shadow-lg overflow-hidden">
+                                        <a href="{% url 'video_details' post.slug %}">
+                                            <div class="relative">
+                                                <img class="w-full h-48 object-cover cursor-pointer video-thumbnail" data-video-src="{{ post.video_file.url }}" alt="{{ post.title }}">
+                                                <div class="absolute inset-0 flex items-center justify-center">
+                                                    <i class="fas fa-play-circle text-white text-4xl bg-gray-800 bg-opacity-50 p-3 rounded-full"></i>
+                                                </div>
+                                            </div>
+                                            <div class="p-4 text-left">
+                                                <p class="text-sm font-medium text-white mb-4">{{ post.title }}</p>
+                                                <p class="text-xs font-light text-white">{{ post.date|date:"F j, Y" }}</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <!-- Display blog post -->
+                                    <a href="{% url 'blog_detail' post.slug %}">
+                                        {% if post.image %}
+                                            <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
+                                        {% else %}
+                                            <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-full h-44 object-cover mb-4">
+                                        {% endif %}
+                                    </a>
+                                    <div class="">
+                                        <h2 class="text-sm font-bold mb-2 text-gray-800 hover:text-gray-600">
+                                            <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                                        </h2>
+                                        <p class="text-gray-600 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
+                                        <a href="{% url 'blog_detail' post.slug %}" class="inline-block mb-4 px-4 py-2 text-white bg-red-800 rounded-md hover:bg-red-900 transition duration-300 ease-in-out transform hover:scale-105">
+                                            Read More
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="mt-8 flex justify-center items-center space-x-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                                &lt; PREV
+                            </a>
+                        {% else %}
+                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                                &lt; PREV
+                            </span>
+                        {% endif %}
+
+                        {% for page_num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == page_num %}
+                                <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-pink-500">
+                                    {{ page_num }}
+                                </span>
+                            {% else %}
+                                <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100">
+                                    {{ page_num }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                                NEXT &gt;
+                            </a>
+                        {% else %}
+                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                                NEXT &gt;
+                            </span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar -->
+            <div class="w-full lg:w-4/12 px-4">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">Trending Now</h2>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="#" class="flex items-center space-x-3">
+                                <img src="https://via.placeholder.com/80" alt="Trending story" class="w-20 h-16 object-cover rounded-lg">
+                                <div>
+                                    <p class="text-gray-700 text-sm font-medium">Trending Story Title</p>
+                                    <p class="text-gray-500 text-xs">August 24, 2024</p>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- Repeat for other trending stories -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer mt-8">
+        {% block footer %}
+            {% include 'footer.html' %}
+        {% endblock %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const thumbnails = document.querySelectorAll('.video-thumbnail');
+
+            thumbnails.forEach(thumbnail => {
+                const videoUrl = thumbnail.getAttribute('data-video-src');
+                const video = document.createElement('video');
+                video.src = videoUrl;
+
+                video.addEventListener('loadeddata', function() {
+                    if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        const width = video.videoWidth;
+                        const height = video.videoHeight;
+                        canvas.width = width;
+                        canvas.height = height;
+                        context.drawImage(video, 0, 0, width, height);
+                        thumbnail.src = canvas.toDataURL('image/jpeg');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

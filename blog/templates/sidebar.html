@@ -1,6 +1,74 @@
-<!-- blog/templates/blog/sidebar.html -->
-<div class="bg-white p-4 shadow">
-    <h2 class="text-xl font-bold mb-4">Sidebar</h2>
-    <p>This is the sidebar content.</p>
-    <!-- You can include additional sidebar content here -->
+{% load static %}
+
+
+<div class="p-6 sm:col-span-1">
+    <div>
+        <!-- heading -->
+        <div class="section flex-row items-center">
+            <div class="heading">
+                <h2 class="text-xs font-bold uppercase">Related</h2>
+            </div>
+            <div class="line">
+                <div class="highlight"></div>
+            </div>
+        </div>
+        <div>
+            {% for post in related_posts %}
+                <div class="mb-4 flex">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                {% else %}
+                    <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
+                {% endif %}
+                    <div>
+                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:80|title }}</a>
+                        <div class="meta text-xs text-gray-600 flex items-center mt-2">
+                            <p class="text-gray-600">
+                                <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
+                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No related posts available.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Recommended posts -->
+    <div>
+        <!-- heading -->
+        <div class="section flex-row items-center">
+            <div class="heading">
+                <h2 class="text-xs font-bold uppercase">Recommended</h2>
+            </div>
+            <div class="line">
+                <div class="highlight"></div>
+            </div>
+        </div>
+        <div>
+            {% for post in recommended_posts %}
+                <div class="mb-4 flex">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                {% else %}
+                    <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
+                {% endif %}
+                    <div>
+                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:80|title }}</a>
+                        <div class="meta text-xs text-gray-600 flex items-center mt-2">
+                            <p class="text-gray-600">
+                                <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
+                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No recommended posts available.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+</div>
 </div>

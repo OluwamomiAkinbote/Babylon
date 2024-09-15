@@ -1,0 +1,93 @@
+{% load static %}
+
+
+<!-- navigation on small screen -->
+<div>
+
+    <!-- Navigation: Menu Bar -->
+    <nav class="text-gray-900 border-t border-b border-gray-900 flex justify-between items-center sm:hidden p-4">
+        <!-- Menu Button -->
+        <button id="menu-button" class="text-xl font-bold transition-transform transform hover:scale-110">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Logo -->
+        <div class="logo">
+            <img src="{% static 'images/logoheader.png' %}" alt="Logo" class="h-10 w-auto md:h-12 object-contain transition-transform transform hover:scale-105">
+        </div>
+        
+        <!-- Search Toggle -->
+        <button id="search-toggle" class="text-xl transition-transform transform hover:scale-110">
+            <i class="fas fa-search"></i>
+        </button>
+    </nav>
+
+    <!-- Category Container -->
+    <div id="category-container" class="hidden bg-green-950/50 backdrop-blur-md text-white absolute left-0 py-2 w-48 shadow-lg sm:hidden transition-transform transform scale-100 ">
+        <ul class="flex flex-col space-y-2 capitalize">
+            <li class="hover:underline hover:text-gray-200 transition px-4 py-2 border-b border-gray-300">
+                <a href="/">Home</a>
+            </li>
+            {% for category in navbar_categories %}
+            <li class="hover:underline hover:text-gray-200 transition px-4 py-2 border-b border-gray-300">
+                <a href="{% url 'category_list' category.slug %}">{{ category.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div id="search-container" class="hidden bg-white/30 backdrop-blur-md absolute left-0 py-2 w-full border-t border-gray-300 sm:hidden px-6 transition-transform transform scale-100">
+        <div class="search flex w-full">
+            <input id="mobile-search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 w-full focus:outline-none focus:ring-0 text-sm" list="search-suggestions">
+            <datalist id="search-suggestions"></datalist>
+            <button id="mobile-search-button" class="bg-[#10AA6A] text-white rounded-r-md py-2 px-4 hover:bg-green-800 flex items-center justify-center focus:outline-none focus:ring-0">
+                <i class="fas fa-search text-sm"></i>
+            </button>
+        </div>
+    </div>
+    
+
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchButton = document.getElementById('mobile-search-button');
+        const searchInput = document.getElementById('mobile-search-input');
+        const suggestionList = document.getElementById('search-suggestions');
+        
+        // Function to fetch and update suggestions
+        function updateSuggestions(query) {
+            if (query.length > 0) {
+                fetch(`/get-suggestions/?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionList.innerHTML = ''; // Clear previous suggestions
+
+                        if (data.length > 0) {
+                            data.forEach(function (item) {
+                                const option = document.createElement('option');
+                                option.value = item;
+                                suggestionList.appendChild(option);
+                            });
+                        }
+                    });
+            } else {
+                suggestionList.innerHTML = ''; // Clear suggestions when query is empty
+            }
+        }
+
+        // Update suggestions on input
+        searchInput.addEventListener('input', function () {
+            const query = this.value;
+            updateSuggestions(query);
+        });
+
+        // Perform search on button click
+        searchButton.addEventListener('click', function () {
+            const query = searchInput.value.trim();
+            if (query) {
+                window.location.href = `/search/?query=${encodeURIComponent(query)}`;
+            }
+        });
+    });
+</script>
+

@@ -1,11 +1,8 @@
 {% load static %}
 
 <head>
-    <style>
-        .list-disc-red li::marker {
-            color: rgb(70, 9, 9);
-        }
-    </style>
+
+
 </head>
 
 <body>
@@ -20,7 +17,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 ">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Main Post -->
             <div class="col-span-1 md:col-span-3 lg:col-span-1 main_post mt-4 pt-4">
                 {% if main_post %}
@@ -29,19 +26,23 @@
                             {% if main_post.image %}
                                 <img src="{{ main_post.image.url }}" alt="{{ main_post.image.alt_text }}" class="w-full h-auto rounded-lg">
                             {% else %}
-                                <p>No Image Available</p>
+                                <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class="w-full h-auto rounded-lg">                                                 
                             {% endif %}
                             <span class="absolute bottom-0 left-0 bg-red-600 text-white text-xs px-2 py-1">NEWS</span>
                         </div>
                         <div class="mt-4">
                             <a href="{% url 'blog_detail' main_post.slug %}" class="text-xl font-semibold hover:underline">{{ main_post.title|truncatechars:80 }}</a>
-                            <div class="meta text-xs text-gray-600 flex items-center gap-2 mt-2">
-                                <div>
-                                    <p>BY {{ main_post.author }}</p>
+                            <div class="meta text-xs text-gray-600 flex flex-col gap-2 mt-2">
+                                <div class="flex  space-x-2 sm:mb-0 mb-2">
+                                    <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
+                                        <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
+                                    </div>
+                                    <p class="font-semibold text-gray-900 text-sm sm:text-base">Scodynate News</p>
                                 </div>
-                                <div>
+                                <!-- Date Info -->
+                                <div class="text-gray-600 text-sm sm:text-base">
                                     <p class="text-gray-600">
-                                        <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
+                                        <i class="fas fa-clock text-red-500 text-sm "></i>
                                         <span class="post-date" data-date="{{ main_post.date|date:'U' }}"></span>
                                     </p>
                                 </div>
@@ -55,7 +56,7 @@
                 {% endif %}
             </div>
 
-            <!-- Other Posts -->
+            <!-- Non-Exclusive Posts -->
             <div class="col-span-1 other_posts grid grid-cols-1 gap-4 mt-4 pt-4">
                 {% for post in non_exclusive_posts %}
                     <div class="flex items-center justify-center border-b">
@@ -99,20 +100,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            updatePostDates('.post-date');  // Initialize date updating
+            updatePostDates('.post-date');
 
             setInterval(function() {
-                updatePostDates('.post-date');  // Update dates every second
+                updatePostDates('.post-date');
             }, 1000);
         });
 
         function updatePostDates(selector) {
             var postDates = document.querySelectorAll(selector);
-            console.log('Updating post dates for elements:', postDates); // Debugging output
             postDates.forEach(function(postDate) {
                 var dateElement = postDate.getAttribute('data-date');
-                console.log('Original data-date attribute:', dateElement); // Debugging output
-                var date = new Date(parseInt(dateElement) * 1000);  // Convert UNIX timestamp to milliseconds
+                var date = new Date(parseInt(dateElement) * 1000);
                 var currentDate = new Date();
                 var secondsAgo = Math.floor((currentDate - date) / 1000);
 
@@ -125,10 +124,8 @@
                     var hoursAgo = Math.floor(secondsAgo / 3600);
                     postDate.textContent = hoursAgo + ' hours ago';
                 } else {
-                    // Default to the original date format if more than 24 hours ago
                     postDate.textContent = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
                 }
-                console.log('Updated post date text:', postDate.textContent); // Debugging output
             });
         }
     </script>

@@ -1,148 +1,26 @@
-{% load static %}
-
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-
-<div class="bg-white p-4 my-6 rounded-md shadow-md">
-    <h3 class="text-lg font-semibold text-red-800 mb-4">Comments</h3>
-    
-    <!-- Iterate over comments -->
-    {% for comment in comments %}
-        <div class="mb-4 border-b border-gray-200 pb-4">
-            <div class="flex items-start">
-                <!-- Avatar Image -->
-                {% if comment.author_name %}
-                    {% with comment.author_name|slice:":1" as first_initial %}
-                        {% with comment.author_name|slice:"1:2" as second_initial %}
-                            <div class="w-10 h-10 rounded-full mr-4 flex items-center justify-center bg-gray-300 text-white text-lg font-semibold">
-                                <span>{{ first_initial }}{{ second_initial }}</span>
-                            </div>
-                        {% endwith %}
-                    {% endwith %}
-                {% else %}
-                    <div class="w-10 h-10 rounded-full mr-4 flex items-center justify-center bg-gray-300 text-white text-lg font-semibold">
-                        <span>?</span>
-                    </div>
-                {% endif %}
-
-                <!-- Comment Body -->
-                <div class="w-full">
-                    <p class="text-sm text-gray-600">
-                        <strong>{{ comment.author_name }}</strong>
-                        <span class="text-xs text-gray-400">on {{ comment.date_posted }}</span>
-                    </p>
-                    <p class="text-gray-800">{{ comment.text }}</p>
-
-                    {% if request.user.is_authenticated %}
-                    <button class="like-button text-gray-500 hover:text-gray-700 mr-4" 
-                        data-comment-id="{{ comment.id }}"
-                        data-liked="{% if request.user.is_authenticated and request.user in comment.liked_by.all %}true{% else %}false{% endif %}">
-                        <i class="fas fa-thumbs-up"></i>
-                    </button>
-                    <span id="like-count-{{ comment.id }}" class="text-gray-500 like-count mr-4">{{ comment.likes_count }}</span>
-                    {% endif %}
-                
-                    <!-- Replies Button -->
-                    <button class="text-gray-600 hover:underline reply-toggle" data-comment-id="{{ comment.id }}">
-                        <i class="fas fa-reply"></i>
-                    </button>
-
-                    <!-- Display replies for each comment -->
-                    {% for reply in comment.replies.all %}
-                        <div class="ml-12 mt-2 bg-gray-100 p-3 rounded-md">
-                            <p class="text-sm text-gray-600">
-                                <strong>{{ reply.author_name }}</strong>
-                                <span class="text-xs text-gray-400">on {{ reply.date_posted }}</span>
-                            </p>
-                            <p class="text-gray-800">{{ reply.text }}</p>
-                        </div>
-                    {% endfor %}
-
-                    <!-- Reply Button and Form (initially hidden) -->
-                    <div class="mt-2 reply-form hidden" id="reply-form-{{ comment.id }}">
-                        <form method="POST" action="{% url 'add_reply' comment.id %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="parent_comment_id" value="{{ comment.id }}">
-                            <input type="text" name="author_name" placeholder="Your Name" class="w-full p-2 mb-2 border rounded-md">
-                            <input type="email" name="author_email" placeholder="Your Email" class="w-full p-2 mb-2 border rounded-md">
-                            <textarea name="text" placeholder="Your Reply" class="w-full p-2 mb-2 border rounded-md"></textarea>
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">Post Reply</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-    
-    <!-- Form to add a new comment -->
-    <div class="mt-4">
-        <h4 class="text-md font-semibold text-gray-900 mb-2">Leave a Comment</h4>
-        <form method="POST" action="{% url 'add_comment' post.slug %}">
-            {% csrf_token %}
-            <input type="text" name="author_name" placeholder="Your Name" class="w-full p-2 mb-2 border border-gray-300 rounded-md">
-            <input type="email" name="author_email" placeholder="Your Email" class="w-full p-2 mb-2 border border-gray-300 rounded-md">
-            <textarea name="text" placeholder="Your Comment" class="w-full p-2 mb-2 border border-gray-300 rounded-md"></textarea>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">Post Comment</button>
-        </form>
-    </div>
-</div>
-
-<!-- JavaScript for toggling reply forms -->
+<br>
+<br>
+<br>
+<hr>
+<br>
+<br>
+<br>
+<div id="disqus_thread"></div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.reply-toggle').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const commentId = this.dataset.commentId;
-                const form = document.getElementById(`reply-form-${commentId}`);
-                form.classList.toggle('hidden');
-            });
-        });
-    });
-
-    // JavaScript for like functionality
-    document.addEventListener('DOMContentLoaded', () => {
-        const likeButtons = document.querySelectorAll('.like-button');
-
-        likeButtons.forEach(button => {
-            button.addEventListener('click', async () => {
-                const commentId = button.getAttribute('data-comment-id');
-                const isLiked = button.getAttribute('data-liked') === 'true';
-                const likeCountElement = document.getElementById(`like-count-${commentId}`);
-
-                try {
-                    const response = await fetch(`/like_comment/${commentId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                        },
-                        body: JSON.stringify({ liked: !isLiked })
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-
-                        // Update the like count
-                        likeCountElement.textContent = data.likes_count;
-
-                        // Toggle button appearance
-                        if (isLiked) {
-                            button.classList.remove('text-red-500');
-                            button.classList.add('text-gray-500');
-                            button.setAttribute('data-liked', 'false');
-                        } else {
-                            button.classList.remove('text-gray-500');
-                            button.classList.add('text-red-500');
-                            button.setAttribute('data-liked', 'true');
-                        }
-                    } else {
-                        console.error('Failed to update like status.');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            });
-        });
-    });
+    var disqus_config = function () {
+        this.page.url = '{{ request.build_absolute_uri }}'; // Page URL
+        this.page.identifier = '{{ object.pk }}'; // Unique identifier for the page
+    };
+    (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://scodynatenews.disqus.com/embed.js'; // Your Disqus shortname
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
 </script>
+
+
+
+
+
+

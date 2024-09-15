@@ -1,0 +1,129 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <title>Scodynate | {{ trend.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+
+        #contentContainer {
+            max-width: 800px;
+            margin: 15px auto;
+            padding: 15px;
+            line-height: 1.75;
+            color: #333;
+        }
+
+        .first-letter {
+            color: #228B22;
+            font-size: 4rem;
+            font-weight: bold;
+            float: left;
+            margin-right: 10px;
+            line-height: 0.6;
+            padding-top: 0.15em;
+            padding-bottom: 0.15em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); 
+        }
+
+
+
+
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-20 bg-white bg-opacity-80 shadow-md backdrop-blur-md">
+        {% block content %}
+            {% include 'header.html' %}
+        {% endblock %}
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-wrap -mx-4">
+            
+            <!-- Trend Section -->
+            <div class="w-full lg:w-8/12 px-4 mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">{{ trend.title }}</h2>
+
+                <!-- Trend Media (Image/Video) -->
+                <div class="bg-white overflow-hidden mb-4">
+                    {% if trend.image %}
+                        <img src="{{ trend.image.url }}" alt="{{ trend.title }}" class="w-full object-cover">
+                    {% elif trend.video %}
+                        <video controls class="w-full h-auto">
+                            <source src="{{ trend.video.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% else %}
+                        <img src="#" alt="No media available" class="w-full object-cover">
+                    {% endif %}
+                </div>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center font-poppins mb-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-gray-700 font-medium">
+                        <!-- Author Info -->
+                        <div class="flex items-center space-x-2 mb-2 sm:mb-0">
+                            <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
+                                <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
+                            </div>
+                            <p class="font-semibold text-gray-900 text-sm sm:text-base">Scodynate News</p>
+                        </div>
+                        <!-- Date Info -->
+                        <div class="flex items-center space-x-2 text-gray-600 text-md sm:text-base font-md">
+                            <!-- Date Icon -->
+                            <i class="fas fa-calendar-day text-green-700"></i>
+                            <!-- Date Text -->
+                            <p>{{ trend.date|date:"F j, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div>
+                    {% include 'buttons.html' %}
+                </div>
+
+                <!-- Trend Description -->
+                <div id="contentContainer" >
+                
+                    {{ trend.content|first_letter_richtext | safe | linebreaks }}
+                
+               </div>
+                
+                <!-- Comments Section -->
+                <div class="mt-6">
+                    {% block comment&reply %}
+                        {% include 'comment&reply.html' %}
+                    {% endblock %}
+                </div>
+            </div>
+
+            <!-- Sidebar Section -->
+            <aside class="w-full lg:w-4/12 px-4">
+            
+            </aside>
+
+
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-white border-t border-gray-200 shadow-md">
+        {% block footer %}
+            {% include 'footer.html' %}
+        {% endblock %}
+    </footer>
+
+</body>
+</html>
+

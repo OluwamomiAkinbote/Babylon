@@ -2,14 +2,25 @@
 <footer class="bg-gray-950 text-white py-8">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- About Section -->
+<!-- About Section -->
             <div>
-                <div class="logo">
+                <div class="logo mb-4">
                     <img src="{% static 'images/logofooter.png' %}" alt="Logo" class="h-12 w-auto md:h-16 lg:h-20 object-contain">
                 </div>
                 
-                <p class="text-gray-400">Welcome to our blog! We provide insightful articles on a wide range of topics. Stay tuned for regular updates and in-depth content.</p>
+                <h3 class="text-gray-400">If You're Looking For:</h3>
+                <ul class="text-gray-400 list-disc pl-5">
+                    <li>Latest Nigeria News</li>
+                    <li>Global News</li>
+                    <li>Sports News</li>
+                    <li>Technology News</li>
+                    <li>Trending News</li>
+                    <li>Health</li>
+                    <li>Business, and more</li>
+                </ul>
+                <p class="text-gray-400 mt-2">Then you've come to the right place.</p>
             </div>
+
             <!-- Navigation Section -->
             <div>
                 <h3 class="text-xl font-semibold mb-4">Navigation</h3>
@@ -57,7 +68,8 @@
                     <i class="fab fa-linkedin-in"></i>
                 </a>
             </div>
-            <p class="text-gray-400">© 2024 My Blog. All rights reserved.</p>
+            <p class="text-gray-400">© 2024 - {% now "Y" %} Scodynate News. All rights reserved.</p>
+
         </div>
     </div>
 </footer>

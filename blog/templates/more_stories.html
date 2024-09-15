@@ -12,90 +12,89 @@
     <title>Scodynate | More Latest Stories</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class=" bg-white text-gray-900">
+<body class="bg-white text-gray-900">
     <div class="relative mx-auto">
         <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
             <!-- Header Section -->
             {% block content %}
                 {% include 'header.html' %}
             {% endblock %}
-        </header>   
+        </header>
+    </div>
 
-<div class="container mx-auto ">
-    <h2 class="capitalize font-poppins font-bold text-4xl mb-8">more latest stories</h2>
-    <div class="flex flex-wrap -mx-4">
-        <!-- Main Content -->
-        <div class="w-full lg:w-8/12 px-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ">
-                {% for post in page_obj %}
-                    <div class="bg-white transition-shadow duration-300 border-b border-gray-950">
-                        <a href="{% url 'blog_detail' post.slug %}">
-                            {% if post.image %}
-                                <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class= "w-full h-44 object-cover mb-4">
-                            {% else %}
-                                <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class= "w-full h-44 object-cover mb-4">
-                            {% endif %}
-                            
-                        </a>
-                        <div class="px-2">
-                            <h2 class="text-sm font-bold mb-2 text-gray-800 hover:text-gray-600">
-                                <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
-                            </h2>
-                            <p class="text-gray-600 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
+    <div class="container mx-auto px-4 mb-8">
+        <h2 class="capitalize font-poppins font-bold text-4xl mb-8">more latest stories</h2>
+
+        <div class="flex flex-wrap -mx-4">
+            <!-- Main Content -->
+            <div class="w-full lg:w-8/12 px-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {% for post in page_obj %}
+                        <div class="bg-white transition-shadow duration-300 border-b border-gray-950">
+                            <a href="{% url 'blog_detail' post.slug %}">
+                                {% if post.image %}
+                                    <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
+                                {% else %}
+                                    <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
+                                {% endif %}
+                            </a>
+                            <div class="px-2">
+                                <h2 class="text-sm font-bold mb-2 text-gray-800 hover:text-gray-600">
+                                    <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                                </h2>
+                                <p class="text-gray-600 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
+                    {% endfor %}
+                </div>
 
-            <!-- Pagination -->
-            <div class="mt-8 flex justify-between items-center">
-                <p class="text-sm text-gray-700">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                </p>
-                <nav class="inline-flex -space-x-px">
+                <!-- Pagination -->
+                <div class="mt-8 flex justify-center items-center space-x-2">
                     {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 border rounded-l-lg text-sm text-gray-700 bg-white hover:bg-gray-100">Previous</a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                            &lt; PREV
+                        </a>
+                    {% else %}
+                        <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                            &lt; PREV
+                        </span>
                     {% endif %}
+
                     {% for page_num in page_obj.paginator.page_range %}
                         {% if page_obj.number == page_num %}
-                            <span class="px-3 py-2 border text-sm text-white bg-blue-500">{{ page_num }}</span>
+                            <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
+                                {{ page_num }}
+                            </span>
                         {% else %}
-                            <a href="?page={{ page_num }}" class="px-3 py-2 border text-sm text-gray-700 bg-white hover:bg-gray-100">{{ page_num }}</a>
+                            <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100">
+                                {{ page_num }}
+                            </a>
                         {% endif %}
                     {% endfor %}
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-2 border rounded-r-lg text-sm text-gray-700 bg-white hover:bg-gray-100">Next</a>
-                    {% endif %}
-                </nav>
-            </div>
-        </div>
 
-        <!-- Sidebar -->
-        <div class="w-full lg:w-4/12 px-4">
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800">Trending Now</h2>
-                <ul class="space-y-4">
-                    <li>
-                        <a href="#" class="flex items-center space-x-3">
-                            <img src="https://via.placeholder.com/80" alt="Trending story" class="w-20 h-16 object-cover rounded-lg">
-                            <div>
-                                <p class="text-gray-700 text-sm font-medium">Trending Story Title Goes Here</p>
-                                <p class="text-gray-500 text-xs">August 24, 2024</p>
-                            </div>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                            NEXT &gt;
                         </a>
-                    </li>
-                    <!-- Repeat for other trending stories -->
-                </ul>
+                    {% else %}
+                        <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                            NEXT &gt;
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="w-full lg:w-4/12 px-4">
+               {% include 'trend.html' %}
             </div>
         </div>
     </div>
-</div>
 
-<div class="footer">
-    {% block footer %}
-      {% include 'footer.html' %}
-    {% endblock %}
-</div>
-
+    <div class="footer">
+        {% block footer %}
+            {% include 'footer.html' %}
+        {% endblock %}
+    </div>
 </body>
 </html>
