@@ -1,0 +1,52 @@
+{% load static %}
+
+
+<!-- navigation on small screen -->
+<div>
+
+    <!-- Navigation: Menu Bar -->
+    <nav class=" border-b border-green-100 flex justify-between items-center sm:hidden p-4">
+        <!-- Menu Button -->
+        <button id="menu-button" class="text-xl font-bold transition-transform transform hover:scale-110">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Logo -->
+        <div class="logo">
+            <img src="{% static 'images/logoheader.png' %}" alt="Logo" class="h-10 w-auto md:h-12 object-contain transition-transform transform hover:scale-105">
+        </div>
+        
+        <!-- Search Toggle -->
+        <button id="search-toggle" class="text-xl transition-transform transform hover:scale-110">
+            <i class="fas fa-search"></i>
+        </button>
+    </nav>
+
+    <!-- Category Container -->
+    <div id="category-container" class="hidden bg-green-100/50 backdrop-blur-md text-black absolute left-0 py-2 w-48 shadow-lg sm:hidden font-semibold transition-transform transform scale-100 ">
+        <ul class="flex flex-col space-y-2 capitalize">
+            <li class="hover:underline hover:text-green-800 transition px-4 py-2 border-b border-green-800">
+                <a href="/">Home</a>
+            </li>
+            {% for category in navbar_categories %}
+            <li class="hover:underline hover:text-green-800 transition px-4 py-2 border-b border-green-800">
+                <a href="{% url 'category_list' category.slug %}">{{ category.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div id="search-container" class="hidden bg-white/30 backdrop-blur-md absolute left-0 py-2 w-full border-t border-gray-300 sm:hidden px-6 transition-transform transform scale-100">
+        <div class="search flex w-full">
+            <input id="mobile-search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 w-full focus:outline-none focus:ring-0 text-sm" list="search-suggestions">
+            <datalist id="search-suggestions"></datalist>
+            <button id="mobile-search-button" class="bg-[#10AA6A] text-white rounded-r-md py-2 px-4 hover:bg-green-800 flex items-center justify-center focus:outline-none focus:ring-0">
+                <i class="fas fa-search text-sm"></i>
+            </button>
+        </div>
+    </div>
+    
+
+</div>
+<script src="{% static 'js/search.js'%}"></script>
+

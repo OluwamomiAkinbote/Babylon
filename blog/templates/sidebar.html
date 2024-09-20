@@ -1,7 +1,8 @@
 {% load static %}
 
-
-<div class="p-6 sm:col-span-1">
+<head>
+</head>
+<div class="p-6 sm:col-span-1 ">
     <div>
         <!-- heading -->
         <div class="section flex-row items-center">
@@ -21,11 +22,11 @@
                     <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                 {% endif %}
                     <div>
-                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:80|title }}</a>
+                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:50|title }}</a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <p class="text-gray-600">
                                 <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
-                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                                <span class="text-gray-700 text-sm mb-2">{{ post.date|date:"F j, Y" }}</span>
                             </p>
                         </div>
                     </div>
@@ -55,11 +56,11 @@
                     <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                 {% endif %}
                     <div>
-                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:80|title }}</a>
+                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:50|title }}</a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <p class="text-gray-600">
                                 <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
-                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                                <span class="text-gray-700 text-sm mb-2">{{ post.date|date:"F j, Y" }}</span>
                             </p>
                         </div>
                     </div>

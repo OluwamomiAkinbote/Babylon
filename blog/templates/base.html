@@ -27,28 +27,39 @@
     <script src="https://cdn.tailwindcss.com"></script> 
 {% tailwind_css %}
 </head>
-<body class="font-bitter">
+<body class="font-helvetica">
     <div class="z-50 fixed w-full">
 
         {% block content %}
-          {% include 'header.html' %}
+          {% include 'header/header.html' %}
         {% endblock %}
     </div>
 
     
     
     <main class="container mx-auto sm:py-8 py-2">
+
         <div class="mt-44">
+
+            {% include 'advert/advert.html' with banner=leaderboard_ad %}
+        </div>
+        <div class="mt-24">
             {% block hero_posts %}
                 <!-- Default latest news content -->
             {% endblock %}
         </div>
+
+
+
         
         <div class="">
             {% block latest_news %}
             <!-- Default latest news content -->
             {% endblock %}
         </div>
+
+        {% include 'advert/advert.html' with banner=home_ad %}
+        
         <div class="">
             {% block global_news %}
               {% include 'global_news.html' %}
@@ -64,13 +75,14 @@
               {% include 'videos.html' %}
             {% endblock %}
         </div>
-        <div class="font-helvetica">
+        <div class="font-poppins">
             {% block recentnews %}
               {% include 'recentnews.html' %}
             {% endblock %}
         </div>
-       
+    
     </main>
+
 
     <!-- footer -->
 

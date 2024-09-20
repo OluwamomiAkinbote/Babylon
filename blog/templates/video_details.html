@@ -3,10 +3,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scodynate | {{ video.title }}</title>
+    <title>Scodynate News | {{ video.title }}</title>
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
@@ -35,16 +36,17 @@
             line-height: 0.6;
             padding-top: 0.15em;
             padding-bottom: 0.15em;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
+
 <body class="bg-white text-gray-900">
 
     <!-- Header Section -->
     <header class="sticky top-0 z-20 bg-white bg-opacity-80 shadow-md backdrop-blur-md">
         {% block content %}
-            {% include 'header.html' %}
+        {% include 'header/header.html' %}
         {% endblock %}
     </header>
 
@@ -55,46 +57,47 @@
             <!-- Video Player Section -->
             <div class="w-full lg:w-8/12 px-4 mb-8">
                 <h2 class="text-4xl font-bold text-gray-900 mb-8">{{ video.title }}</h2>
-                <div class="bg-white overflow-hidden">
-                    <video controls class="w-full h-auto">
+
+
+                <div class="bg-green-50">
+                    <video controls class="w-full h-auto ">
                         <source src="{{ video.video_file.url }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
+                    <!-- Author and Date Info -->
                     <div class="flex flex-col sm:flex-row items-start sm:items-center font-poppins my-4">
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-gray-700 font-medium">
-                            <!-- Author Info -->
-                            <div class="flex items-center space-x-2 mb-2 sm:mb-0">
-                                <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
-                                    <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
-                                </div>
-                                <p class="font-semibold text-gray-900 text-sm sm:text-base">Scodynate News</p>
+                        <div class="flex items-center space-x-2 mb-2 sm:mb-0">
+                            <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
+                                <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
                             </div>
-                            <!-- Date Info -->
-                            <div class="flex items-center space-x-2 text-gray-600 text-sm sm:text-base">
-                                <!-- Date Icon -->
-                                <i class="fas fa-calendar-day text-green-700"></i>
-                                <!-- Date Text -->
-                                <p>{{ video.date|date:"F j, Y" }}</p>
-                            </div>
+                            <p class="font-semibold text-gray-900 text-sm sm:text-base">Scodynate News</p>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-600 text-sm sm:text-base">
+                            <i class="fas fa-calendar-day text-green-700"></i>
+                            <p>{{ video.date|date:"F j, Y" }}</p>
                         </div>
                     </div>
 
+
                     <!-- Action Buttons -->
-                    <div>
-                        {% include 'buttons.html' %}
+                    {% include 'buttons.html' %}
+    
+                    <!-- Content -->
+                    <div id="contentContainer" class="py-0 overflow-hidden">
+                        {{ advert|first_letter_richtext | safe | linebreaks }}
                     </div>
 
-                    <!-- Video Description -->
-                    <div id="contentContainer">
-                        {{ video.description|first_letter_richtext|safe|linebreaks }}
-                    </div>
+                </div>
 
-                    <!-- Comments Section -->
-                    <div>
-                        {% block comment_reply %}
-                            {% include 'comment&reply.html' %}
-                        {% endblock %}
-                    </div>
+
+
+
+
+                <!-- Comments Section -->
+                <div>
+                    {% block comment_reply %}
+                    {% include 'comment&reply.html' %}
+                    {% endblock %}
                 </div>
             </div>
 
@@ -108,9 +111,10 @@
     <!-- Footer Section -->
     <footer class="bg-white border-t border-gray-200 shadow-md">
         {% block footer %}
-            {% include 'footer.html' %}
+        {% include 'footer.html' %}
         {% endblock %}
     </footer>
 
 </body>
+
 </html>

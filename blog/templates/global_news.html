@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="global_news px-2 py-4 bg-white font-helvetica">
+<div class="global_news px-2 py-4  font-helvetica">
     <!-- heading section -->
     <div class="section">
         <div class="heading">
@@ -11,24 +11,23 @@
         </div>
     </div>
     
-
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for post in global_news_posts %}
-        <div class="relative bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="relative bg-gray-800 rounded-lg shadow-lg overflow-hidden">
             {% if post.image %}
                 <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
             {% else %}
-                <p class="text-center py-8">No Image available</p>
+                <img src="{% static 'images/Breakingnews.png' %}" alt="Breaking News" class="w-full h-48 object-cover">
             {% endif %}
-            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 to-transparent flex items-end p-4">
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent flex items-end p-4">
                 <div class="text-left text-white w-full">
                     <h3 class="text-lg md:text-xl font-bold">{{ post.title|truncatechars:70 }}</h3>
                     <div class="meta text-sm flex justify-between items-center mt-2">
                         <div class="date flex items-center space-x-1">
-                            <i class="fas fa-clock text-red-500 text-xs"></i>
-                            <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                            <i class="fas fa-clock text-green-500 text-xs"></i>
+                            <span class="post-date" data-date="{{ post.date|date:'U' }}">{{ post.date|date:"F j, Y" }}</span>
                         </div>
-                        <a href="{% url 'blog_detail' post.slug %}" class="inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Read More</a>
+                        <a href="{% url 'blog_detail' post.slug %}" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded transition duration-300 ease-in-out transform hover:scale-105">Read More</a>
                     </div>
                 </div>
             </div>
@@ -36,6 +35,7 @@
         {% endfor %}
     </div>
 </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

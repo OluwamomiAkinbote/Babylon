@@ -13,10 +13,10 @@
     }
 
     .line {
-        @apply bg-gray-300 w-full h-0.5;
+        @apply bg-green-300 w-full h-0.5;
     }
 
     .highlight {
-        @apply bg-red-700 h-0.5 w-6;
+        @apply bg-green-800 h-0.5 w-6;
     }
 }

@@ -31,10 +31,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'advert',
     'tailwind',
     'theme',
     'django_browser_reload',
-    'django.contrib.humanize',
     'tinymce',
     'mptt',
     'polymorphic',
@@ -59,15 +59,7 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 
-JAZZMIN_SETTINGS = {
-    'site_title': 'ScodynateNews',
-    'site_header': 'Scodynate New',
-    'welcome_sign': 'Welcome to Scodynate News Amin!',
-    'theme': 'material',  # 'light', 'dark', 'transparent', or 'material'
-    'navigation_menu': 'your_app.admin_menu.CustomMenu',
-    'site_logo': 'path//images/logoheader.png',
-    'site_logo_color': '#fff',
-}
+
 
 TAILWIND_APP_NAME = 'theme'
 

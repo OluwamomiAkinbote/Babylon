@@ -1,0 +1,37 @@
+<!-- ad_banner.html -->
+<div class="container mx-auto px-4  ">
+    {% if banner %}
+        <div class="ad-banner bg-gray-300 mx-auto flex justify-center items-center ">
+            <a href="{{ banner.link }}" target="_blank" class="block w-full h-full">
+                {% if banner.video %}
+                    <!-- Video Ad -->
+                     <div class="flex justify-center items-center w-[350px] h-[250px] ">
+                         <video autoplay muted loop class=" w-[350px] h-[250px] object-cover">
+                             <source src="{{ banner.video.url }}" type="video/mp4">
+                             Your browser does not support the video tag.
+                         </video>
+
+                     </div>
+                {% else %}
+                    <!-- Image Ad -->
+                    <picture>
+                        <!-- Image for large screens (min-width: 768px) -->
+                        <source srcset="{{ banner.image_large.url }} 1x, {{ banner.image_large.url }} 2x" media="(min-width: 768px)">
+                        
+                        <!-- Image for medium screens (min-width: 448px) -->
+                        <source srcset="{{ banner.image_medium.url }} 1x, {{ banner.image_medium.url }} 2x" media="(min-width: 448px)">
+                        
+                        <!-- Default image for small screens (fallback) -->
+                        <img src="{{ banner.image_small.url }}" alt="Ad Banner" class="w-full h-full object-cover">
+                    </picture>
+                    
+                {% endif %}
+            </a>
+        </div>
+    {% else %}
+        <!-- Optional: Display a default banner or message if no active banner -->
+        <div class="ad-banner bg-gray-300 text-gray-700 py-2 px-4 text-center mx-auto ">
+            <p class="text-sm  ">Advertise with us!</p>
+        </div>
+    {% endif %}
+</div>

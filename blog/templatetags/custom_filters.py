@@ -18,3 +18,8 @@ def first_letter_richtext(content):
         soup.p.append(BeautifulSoup(f'<span class="first-letter">{first_letter}</span>{rest_of_content}', 'html.parser'))
 
     return mark_safe(str(soup))  # Return the modified content as safe HTML
+
+
+
+
+

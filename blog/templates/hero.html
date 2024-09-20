@@ -8,6 +8,7 @@
         input[name="carousel"] {
             display: none;
         }
+    
         input[name="carousel"]:nth-of-type(1):checked ~ .carousel-item:nth-of-type(1),
         input[name="carousel"]:nth-of-type(2):checked ~ .carousel-item:nth-of-type(2),
         input[name="carousel"]:nth-of-type(3):checked ~ .carousel-item:nth-of-type(3),
@@ -16,26 +17,35 @@
         input[name="carousel"]:nth-of-type(6):checked ~ .carousel-item:nth-of-type(6) {
             display: block;
         }
+    
         .carousel-item {
             display: none;
         }
+    
         .carousel-control label {
             border: 2px solid white;
-            background-color: transparent;
+            background-color: transparent; /* Transparent by default */
             width: 12px;
             height: 12px;
             border-radius: 50%;
             display: inline-block;
             cursor: pointer;
         }
+    
         .carousel-control label:hover {
             background-color: white;
         }
+    
+        /* Style for the active label when the corresponding input is checked */
+        input[name="carousel"]:checked + label {
+            background-color: white;
+        }
     </style>
+    
 </head>
 <body>
    
-    <section class="relative bg-gray-100">
+    <section class="relative">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
             <!-- Hero Section (2/3 on larger screens) -->
             <div class="hero col-span-2">
@@ -48,32 +58,33 @@
                     <!-- Carousel Items -->
                     {% for post in hero_posts %}
                     <div class="carousel-item relative">
-                        <a href="{% url 'blog_detail' post.slug %}">
                             {% if post.image %}
                                 <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-64 md:h-96 object-cover">
                             {% else %}
                                 <img src="{% static 'images/Breakingnews.png' %}" alt="Placeholder image" class="w-full h-64 md:h-96 object-cover">
                             {% endif %}
                             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center">
-                                <div class="text-white p-8">
-                                    <span class="bg-red-500 px-2 py-1 text-sm uppercase font-bold">{{ post.date }}</span>
-                                    <h1 class="text-2xl md:text-5xl font-bold mt-4 md:w-3/5">{{ post.title | truncatechars:60 }}</h1>
+                                <div class="text-white p-4">
+                                    <span class="bg-red-500 px-2 py-1 text-xs uppercase font-bold">{{ post.date| date:"F j, Y" }}</span>
+                                    <a href="{% url 'blog_detail' post.slug %}">
+                                        
+                                        <h1 class="text-lg font-bold mt-4 md:w-3/5">{{ post.title | truncatechars:80 }}</h1>
+                                    </a>
                                     <div class="flex items-center mt-2 space-x-2">
-                                        <div class="w-8 h-8 rounded-full overflow-hidden border-2 bg-black border-white shadow-lg">
+                                        <div class="w-5 h-5 rounded-full overflow-hidden border-2 bg-black border-white shadow-lg">
                                             <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
                                         </div>
                                         <p class="text-sm font-semibold">Scodynate News</p>
                                     </div>
                                 </div>
                             </div>
-                        </a>
                     </div>
                     {% endfor %}
                     
                     <!-- Carousel Controls -->
                     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                         {% for i in hero_posts %}
-                        <label for="carousel-{{ forloop.counter }}" class="w-3 h-3 rounded-full bg-white cursor-pointer"></label>
+                        <label for="carousel-{{ forloop.counter }}" class="w-3 h-3 rounded-full bg-transparent border border-gray-100 cursor-pointer"></label>
                         {% endfor %}
                     </div>
                 </div>
@@ -84,6 +95,8 @@
 
                 {% include 'trend.html' %}
             </div>
+
+            
         </div>
     </section>
     

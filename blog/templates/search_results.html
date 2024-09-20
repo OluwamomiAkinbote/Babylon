@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'site.webmanifest' %}">
-    <title>Scodynate | Search Results</title>
+    <title>Scodynate News | Search Results</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-white text-gray-900">
@@ -17,21 +17,21 @@
         <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
             <!-- Header Section -->
             {% block content %}
-                {% include 'header.html' %}
+                {% include 'header/header.html' %}
             {% endblock %}
         </header>
     </div>
 
     <div class="container mx-auto ">
-<h2 class="capitalize font-poppins font-bold text-2xl sm:text-3xl md:text-4xl mb-8 mx-2 max-w-[46rem]">Search Results for "{{ query }}"</h2>
+        <h2 class="capitalize font-poppins font-bold text-2xl sm:text-3xl md:text-4xl mb-8 mx-2 max-w-[46rem]">Search Results for "{{ query }}"</h2>
 
-        <div class="flex flex-wrap ">
+        <div class="flex flex-wrap">
             <!-- Main Content -->
             <div class="w-full lg:w-8/12 px-4">
                 {% if results %}
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {% for result in results %}
-                            <div class="bg-white transition-shadow duration-300 border-b border-gray-950">
+                            <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-950">
                                 <a href="{% url 'blog_detail' result.slug %}">
                                     {% if result.image %}
                                         <img src="{{ result.image.url }}" alt="{{ result.title }}" class="w-full h-44 object-cover mb-4">
@@ -40,36 +40,52 @@
                                     {% endif %}
                                 </a>
                                 <div class="px-2">
-                                    <h2 class="text-sm font-bold mb-2 text-gray-800 hover:text-gray-600">
+                                    <h2 class="text-sm font-bold mb-2  text-white hover:text-green-500">
                                         <a href="{% url 'blog_detail' result.slug %}">{{ result.title }}</a>
                                     </h2>
-                                    <p class="text-gray-600 text-sm mb-2">{{ result.date|date:"F j, Y" }}</p>
-                                    <a href="{% url 'blog_detail' result.slug %}" class="text-indigo-600 hover:text-indigo-800 font-semibold">Read more</a>
+                                    <p class="text-green-400 text-sm mb-2">{{ result.date|date:"F j, Y" }}</p>
+                                    <a href="{% url 'blog_detail' result.slug %}" 
+                                    class="inline-block mb-4 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                                    Read More
+                                 </a>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-8 flex justify-between items-center">
-                        <p class="text-sm text-gray-700">
-                            Showing {{ results|length }} results
-                        </p>
-                        <nav class="inline-flex -space-x-px">
-                            {% if results.has_previous %}
-                                <a href="?page={{ results.previous_page_number }}" class="px-3 py-2 border rounded-l-lg text-sm text-gray-700 bg-white hover:bg-gray-100">Previous</a>
+                    <div class="mt-8 flex justify-center items-center space-x-2">
+                        {% if results.has_previous %}
+                            <a href="?page={{ results.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                                &lt; PREV
+                            </a>
+                        {% else %}
+                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                                &lt; PREV
+                            </span>
+                        {% endif %}
+
+                        {% for page_num in results.paginator.page_range %}
+                            {% if results.number == page_num %}
+                                <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
+                                    {{ page_num }}
+                                </span>
+                            {% else %}
+                                <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100">
+                                    {{ page_num }}
+                                </a>
                             {% endif %}
-                            {% for page_num in results.paginator.page_range %}
-                                {% if results.number == page_num %}
-                                    <span class="px-3 py-2 border text-sm text-white bg-blue-500">{{ page_num }}</span>
-                                {% else %}
-                                    <a href="?page={{ page_num }}" class="px-3 py-2 border text-sm text-gray-700 bg-white hover:bg-gray-100">{{ page_num }}</a>
-                                {% endif %}
-                            {% endfor %}
-                            {% if results.has_next %}
-                                <a href="?page={{ results.next_page_number }}" class="px-3 py-2 border rounded-r-lg text-sm text-gray-700 bg-white hover:bg-gray-100">Next</a>
-                            {% endif %}
-                        </nav>
+                        {% endfor %}
+
+                        {% if results.has_next %}
+                            <a href="?page={{ results.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                                NEXT &gt;
+                            </a>
+                        {% else %}
+                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                                NEXT &gt;
+                            </span>
+                        {% endif %}
                     </div>
                 {% else %}
                     <p class="text-center text-gray-500">No results found.</p>

@@ -13,11 +13,17 @@ from django.core.mail import send_mail
 from django.conf import settings
 from itertools import chain
 import random
+from advert.models import AdBanner, AdCategory
+from .utils import insert_ad_banner
+from django.http import JsonResponse
+from django.db.models import Q
+from .models import BlogPost, Trend
 
 
 def index(request):
     exclusive_category, global_news_category, videos_category = None, None, None
 
+    # Query blog categories and posts
     try:
         exclusive_category = Category.objects.get(name='Exclusive')
         exclusive_posts = BlogPost.objects.filter(category=exclusive_category).order_by('-date')[:5]
@@ -32,7 +38,7 @@ def index(request):
 
     try:
         videos_category = Category.objects.get(name='Videos')
-        video_posts = Video.objects.filter(category=videos_category).order_by('-title')
+        video_posts = Video.objects.filter(category=videos_category).order_by('-date')
     except Category.DoesNotExist:
         video_posts = []
 
@@ -48,8 +54,23 @@ def index(request):
     except Category.DoesNotExist:
         tech_posts = []
 
+    # Ads from the AdBanner model (leaderboard and sidebar)
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
+
+
     five_days_ago = timezone.now() - timedelta(days=5)
-    posts_from_five_days_ago = BlogPost.objects.filter(date__lte=five_days_ago).order_by('-date')[:12]
+    blogpost = BlogPost.objects.filter(date__lt=five_days_ago).order_by('-date')[:12]
+    trendpost = Trend.objects.filter(date__lt=five_days_ago).order_by('-date')[:12]
+    
+    posts_from_five_days_ago = sorted(
+    chain(blogpost, trendpost),
+    key=lambda post: post.date,
+    reverse=True
+)
+  
+
 
     all_posts = BlogPost.objects.all().order_by('-date')
     three_days_ago = timezone.now() - timedelta(days=3)
@@ -66,6 +87,7 @@ def index(request):
     non_exclusive_posts = non_exclusive_posts.exclude(category=global_news_category) if global_news_category else non_exclusive_posts
     trends = Trend.objects.all().order_by('-date')[:5]
 
+    # Context for the template
     context = {
         'main_post': main_post,
         'hero_posts': hero_posts,
@@ -81,6 +103,9 @@ def index(request):
         'trends': trends,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad,  
+        'home_ad': home_ad,  
     }
 
     return render(request, 'index.html', context)
@@ -93,34 +118,66 @@ def blog_detail(request, slug):
     recommended_posts = random.sample(list(all_other_posts), min(len(all_other_posts), 5))
 
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
 
-    return render(request, 'blog_detail.html', {
+    # Retrieve active ads and group them by category
+    ads = AdBanner.objects.filter(category=AdCategory.INLINE, active=True)
+
+    # Insert ads dynamically into the post content
+    advert_content = insert_ad_banner(post.content, ads)
+
+    context = {
         'post': post,
         'related_posts': related_posts,
         'recommended_posts': recommended_posts,
         'navbar_categories': navbar_categories,
+        'advert': advert_content,
         'current_time': timezone.now(),
         'email': 'contact@scodynatenews.com',
-    })
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad, 
+    }
+    
+    return render(request, 'blog_detail.html', context)
+
 
 
 def video_detail(request, slug):
     video = get_object_or_404(Video, slug=slug)
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
     trends = Trend.objects.all().order_by('-date')[:10]
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+        # Retrieve active ads and group them by category
+    ads = AdBanner.objects.filter(category=AdCategory.INLINE, active=True)
+
+    # Insert ads dynamically into the post content
+    advert_content = insert_ad_banner(video.description, ads)
 
     return render(request, 'video_details.html', {
         'video': video,
         'navbar_categories': navbar_categories,
         'trends': trends,
+        'advert': advert_content,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad, 
     })
 
 
 def more_stories(request):
-    today = timezone.now().date()
-    posts = BlogPost.objects.filter(date__lt=today).order_by('-date')
+    today=timezone.now() - timedelta(days=1)
+    
+    blogpost = BlogPost.objects.filter(date__lt=today).order_by('-date')
+    trendpost = Trend.objects.filter(date__lt=today).order_by('-date')
+    
+    posts = sorted(
+    chain(blogpost, trendpost),
+    key=lambda post: post.date,
+    reverse=True
+)
 
     paginator = Paginator(posts, 18)
     page_number = request.GET.get('page')
@@ -128,6 +185,8 @@ def more_stories(request):
 
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
     trends = Trend.objects.all().order_by('-date')[:10]
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
 
     return render(request, 'more_stories.html', {
         'page_obj': page_obj,
@@ -135,6 +194,8 @@ def more_stories(request):
         'trends': trends,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad, 
     })
 
 
@@ -144,6 +205,8 @@ def category_list(request, slug):
 
     blog_posts = BlogPost.objects.filter(category=category)
     video_posts = Video.objects.filter(category=category)
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
 
     posts = sorted(
         chain(blog_posts, video_posts),
@@ -162,6 +225,8 @@ def category_list(request, slug):
         'navbar_categories': navbar_categories,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad, 
     })
 
 
@@ -192,7 +257,20 @@ def subscribe(request):
 
 def search_view(request):
     query = request.GET.get('query', '')
-    results = BlogPost.objects.filter(title__icontains=query)
+    
+    # Perform a single query with both title and content using Q objects for BlogPost
+    blogpost_results = BlogPost.objects.filter(
+        Q(title__icontains=query) | Q(content__icontains=query)
+    )
+    
+    # Perform a single query with both title and content using Q objects for Trend
+    trend_results = Trend.objects.filter(
+        Q(title__icontains=query) | Q(content__icontains=query)
+    )
+    
+    # Combine the two querysets as lists
+    results = list(blogpost_results) + list(trend_results)
+    
 
     paginator = Paginator(results, 18)
     page_number = request.GET.get('page')
@@ -200,6 +278,8 @@ def search_view(request):
 
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
     trends = Trend.objects.all().order_by('-date')[:10]
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
 
     return render(request, 'search_results.html', {
         'results': results,
@@ -209,22 +289,50 @@ def search_view(request):
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
         'navbar_categories': navbar_categories,
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad, 
     })
+
 
 
 def get_suggestions(request):
     query = request.GET.get('query', '')
-    suggestions = BlogPost.objects.filter(title__icontains=query).values_list('title', flat=True)[:10] if query else []
-    return JsonResponse(list(suggestions), safe=False)
+
+    if query:
+        # Fetch BlogPost and Trend titles that match the query
+        blogpost_suggestions = BlogPost.objects.filter(
+            Q(title__icontains=query)
+        ).values_list('title', flat=True)[:5]  # Limit to 5 results from BlogPost
+
+        trend_suggestions = Trend.objects.filter(
+            Q(title__icontains=query)
+        ).values_list('title', flat=True)[:5]  # Limit to 5 results from Trend
+
+        # Combine both suggestions into a single list
+        suggestions = list(blogpost_suggestions) + list(trend_suggestions)
+    else:
+        suggestions = []
+
+    return JsonResponse(suggestions, safe=False)
+
 
 
 def trend_detail(request, slug):
     trend = get_object_or_404(Trend, slug=slug)
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    
+    ads = AdBanner.objects.filter(active=True)
+
+    advert_content = insert_ad_banner(trend.content, ads)
 
     return render(request, 'trend_detail.html', {
         'trend': trend,
+        'advert':advert_content,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
         'navbar_categories': navbar_categories,
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad, 
     })

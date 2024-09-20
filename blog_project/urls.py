@@ -10,6 +10,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')), 
+    path('advert/', include('advert.urls')), 
     path("__reload__/", include("django_browser_reload.urls")),
     path('filer/', include('filer.urls')),
     path('tinymce/', include('tinymce.urls')),

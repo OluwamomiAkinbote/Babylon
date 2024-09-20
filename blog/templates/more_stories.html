@@ -17,7 +17,7 @@
         <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
             <!-- Header Section -->
             {% block content %}
-                {% include 'header.html' %}
+                {% include 'header/header.html' %}
             {% endblock %}
         </header>
     </div>
@@ -30,7 +30,7 @@
             <div class="w-full lg:w-8/12 px-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {% for post in page_obj %}
-                        <div class="bg-white transition-shadow duration-300 border-b border-gray-950">
+                        <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl">
                             <a href="{% url 'blog_detail' post.slug %}">
                                 {% if post.image %}
                                     <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
@@ -39,10 +39,10 @@
                                 {% endif %}
                             </a>
                             <div class="px-2">
-                                <h2 class="text-sm font-bold mb-2 text-gray-800 hover:text-gray-600">
+                                <h2 class="text-sm font-bold mb-2 text-white hover:text-green-500">
                                     <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
                                 </h2>
-                                <p class="text-gray-600 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
+                                <p class="text-green-400 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
                             </div>
                         </div>
                     {% endfor %}
