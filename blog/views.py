@@ -120,6 +120,7 @@ def blog_detail(request, slug):
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
     leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
     sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
 
     # Retrieve active ads and group them by category
     ads = AdBanner.objects.filter(category=AdCategory.INLINE, active=True)
@@ -137,6 +138,7 @@ def blog_detail(request, slug):
         'email': 'contact@scodynatenews.com',
         'leaderboard_ad': leaderboard_ad, 
         'sidebar_ad': sidebar_ad, 
+        'home_ad': home_ad, 
     }
     
     return render(request, 'blog_detail.html', context)
@@ -149,6 +151,7 @@ def video_detail(request, slug):
     trends = Trend.objects.all().order_by('-date')[:10]
     leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
     sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
         # Retrieve active ads and group them by category
     ads = AdBanner.objects.filter(category=AdCategory.INLINE, active=True)
 
@@ -163,7 +166,8 @@ def video_detail(request, slug):
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
         'leaderboard_ad': leaderboard_ad, 
-        'sidebar_ad': sidebar_ad, 
+        'sidebar_ad': sidebar_ad,
+        'home_ad': home_ad,  
     })
 
 
@@ -187,6 +191,7 @@ def more_stories(request):
     trends = Trend.objects.all().order_by('-date')[:10]
     leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
     sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
 
     return render(request, 'more_stories.html', {
         'page_obj': page_obj,
@@ -195,18 +200,24 @@ def more_stories(request):
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
         'leaderboard_ad': leaderboard_ad, 
-        'sidebar_ad': sidebar_ad, 
+        'sidebar_ad': sidebar_ad,
+        'home_ad': home_ad,  
     })
 
 
 def category_list(request, slug):
     category = get_object_or_404(Category, slug=slug)
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+     
+    # Replace post.category with category
+    all_other_category = BlogPost.objects.exclude(category=category).exclude(slug=slug)
+    recommended_posts = random.sample(list(all_other_category), min(len(all_other_category), 5))
 
     blog_posts = BlogPost.objects.filter(category=category)
     video_posts = Video.objects.filter(category=category)
     leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
     sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
 
     posts = sorted(
         chain(blog_posts, video_posts),
@@ -222,12 +233,15 @@ def category_list(request, slug):
         'posts': posts,
         'page_obj': page_obj,
         'category': category,
+        'recommended_posts': recommended_posts,
         'navbar_categories': navbar_categories,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
         'leaderboard_ad': leaderboard_ad, 
-        'sidebar_ad': sidebar_ad, 
+        'sidebar_ad': sidebar_ad,
+        'home_ad': home_ad,  
     })
+
 
 
 def subscribe(request):
@@ -280,6 +294,7 @@ def search_view(request):
     trends = Trend.objects.all().order_by('-date')[:10]
     leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
     sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
 
     return render(request, 'search_results.html', {
         'results': results,
@@ -290,7 +305,8 @@ def search_view(request):
         'email': 'contact@scodynatenews.com',
         'navbar_categories': navbar_categories,
         'leaderboard_ad': leaderboard_ad, 
-        'sidebar_ad': sidebar_ad, 
+        'sidebar_ad': sidebar_ad,
+        'home_ad': home_ad,  
     })
 
 
@@ -319,9 +335,13 @@ def get_suggestions(request):
 
 def trend_detail(request, slug):
     trend = get_object_or_404(Trend, slug=slug)
+
+    posts = BlogPost.objects.all()
+    recommended_posts = random.sample(list(posts), min(len(posts), 5))
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
     leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
     sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
     
     ads = AdBanner.objects.filter(active=True)
 
@@ -330,9 +350,40 @@ def trend_detail(request, slug):
     return render(request, 'trend_detail.html', {
         'trend': trend,
         'advert':advert_content,
+        'recommended_posts':recommended_posts,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
         'navbar_categories': navbar_categories,
         'leaderboard_ad': leaderboard_ad, 
-        'sidebar_ad': sidebar_ad, 
+        'sidebar_ad': sidebar_ad,
+        'home_ad': home_ad,  
     })
+
+
+def privacy_policy(request):
+    posts = BlogPost.objects.all()
+    recommended_posts = random.sample(list(posts), min(len(posts), 5))
+
+    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
+    
+    ads = AdBanner.objects.filter(active=True)
+
+
+    context ={
+        'recommended_posts':recommended_posts,
+        'current_time': datetime.now(),
+        'email': 'contact@scodynatenews.com',
+        'navbar_categories': navbar_categories,
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad,
+        'home_ad': home_ad, 
+
+    }
+
+
+
+    return render(request, 'privacy_policy.html', context)

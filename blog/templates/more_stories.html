@@ -9,11 +9,13 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'site.webmanifest' %}">
-    <title>Scodynate | More Latest Stories</title>
+    <title>Scodynate  News | More Latest Stories</title>
     <script src="https://cdn.tailwindcss.com"></script>
+{% tailwind_css %}    
 </head>
-<body class="bg-white text-gray-900">
-    <div class="relative mx-auto">
+<body class="bg-white text-gray-900 font-poppins">
+    <div class="relative mx-auto ">
+        {% include 'advert/advert.html' with banner=leaderboard_ad %}
         <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
             <!-- Header Section -->
             {% block content %}
@@ -22,13 +24,13 @@
         </header>
     </div>
 
-    <div class="container mx-auto px-4 mb-8">
+    <div class="container mx-auto px-4 mb-8 font-poppins">
         <h2 class="capitalize font-poppins font-bold text-4xl mb-8">more latest stories</h2>
 
         <div class="flex flex-wrap -mx-4">
             <!-- Main Content -->
             <div class="w-full lg:w-8/12 px-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
                     {% for post in page_obj %}
                         <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl">
                             <a href="{% url 'blog_detail' post.slug %}">
@@ -46,10 +48,13 @@
                             </div>
                         </div>
                     {% endfor %}
+
                 </div>
 
+                {% include 'advert/advert.html' with banner=home_ad %}
+                
                 <!-- Pagination -->
-                <div class="mt-8 flex justify-center items-center space-x-2">
+                <div class="my-8 flex justify-center items-center space-x-2">
                     {% if page_obj.has_previous %}
                         <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
                             &lt; PREV
@@ -85,9 +90,16 @@
             </div>
 
             <!-- Sidebar -->
-            <div class="w-full lg:w-4/12 px-4">
-               {% include 'trend.html' %}
+            
+            <div class="w-full lg:w-4/12 px-4 ">
+                {% include 'advert/advert.html' with banner=sidebar_ad %}
+                <div class="my-8">
+                    {% include 'trend.html' %}
+
+                </div>
+               {% include 'advert/advert.html' with banner=home_ad %}
             </div>
+
         </div>
     </div>
 

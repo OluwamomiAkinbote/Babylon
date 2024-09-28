@@ -1,0 +1,241 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Scodynate News | Privacy Policy</title>
+    {% tailwind_css %}
+    <style>
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            cursor: pointer;
+            border-top: 2px solid #e2e8f0; /* Light border */
+            border-bottom: 2px solid #e2e8f0; 
+            transition: background-color 0.2s;
+        }
+
+       
+        .accordion-header:hover {
+            background-color: #edf2f7;
+            color: black;
+        }
+
+        .accordion-icon {
+            width: 20px; /* Icon size */
+            height: 20px;
+            color: #22C55E;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="z-50 sticky top-0 w-full">
+        {% include 'header/header.html' %}
+    </div>
+
+    <div class="flex container mx-auto my-20 font-poppins">
+        <div class="flex-1 p-4 mr-4">
+            <h1 class="text-4xl font-bold mb-4">Privacy Policy</h1>
+            <p class="mb-8 font-[300]">Last updated: September 28, 2024</p>
+
+
+            <p class="mb-4  ">At <strong>Scodynate News</strong>, we understand that protecting your privacy is critical to maintaining our relationship. This Privacy Commitment to communicate the principles that guide our approach your personal information.  It should be read with our Privacy Policy, which describes our specific practices with respect to personal information, including why we collect and use it, and with whom we share it.</p>
+
+            <div class="accordion">
+                <div class="information mb-4">
+                    <div class="accordion-header" onclick="toggleAccordion('info')">
+                        <h2 class="text-lg font-semibold flex items-center">
+                            <i class="fas fa-info-circle mr-2 text-green-500"></i> <!-- FontAwesome icon -->
+                            Information We Collect
+                        </h2>
+                        
+                        <i id="icon-info" class="accordion-icon fas fa-plus"></i>
+                    </div>
+                    <div id="info" class="accordion-content hidden mb-4">
+                        <p class="mb-2">When you interact with our website, we may collect the following types of personal information:</p>
+                        <ul class="list-disc list-inside mb-4">
+                            <li><strong>Comments:</strong> If you leave a comment via the Facebook Comments Plugin, we may collect your Facebook profile information, such as your name and profile picture, as well as any comments you post.</li>
+                            <li><strong>Cookies:</strong> We use cookies and similar technologies to enhance your experience on our website. These cookies may be set by Facebook when you use the comments feature.</li>
+
+                        </ul>
+                    </div>
+                </div>
+            
+                <div class="commenting-policy mb-4">
+                    <div class="accordion-header" onclick="toggleAccordion('commentingPolicy')">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-comment-alt mr-2 text-green-500"></i>
+                            Commenting Policy
+
+                        </h2>
+                        <i id="icon-commenting" class="accordion-icon fas fa-plus"></i>
+                    </div>
+                    <div id="commentingPolicy" class="accordion-content hidden mb-4">
+                        <p class="mb-4">Scodynate News invites readers to comment but requires civility and constructive dialogue. The site uses the <strong>Facebook Comments Plugin</strong>, which collects personal information, and logging in via Facebook is mandatory for participation.</p>
+
+                        <p class="mb-4">Comments are mostly post-moderated and can be removed if they violate guidelines. Users can report inappropriate comments using a drop-down menu, and moderators will review flagged content. Violations can also be reported to Facebook.</p>
+
+                        <p class="mb-4">Some stories may have disabled comments due to legal concerns. The site enforces a zero-tolerance policy for spam and commercial promotions, promptly banning offenders. Readers are encouraged to mark spam comments for moderation review. For data handling details, users can <a href="https://www.facebook.com/policy.php" target="_blank" class="text-blue-500 hover:underline">Facebook Data Policy</a>.</p>
+                    </div>
+                </div>
+            
+                <div class="information-usage mb-4">
+                    <div class="accordion-header" onclick="toggleAccordion('usage')">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-info-circle mr-2 text-green-500"></i>How We Use Your Information
+                        </h2>
+                        <i id="icon-usage" class="accordion-icon fas fa-plus"></i>
+                    </div>
+                    <div id="usage" class="accordion-content hidden mb-4">
+                        <p class="mb-2">We may use the information we collect to:</p>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>Respond to your comments or inquiries.</li>
+                            <li>Improve our website and services.</li>
+                            <li>Analyze user behavior on our website to enhance user experience.</li>
+                        </ul>
+                    </div>
+                </div>
+            
+                <div class="data-security mb-4">
+                    <div class="accordion-header" onclick="toggleAccordion('security')">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-lock mr-2 text-green-500"></i> Data Security
+                        </h2>
+                        
+                        <i id="icon-security" class="accordion-icon fas fa-plus"></i>
+                    </div>
+                    <div id="security" class="accordion-content hidden mb-4">
+                        <p class="mb-4">We take the security of your data seriously and employ appropriate security measures to protect your information from unauthorized access, alteration, or disclosure. However, please note that no method of online transmission is completely secure.</p>
+                    </div>
+                </div>
+            
+                <div class="your-rights mb-4">
+                    <div class="accordion-header" onclick="toggleAccordion('rights')">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-gavel mr-2 text-green-500"></i>Your Rights
+                        </h2>
+                        
+                        <i id="icon-rights" class="accordion-icon fas fa-plus"></i>
+                    </div>
+                    <div id="rights" class="accordion-content hidden mb-4">
+                        <p class="mb-2">You have the following rights regarding your personal information:</p>
+                        <ul class="list-disc list-inside mb-4">
+                            <li><strong>Access:</strong> You can request access to the personal information we hold about you.</li>
+                            <li><strong>Correction:</strong> You can request that we correct any inaccurate information.</li>
+                            <li><strong>Deletion:</strong> You can request that we delete your personal information, subject to certain exceptions.</li>
+                        </ul>
+                        <p class="mb-4">To exercise any of these rights, please contact us at the details provided below.</p>
+                    </div>
+                </div>
+            
+                <div class="changes-to-policy mb-4">
+                    <div class="accordion-header" onclick="toggleAccordion('changes')">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-edit mr-2 text-green-500"></i>Changes to This Policy
+                        </h2>
+                        
+                        <i id="icon-changes" class="accordion-icon fas fa-plus"></i>
+                    </div>
+                    <div id="changes" class="accordion-content hidden mb-4">
+                        <p class="mb-4">We may update this Privacy Policy from time to time. Any changes will be posted on this page with the updated effective date. We encourage you to review this policy periodically.</p>
+                    </div>
+                </div>
+            
+                <div class="contact-us mb-4">
+                    <div class="accordion-header" onclick="toggleAccordion('contact')">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-envelope mr-2 text-green-500"></i>Contact Us
+                        </h2>
+                        
+                        <i id="icon-contact" class="accordion-icon fas fa-plus"></i>
+                    </div>
+                    <div id="contact" class="accordion-content hidden mb-4">
+                        <p>If you have any questions about this Privacy Policy or how we handle your personal information, please contact us at:</p>
+                        <p class="mb-4">
+                            <strong>Scodynate News</strong><br>
+                            <strong>Email:</strong> <a href="mailto:newsscodynate@gmail.com" class="text-blue-500 hover:underline">newsscodynate@gmail.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-4/12 px-4">
+
+            {% include 'advert/advert.html' with banner=sidebar_ad %}
+           <!-- Recommended posts -->
+            <div class="my-8">
+                <!-- heading -->
+                <div class="section">
+                    <div class="heading">
+                        <h2 >Recommended</h2>
+                    </div>
+                    <div class="line">
+                        <div class="highlight"></div>
+                    </div>
+                </div>
+                <div>
+                    {% for post in recommended_posts %}
+                        <div class="mb-4 flex shadow-md ">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                        {% else %}
+                            <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
+                        {% endif %}
+                            <div>
+                                <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:50|title }}</a>
+                                <div class="meta text-xs text-gray-600 flex items-center mt-2">
+                                    <p class="text-gray-600">
+                                        <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
+                                        <span class="text-gray-700 text-sm mb-2">{{ post.date|date:"F j, Y" }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>No recommended posts available.</p>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            {% include 'advert/advert.html' with banner=home_ad %}
+            
+        </div>
+    </div>
+
+    <div class="footer">
+        {% block footer %}
+          {% include 'footer.html' %}
+        {% endblock %}
+    </div>
+
+    <script>
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-plus');
+                icon.classList.add('fa-minus');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-minus');
+                icon.classList.add('fa-plus');
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,26 +1,36 @@
-<br>
-<br>
-<br>
-<hr>
-<br>
-<br>
-<br>
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v16.0&appId=376703375532188&autoLogAppEvents=1"></script>
+
+
+
+
+<div class="max-w-3xl mx-auto mt-8 bg-green-50 p-4">
+    <p class="mb-6">By commenting, you agree to our <a href="{% url 'privacy_policy' %}" class="text-blue-500 ">commenting policy</a>.</p>
+
+    <div class="fb-comments " data-href="{{ request.build_absolute_uri }}" data-width="100%" data-numposts="5"></div>
+</div>
+
+
+
+
+<!-- 
+
+
+
 <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = '{{ request.build_absolute_uri }}'; // Page URL
-        this.page.identifier = '{{ object.pk }}'; // Unique identifier for the page
+        this.page.url = '{{ request.build_absolute_uri }}'; 
+        this.page.identifier = '{{ object.pk }}'; 
     };
     (function() {
         var d = document, s = d.createElement('script');
-        s.src = 'https://scodynatenews.disqus.com/embed.js'; // Your Disqus shortname
+        s.src = 'https://scodynatenews.disqus.com/embed.js'; 
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
 </script>
 
 
-
-
-
-
+-->

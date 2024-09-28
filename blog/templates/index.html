@@ -2,21 +2,39 @@
 {% extends 'base.html' %}
 
 
-{% block hero_posts %}
-    {% include 'hero.html' %}
-{% endblock %}
+{% block content %}
 
+  
+    <div class="mt-44">
 
-{% block latest_news %}
+        {% include 'advert/advert.html' with banner=leaderboard_ad %}
+    </div>
+
+    <div class="mt-24">
+        
+        {% include 'hero.html' %}
+
+    </div>
+
+ 
+
     {% include 'latest_news.html' %}
-{% endblock %}
 
-{% block sports %}
+    {% include 'advert/advert.html' with banner=home_ad %}
+
     {% include 'sports.html' %}
-{% endblock %}
 
-{% block videos %}
     {% include 'videos.html' %}
-{% endblock %}
+
+    {% include 'recentnews.html' %}
+
+
+
+
+
+{% endblock%}
+
+
+
 
 

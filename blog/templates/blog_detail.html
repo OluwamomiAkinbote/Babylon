@@ -1,5 +1,8 @@
+{% extends 'base.html' %}
 {% load static tailwind_tags %}
 {% load custom_filters %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +19,9 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM0s4HRZ06k6nyJ8Bwhe1g1dZ9IejdBBSskVQ2" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'js/date-utils.js' %}">
+    <script src="{% static 'js/date-utils.js' %}"></script>
+ 
+
     {% tailwind_css %}
     
     <style>
@@ -42,11 +47,9 @@
     </style>
 </head>
 <body class="bg-white">
-    <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
-        {% include 'header/header.html' %}
-    </header>
-
-    {% include 'advert/advert.html' with banner=leaderboard_ad %} 
+    <div class="mt-40">
+        {% include 'advert/advert.html' with banner=leaderboard_ad %}
+    </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 font-poppins overflow-hidden">  
         <div class="p-6 sm:col-span-2 overflow-hidden">
@@ -71,7 +74,7 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center font-poppins overflow-hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-gray-700 font-medium overflow-hidden">
                     <!-- Author Info -->
-                    <div class="flex items-center space-x-2 mb-2 sm:mb-0 overflow">
+                    <div class="flex items-center space-x-2 mb-2 sm:mb-0 overflow-hidden">
                         <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
                             <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
                         </div>
@@ -85,7 +88,8 @@
                 </div>
             </div>
 
-            <div class="bg-green-50">
+            <!-- Post Image -->
+            <div class="">
                 <div class="relative my-4">
                     {% if post.image %}
                         <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-auto">
@@ -96,32 +100,25 @@
                 
                 {% include 'buttons.html' %}
                 
-                <div id="contentContainer" class="py-0 overflow-hidden">
+                <!-- Post Content -->
+                <div id="contentContainer" class="py-0 overflow-hidden my-8">
                     {{ advert|first_letter_richtext | safe | linebreaks }}
                 </div>
+
+                {% include 'advert/advert.html' with banner=home_ad %}
             </div>
 
-            <div class="">
-                {% block comment&reply %}
-                    {% include 'comment&reply.html' %}
-                {% endblock %}
-            </div>
+            {% block comment&reply %}
+               {% include 'comment&reply.html' %}
+            {% endblock %}
         </div>
 
         <!-- Sidebar with related posts -->
-        <div class="">
-            {% block sidebar %}
-                {% include 'advert/advert.html' with banner=sidebar_ad %}
-                {% include 'sidebar.html' %}
-            {% endblock %}
+        <div>
+            {% include 'advert/advert.html' with banner=sidebar_ad %}
+            {% include 'sidebar.html' %}
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-gray-100 py-4">
-        {% block footer %}
-            {% include 'footer.html' %}
-        {% endblock %}
-    </footer>
 </body>
 </html>
+{% endblock %}

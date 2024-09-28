@@ -5,9 +5,9 @@
 <div class="p-6 sm:col-span-1 ">
     <div>
         <!-- heading -->
-        <div class="section flex-row items-center">
+        <div class="section">
             <div class="heading">
-                <h2 class="text-xs font-bold uppercase">Related</h2>
+                <h2 >Related</h2>
             </div>
             <div class="line">
                 <div class="highlight"></div>
@@ -15,14 +15,14 @@
         </div>
         <div>
             {% for post in related_posts %}
-                <div class="mb-4 flex">
+                <div class="mb-4 flex shadow-md">
                 {% if post.image %}
                     <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
                 {% else %}
                     <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                 {% endif %}
                     <div>
-                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:50|title }}</a>
+                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatewords:12|title }}</a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <p class="text-gray-600">
                                 <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
@@ -38,25 +38,25 @@
     </div>
     <!-- Recommended posts -->
     <div>
-        <!-- heading -->
-        <div class="section flex-row items-center">
+        <div class="section">
             <div class="heading">
-                <h2 class="text-xs font-bold uppercase">Recommended</h2>
+                <h2 >Recommended</h2>
             </div>
             <div class="line">
                 <div class="highlight"></div>
             </div>
         </div>
+        </div>
         <div>
             {% for post in recommended_posts %}
-                <div class="mb-4 flex">
+                <div class="mb-4 flex shadow-md">
                 {% if post.image %}
                     <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
                 {% else %}
                     <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                 {% endif %}
                     <div>
-                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:50|title }}</a>
+                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatewords:12|title }}</a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <p class="text-gray-600">
                                 <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
@@ -68,6 +68,8 @@
             {% empty %}
                 <p>No recommended posts available.</p>
             {% endfor %}
+
+            {% include 'advert/advert.html' with banner=home_ad %}
         </div>
     </div>
 </div>

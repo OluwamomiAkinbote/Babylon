@@ -30,12 +30,22 @@
             <div>
                 <h3 class="text-green-500 font-semibold mb-4">Quick Links</h3>
                 <ul class="space-y-2">
+                    <li>
+                        <a href="/privacy-policy" class="text-gray-400 hover:text-green-500 text-sm font-medium ">
+                            Privacy Policy
+                        </a>
+                    </li>
                     <li><a href="{% url 'index' %}" class="text-gray-400 hover:text-green-500 text-sm">Home</a></li>
                     {% for category in navbar_categories %}
-                        <li><a href="{% url 'category_list' category.slug %}" class="text-gray-400 hover:text-green-500">{{ category.name }}</a></li>
+                        <li>
+                            <a href="{% url 'category_list' category.slug %}" class="text-gray-400 hover:text-green-500 text-sm">
+                                {{ category.name }}
+                            </a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
+            
 
             <!-- Newsletter & Social Links -->
             <div>
@@ -57,14 +67,18 @@
                     <h4 class="text-gray-400 mb-4">Follow Us</h4>
                     <div class="flex space-x-3">
                         <!-- Facebook -->
-                        <a href="https://www.facebook.com" target="_blank" class="rounded-full bg-green-500 w-7 h-7 flex items-center justify-center hover:bg-green-600 transition">
+                        <a href="https://www.facebook.com/profile.php?id=61566210926783" target="_blank" class="rounded-full bg-green-500 w-7 h-7 flex items-center justify-center hover:bg-green-600 transition">
                             <i class="fab fa-facebook-f text-white text-lg"></i>
                         </a>
                         <!-- Twitter -->
-                        <a href="https://www.x.com" target="_blank" class="rounded-full bg-green-500 w-7 h-7 flex items-center justify-center hover:bg-green-600 transition">
+                        <a href="https://x.com/ScodynateNews" target="_blank" class="rounded-full bg-green-500 w-7 h-7 flex items-center justify-center hover:bg-green-600 transition">
                             <i class="fab fa-x-twitter text-white text-sm"></i>
                         </a>
-                        <!-- Add more social icons as needed -->
+                        <!-- gmail -->
+                        <a href="mailto:newsscodynate@gmail.com" target="_blank" class="rounded-full bg-green-500 w-7 h-7 flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fas fa-envelope text-white text-sm"></i>
+                        </a>
+                  
                     </div>
                 </div>
             </div>
@@ -72,8 +86,13 @@
 
         <!-- Footer Bottom -->
         <div class="mt-8 border-t border-gray-700 pt-4 text-center">
-            <p class="text-gray-400">© 2024 - {% now "Y" %} Scodynate News. All rights reserved.</p>
+            <p class="text-gray-400">
+                © 2024 - {% now "Y" %} Scodynate News. All rights reserved.
+                <br>
+
+            </p>
         </div>
+        
     </div>
 </footer>
 
