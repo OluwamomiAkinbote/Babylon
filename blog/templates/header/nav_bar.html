@@ -1,26 +1,112 @@
 {% load static %}
-
+<script src="{% static 'js/search.js'%}"></script>
 
 <!-- navigation on small screen -->
-<div>
 
-    <!-- Navigation: Menu Bar -->
-    <nav class=" border-b border-green-100 flex justify-between items-center sm:hidden p-4">
+    
+    <div class="border-b border-green-100 flex justify-between items-center sm:hidden p-4">
+
+
         <!-- Menu Button -->
-        <button id="menu-button" class="text-xl font-bold transition-transform transform hover:scale-110">
-            <i class="fas fa-bars"></i>
-        </button>
-        
+        <div class="flex flex-col items-center text-gray-600 hover:text-[#10AA6A] transition-colors">
+            <div class="flex items-center justify-center w-7 h-7 bg-[#10AA6A] rounded-full"> <!-- Brand Color -->
+                <button id="menu-button" class="text-sm transition-transform transform hover:scale-110 text-white">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+
         <!-- Logo -->
         <div class="logo">
             <img src="{% static 'images/logoheader.png' %}" alt="Logo" class="h-10 w-auto md:h-12 object-contain transition-transform transform hover:scale-105">
         </div>
-        
+
+
+    
         <!-- Search Toggle -->
         <button id="search-toggle" class="text-xl transition-transform transform hover:scale-110">
             <i class="fas fa-search"></i>
         </button>
-    </nav>
+        <div id="suggestion-box" class="hidden absolute top-14 left-0 right-0 bg-white shadow-lg border border-gray-300 max-h-56 overflow-y-auto"></div>
+    </div>
+    
+  
+    
+        
+    <div class="flex justify-between items-center space-x-6 py-4 bg-white shadow-lg px-6 sm:hidden backdrop-blur-md bg-opacity-75">
+    
+        <!-- Home Link -->
+        <div class="flex flex-col items-center text-gray-600 hover:text-[#10AA6A] transition-colors">
+            <div class="flex items-center justify-center w-7 h-7 bg-[#10AA6A] rounded-full"> <!-- Brand Color -->
+                <a href="/" class="text-sm transition-transform transform hover:scale-110 text-white">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+            <span class="text-sm font-semibold mt-1">Home</span>
+        </div>
+    
+        <!-- Trending Updates Link -->
+        <div class="flex flex-col items-center text-gray-600 hover:text-[#10AA6A] transition-colors">
+            <div class="flex items-center justify-center w-7 h-7 bg-[#10AA6A] rounded-full"> <!-- Brand Color -->
+                <a href="{% url 'trend_page'%}" class="text-sm transition-transform transform hover:scale-110 text-white">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                </a>
+            </div>
+            <span class="text-sm font-semibold mt-1">Trending</span>
+        </div>
+    
+        <!-- Videos Link with TV Icon -->
+        <div class="flex flex-col items-center text-gray-600 hover:text-[#10AA6A] transition-colors">
+            <div class="flex items-center justify-center w-7 h-7 bg-[#10AA6A] rounded-full"> <!-- Brand Color -->
+                <a href="{% url 'video_reels' %}" class="text-sm transition-transform transform hover:scale-110 text-white">
+                    <i class="fa-solid fa-video fa-beat"></i>
+                </a>
+            </div>
+            <span class="text-sm font-semibold mt-1">Videos</span>
+        </div>
+    
+        <!-- Shop Link -->
+        <div class="flex flex-col items-center text-gray-600 hover:text-[#10AA6A] transition-colors">
+            <div class="flex items-center justify-center w-7 h-7 bg-[#10AA6A] rounded-full"> <!-- Brand Color -->
+                <a href="{% url 'shop_index' %}" class="text-sm transition-transform transform hover:scale-110 text-white">
+                    <i class="fa-solid fa-store fa-fade"></i>
+                </a>
+            </div>
+            <span class="text-sm font-semibold mt-1">Shop</span>
+        </div>
+    
+    </div>
+    
+    
+    
+    
+
+
+
+
+
+    
+
+
+
+
+
+    <div id="search-container" class="hidden bg-white/30 backdrop-blur-md absolute left-0 py-2 w-full border-t border-gray-300 sm:hidden px-6 transition-transform transform scale-100">
+        <div class="search flex w-full">
+            <input id="mobile-search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 w-full focus:outline-none focus:ring-0 text-sm" list="search-suggestions">
+            <datalist id="search-suggestions"></datalist>
+            <button id="mobile-search-button" class="bg-[#10AA6A] text-white rounded-r-md py-2 px-4 hover:bg-green-800 flex items-center justify-center focus:outline-none focus:ring-0">
+                <i class="fas fa-search text-sm"></i>
+            </button>
+        </div>
+    </div>
+    
+
+</div>
+
+
+
 
     <!-- Category Container -->
     <div id="category-container" class="hidden bg-green-100/50 backdrop-blur-md text-black absolute left-0 py-2 w-48 shadow-lg sm:hidden font-semibold transition-transform transform scale-100 ">
@@ -36,22 +122,18 @@
         </ul>
 
         
-    </div>
-
-
-    
-
-    <div id="search-container" class="hidden bg-white/30 backdrop-blur-md absolute left-0 py-2 w-full border-t border-gray-300 sm:hidden px-6 transition-transform transform scale-100">
-        <div class="search flex w-full">
-            <input id="mobile-search-input" type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 w-full focus:outline-none focus:ring-0 text-sm" list="search-suggestions">
-            <datalist id="search-suggestions"></datalist>
-            <button id="mobile-search-button" class="bg-[#10AA6A] text-white rounded-r-md py-2 px-4 hover:bg-green-800 flex items-center justify-center focus:outline-none focus:ring-0">
-                <i class="fas fa-search text-sm"></i>
-            </button>
+        <div class="social-links flex space-x-4 text-gray-900">
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/profile.php?id=61566210926783" target="_blank" class="rounded-full bg-blue-100 w-7 h-7 flex items-center justify-center hover:bg-blue-200 transition">
+                <i class="fab fa-facebook-f text-blue-600"></i>
+            </a>
+            <!-- X (formerly Twitter) -->
+            <a href="https://x.com/ScodynateNews" target="_blank" class="rounded-full bg-gray-900 w-7 h-7 flex items-center justify-center hover:bg-gray-950 transition">
+                <i class="fab fa-x-twitter text-white"></i>
+            </a>
+            <!-- Gmail -->
+            <a href="mailto:newsscodynate@gmail.com" target="_blank" class="rounded-full bg-red-100 w-7 h-7 flex items-center justify-center hover:bg-red-200 transition">
+                <i class="fas fa-envelope text-red-600"></i>
+            </a>
         </div>
     </div>
-    
-
-</div>
-<script src="{% static 'js/search.js'%}"></script>
-

@@ -8,8 +8,6 @@
 <body class="font-helvetica">
 <!-- top_bar -->
 
-    {% include 'header/top_bar.html'%}
-
      
     <div class="bg-white shadow-md relative z-20 backdrop-blur-md bg-opacity-75">
         <!-- First Container: Social Links, Logo, and Search Bar -->
@@ -54,20 +52,36 @@
             
         </div>
         <!-- navbar on lg screen -->
-        <div class=" navbar md:flex hidden justify-between  bg-green-100 text-black items-center px-4 py-2 font-semibold mb-4 shadow-md text-sm">
-            <div class="home">
-                <a href="/">Home</a>
+        <div class="navbar md:flex hidden justify-between bg-green-100 text-black items-center p-4 font-semibold mb-4 shadow-md text-sm">
+            <div class="home flex items-center space-x-4">
+                <a href="/" class="flex items-center p-2 ">
+                    <div class="flex items-center justify-center bg-green-500 text-white rounded-full w-10 h-10">
+                        <i class="fas fa-home text-xl"></i> <!-- Adjust icon size here -->
+                    </div>
+                    <span class="text-lg ml-2">Home</span>
+                </a>
             </div>
+            
+            <div class="home flex items-center space-x-4">
+                <a href="{% url 'shop_index' %}" class="flex items-center p-2">
+                    <div class="flex items-center justify-center bg-green-500 text-white rounded-full w-10 h-10">
+                        <i class="fas fa-store text-xl"></i> <!-- Adjust icon size here -->
+                    </div>
+                    <span class="text-lg ml-2">Shop</span>
+                </a>
+            </div>
+            
             <div class="category">
-                <ul class="flex space-x-4 capitalize">
+                <ul class="flex space-x-6 capitalize">
                     {% for category in navbar_categories %}
-                    <li class="hover:underline hover:text-green-800 translate-x-1 px-2 py-2">
-                        <a href="{% url 'category_list' category.slug %}">{{ category.name }}</a>
+                    <li class="hover:underline hover:text-green-800 transition-colors">
+                        <a href="{% url 'category_list' category.slug %}" class="text-lg">{{ category.name }}</a>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
+        
         <!-- navigation on small screen -->
         <div>
 

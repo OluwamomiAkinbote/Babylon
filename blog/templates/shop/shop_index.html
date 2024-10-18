@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto py-8 my-40">
+    <div class="flex flex-col md:flex-row items-start">
+        <!-- Categories Filter -->
+        <aside class="md:w-1/4 mb-6 md:mb-0">
+            <h3 class="text-lg md:text-xl font-bold mb-4">Categories</h3>
+            <ul>
+                {% for category in categories %}
+                    <li class="mb-2">
+                        {% if category.get_subcategories %}
+                            <select class="block mt-2 w-full px-4 py-2 border rounded-lg" onchange="location = this.value;">
+                                <option value="">{{ category.name }}</option>
+                                {% for subcategory in category.get_subcategories %}
+                                    <option value="?category={{ subcategory.slug }}">
+                                        {{ subcategory.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+        <!-- Products Grid -->
+        <div class="md:w-3/4 md:pl-6">
+            <!-- Search and Sort -->
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <form method="GET" class="flex w-full md:w-auto mb-4 md:mb-0">
+                    <input type="text" name="search" placeholder="Search products..." class="px-4 py-2 border rounded-lg w-full md:w-64" value="{{ query }}">
+                    <button type="submit" class="ml-2 bg-blue-600 text-white px-4 py-2 rounded-lg">Search</button>
+                </form>
+
+            </div>
+
+            <!-- Product Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for product in products %}
+                    <div class="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                        <a href="{% url 'product_detail' product.slug %}">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h3 class="text-sm md:text-sm font-bold text-nowrap">{{ product.name }}</h3>
+
+                                <!-- Rating Section -->
+                                <div class="block mb-2">
+                                    <div class="text-xs md:text-xs my-1">
+                                        {% if product.rating >= 4.5 %}
+                                            <i class="fas fa-star text-yellow-500"></i>  {# Full star for 4.5 and above #}
+                                        {% elif product.rating >= 4.0 %}
+                                            <i class="fas fa-star text-yellow-500"></i>  {# Full star for 4.0 to 4.4 #}
+                                        {% elif product.rating >= 3.5 %}
+                                            <i class="fas fa-star-half-alt text-yellow-500"></i>  {# Half star for 3.5 to 3.9 #}
+                                        {% elif product.rating >= 3.0 %}
+                                            <i class="fas fa-star text-yellow-500"></i>  {# Full star for 3.0 to 3.4 #}
+                                        {% else %}
+                                            <i class="fas fa-star text-gray-300"></i>  {# Empty star for less than 3.0 #}
+                                        {% endif %}
+                                        <span class="text-gray-600">({{ product.rating }} )</span>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-gray-600 text-xs md:text-sm">
+                                            <i class="fas fa-shopping-cart mr-1"></i> <!-- Add the shopping cart icon here -->
+                                            {{ product.formatted_sales_count }}+ Sold Out
+                                        </p>
+                                    </div>
+                                    
+
+                                </div>
+
+                                <!-- Price Section -->
+                                <div class="sm:block text-xl font-semibold text-red-500 mb-2">
+                                    {% if product.discount_price %}
+                                        <p class="text-black text-lg">{{ product.formatted_discount_price }}</p>
+                                        
+                                    {% else %}
+                                        <p class="text-black text-lg">{{ product.formatted_price }}</p>
+                                    {% endif %}
+                                </div>
+                                
+                                
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

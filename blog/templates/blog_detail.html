@@ -47,9 +47,12 @@
     </style>
 </head>
 <body class="bg-white">
+   
     <div class="mt-40">
         {% include 'advert/advert.html' with banner=leaderboard_ad %}
     </div>
+
+   
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 font-poppins overflow-hidden">  
         <div class="p-6 sm:col-span-2 overflow-hidden">
@@ -108,6 +111,10 @@
                 {% include 'advert/advert.html' with banner=home_ad %}
             </div>
 
+            <div class="shop">
+                {% include 'shop/blog_shop.html' %}
+            </div>
+
             {% block comment&reply %}
                {% include 'comment&reply.html' %}
             {% endblock %}
@@ -119,6 +126,8 @@
             {% include 'sidebar.html' %}
         </div>
     </div>
+
+
 </body>
 </html>
 {% endblock %}

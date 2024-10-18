@@ -18,6 +18,7 @@ from .utils import insert_ad_banner
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import BlogPost, Trend
+from shop.models import Product
 
 
 def index(request):
@@ -86,6 +87,7 @@ def index(request):
     non_exclusive_posts = all_posts.exclude(category=exclusive_category) if exclusive_category else all_posts
     non_exclusive_posts = non_exclusive_posts.exclude(category=global_news_category) if global_news_category else non_exclusive_posts
     trends = Trend.objects.all().order_by('-date')[:5]
+    shop = Product.objects.all().order_by('?')[:12]
 
     # Context for the template
     context = {
@@ -101,6 +103,7 @@ def index(request):
         'sport_posts': sport_posts,
         'tech_posts': tech_posts,
         'trends': trends,
+        'shop': shop,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
         'leaderboard_ad': leaderboard_ad, 
@@ -127,6 +130,7 @@ def blog_detail(request, slug):
 
     # Insert ads dynamically into the post content
     advert_content = insert_ad_banner(post.content, ads)
+    shop = Product.objects.all().order_by('?')[:10]
 
     context = {
         'post': post,
@@ -134,6 +138,7 @@ def blog_detail(request, slug):
         'recommended_posts': recommended_posts,
         'navbar_categories': navbar_categories,
         'advert': advert_content,
+        'shop': shop,
         'current_time': timezone.now(),
         'email': 'contact@scodynatenews.com',
         'leaderboard_ad': leaderboard_ad, 
@@ -170,6 +175,16 @@ def video_detail(request, slug):
         'home_ad': home_ad,  
     })
 
+def video_reels(request):
+    video_posts = Video.objects.all().order_by('-date')  
+    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+
+    context={
+        'navbar_categories': navbar_categories,
+        'video_posts': video_posts,
+
+    }
+    return render(request, 'video_reels.html', context )
 
 def more_stories(request):
     today=timezone.now() - timedelta(days=1)
@@ -346,10 +361,12 @@ def trend_detail(request, slug):
     ads = AdBanner.objects.filter(active=True)
 
     advert_content = insert_ad_banner(trend.content, ads)
+    shop = Product.objects.all().order_by('?')[:12]
 
     return render(request, 'trend_detail.html', {
         'trend': trend,
         'advert':advert_content,
+        'shop':shop,
         'recommended_posts':recommended_posts,
         'current_time': datetime.now(),
         'email': 'contact@scodynatenews.com',
@@ -359,6 +376,41 @@ def trend_detail(request, slug):
         'home_ad': home_ad,  
     })
 
+
+
+
+
+
+def trend_page(request):
+    trend = Trend.objects.all().order_by('-date')
+
+
+    posts = BlogPost.objects.all()
+    recommended_posts = random.sample(list(posts), min(len(posts), 5))
+    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
+    
+    ads = AdBanner.objects.filter(active=True)
+
+
+    paginator = Paginator(trend, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context ={
+        'trend':trend,
+        'page_obj': page_obj,
+        'recommended_posts':recommended_posts,
+        'navbar_categories': navbar_categories,
+        'leaderboard_ad': leaderboard_ad, 
+        'sidebar_ad': sidebar_ad,
+        'home_ad': home_ad,  
+
+    }
+
+    return render(request, 'trend_page.html', context)
 
 def privacy_policy(request):
     posts = BlogPost.objects.all()

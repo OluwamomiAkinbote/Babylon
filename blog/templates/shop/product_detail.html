@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - Product Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-media {
+            width: 100%;
+            height: 500px;
+        }
+
+        .main-media img, .main-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnails {
+            display: flex;
+            margin-top: 10px;
+            flex-wrap: wrap; /* Allow thumbnails to wrap in smaller screens */
+        }
+
+        .thumbnail-item {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+            cursor: pointer;
+            object-fit: cover;
+        }
+
+        .thumbnail-item:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .main-media {
+                height: 300px; /* Smaller height for mobile devices */
+            }
+            .thumbnail-item {
+                width: 60px; /* Smaller thumbnails for mobile */
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .thumbnail-item {
+                width: 50px; /* Even smaller thumbnails for very small screens */
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto my-36">
+        <!-- Product Detail Container -->
+        <div class="bg-white p-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Product Gallery -->
+                <div class="product-gallery">
+                    <!-- Main display area -->
+                    <div id="main-display" class="main-media">
+                        {% if product.media.first.image %}
+                            <img id="main-image" src="{{ product.media.first.image.url }}" alt="{{ product.name }}">
+                        {% elif product.media.first.video %}
+                            <video id="main-video" controls autoplay>
+                                <source src="{{ product.media.first.video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% endif %}
+                    </div>
+
+                    <!-- Thumbnails -->
+                    <div class="thumbnails mt-5">
+                        {% for media in product.media.all %}
+                            {% if media.image %}
+                                <img class="thumbnail-item border" data-media-type="image" data-src="{{ media.image.url }}" src="{{ media.image.url }}" alt="{{ product.name }}">
+                            {% elif media.video %}
+                                <img class="thumbnail-item border" data-media-type="video" data-src="{{ media.video.url }}" src="{{ media.image.url }}" alt="{{ product.name }}">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Product Details container -->
+                <div class="product-details">
+                    <h1 class="text-sm font-bold mb-4">{{ product.name }}</h1>
+
+                    <div class="mb-4">
+                        {% if product.is_in_stock %}
+                            <span class="text-green-500">
+                                <i class="fas fa-check-circle mr-1"></i> In Stock
+                            </span>
+                        {% else %}
+                            <span class="text-red-500">
+                                <i class="fas fa-times-circle mr-1"></i> Out of Stock
+                            </span>
+                        {% endif %}
+                    </div>
+                                <!-- Rating Section -->
+                    <div class="flex items-center gap-4 mb-2">
+                        <div class="text-xs md:text-xs my-1">
+                            {% if product.rating >= 4.5 %}
+                                <i class="fas fa-star text-yellow-500"></i>  {# Full star for 4.5 and above #}
+                            {% elif product.rating >= 4.0 %}
+                                <i class="fas fa-star text-yellow-500"></i>  {# Full star for 4.0 to 4.4 #}
+                            {% elif product.rating >= 3.5 %}
+                                <i class="fas fa-star-half-alt text-yellow-500"></i>  {# Half star for 3.5 to 3.9 #}
+                            {% elif product.rating >= 3.0 %}
+                                <i class="fas fa-star text-yellow-500"></i>  {# Full star for 3.0 to 3.4 #}
+                            {% else %}
+                                <i class="fas fa-star text-gray-300"></i>  {# Empty star for less than 3.0 #}
+                            {% endif %}
+                            <span class="text-gray-600">({{ product.rating }} )</span>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-600 text-xs md:text-sm">
+                                <i class="fas fa-shopping-cart mr-1"></i> <!-- Add the shopping cart icon here -->
+                                {{ product.formatted_sales_count }}+ Sold Out
+                            </p>
+                        </div>
+                        
+
+                    </div>
+                    <div class="sm:block text-xl font-semibold  mb-2">
+                        <div class="flex items-center">
+                            {% if product.discount_price %}
+                                <p class="text-black text-2xl font-bold">{{ product.formatted_discount_price }}</p> <!-- Bigger discount price -->
+                                <span class="text-gray-500 text-sm line-through ml-2">{{ product.formatted_price }}</span> <!-- Smaller original price -->
+                            {% else %}
+                                <p class="text-black text-2xl font-bold">{{ product.formatted_price }}</p> <!-- Bigger price if no discount -->
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- order button -->
+                    <div class="mt-6">
+                        <a href="{{ product.url }}" class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded" target="_blank" rel="noopener noreferrer">
+                            Place Order
+                        </a>
+                    </div>
+
+
+                    <div>
+                        {% include 'shop/related_product.html'%}
+                    </div>
+                    
+                    
+
+
+
+                    
+                    <div class="product-text mt-6  ">
+                        <h2 class="capitalize text-left text-lg font-semibold text-gray-800 mb-2">
+                            Product Description
+                        </h2>
+                        
+                        <div>
+                            <p class="text-gray-700 mb-4 text-base leading-relaxed">
+                                {{ product.description|safe|linebreaks }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    
+
+
+                    
+                    <div class="mt-6">
+                        <a href="{{ product.url }}" class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded" target="_blank" rel="noopener noreferrer">
+                            Place Order
+                        </a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const mainDisplay = document.getElementById('main-display');
+            const mainImage = document.getElementById('main-image');
+            const mainVideo = document.getElementById('main-video');
+            const thumbnailItems = document.querySelectorAll('.thumbnail-item');
+
+            thumbnailItems.forEach((thumbnail) => {
+                thumbnail.addEventListener('click', function () {
+                    const mediaType = this.getAttribute('data-media-type');
+                    const mediaSrc = this.getAttribute('data-src');
+
+                    if (mediaType === 'image') {
+                        // If the thumbnail is an image, display it
+                        if (mainVideo) mainVideo.style.display = 'none';  // Hide video if it exists
+                        if (mainImage) {
+                            mainImage.style.display = 'block';  // Show image
+                            mainImage.src = mediaSrc;
+                        }
+                    } else if (mediaType === 'video') {
+                        // If the thumbnail is a video, display it
+                        if (mainImage) mainImage.style.display = 'none';  // Hide image if it exists
+                        if (mainVideo) {
+                            mainVideo.style.display = 'block';  // Show video
+                            mainVideo.src = mediaSrc;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+{% endblock %}

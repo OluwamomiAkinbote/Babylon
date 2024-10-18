@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scodynate New | Video Streaming</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Video container styles */
+        .video-container {
+            max-width: 800px; /* Limit video width */
+            margin: 0 auto; /* Center align */
+        }
+        .video {
+            width: 100%; /* Full width */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .video-info {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-20 bg-white bg-opacity-80 shadow-md backdrop-blur-md">
+        {% include 'header/header.html' %}
+    </header>
+
+    <div class="container mx-auto my-8">
+        <!-- Video Streaming Section -->
+        <div class="video-container">
+            <h2 class="text-2xl font-bold mb-4">Video Streaming</h2>
+            {% for video in video_posts %}
+                <div class="video-item mb-6 bg-black">
+                    <!-- Video Element -->
+                    <video class="video" controls autoplay muted>
+                        <source src="{{ video.video_file.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <!-- Video Info -->
+                    <div class="video-info">
+                        <p class="text-lg font-bold">{{ video.title }}</p>
+                        <p class="text-sm">{{ video.date|date:"F j, Y" }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <footer class="bg-white border-t border-gray-200 shadow-md">
+        {% block footer %}
+        {% include 'footer.html' %}
+        {% endblock %}
+    </footer>
+
+
+
+</body>
+</html>

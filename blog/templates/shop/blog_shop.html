@@ -1,0 +1,47 @@
+<div class="mt-8">
+    <h2 class="text-xl font-semibold mb-4">Shop</h2>
+    <div class="relative">
+        <div class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth" id="related-products-carousel">
+            {% for product in shop %}
+                <div class="w-40 flex-shrink-0 snap-start">
+                    <div class="border rounded-lg p-4">
+                        <a href="{% url 'product_detail' product.slug %}">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-32 object-cover mb-2 rounded">
+                            <h3 class="text-xs text-gray-500 font-semibold text-nowrap">{{ product.name }}</h3>
+                            {% if product.discount_price %}
+                                <p class="text-black text-md font-bold">{{ product.formatted_discount_price }}</p> 
+                            {% else %}
+                                <p class="text-black text-md font-bold">{{ product.formatted_price }}</p> <
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button id="prev" class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow">❮</button>
+        <button id="next" class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow">❯</button>
+    </div>
+</div>
+
+
+<script>
+    const carousel = document.getElementById('related-products-carousel');
+    const nextButton = document.getElementById('next');
+    const prevButton = document.getElementById('prev');
+
+    nextButton.addEventListener('click', () => {
+        carousel.scrollBy({
+            top: 0,
+            left: carousel.clientWidth,  // Scrolls one full width of the carousel
+            behavior: 'smooth'
+        });
+    });
+
+    prevButton.addEventListener('click', () => {
+        carousel.scrollBy({
+            top: 0,
+            left: -carousel.clientWidth,  // Scrolls back one full width of the carousel
+            behavior: 'smooth'
+        });
+    });
+</script>

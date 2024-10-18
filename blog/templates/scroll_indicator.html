@@ -1,0 +1,50 @@
+<!-- scroll_indicator.html -->
+<div class="progress-circle" id="progressCircle">
+    <svg width="30" height="30"> <!-- Reduced circle size -->
+        <circle cx="15" cy="15" r="12"></circle> <!-- Adjusted radius -->
+        <circle class="progress" cx="15" cy="15" r="12"></circle> <!-- Adjusted radius -->
+    </svg>
+</div>
+
+<style>
+    .progress-circle {
+        position: fixed;
+        top: 50%; /* Vertically center */
+        left: 20px; /* Distance from the left edge */
+        transform: translateY(-50%); /* Center the circle vertically */
+        width: 30px;  /* Circle size */
+        height: 30px; /* Circle size */
+        background: transparent;
+    }
+    .progress-circle svg {
+        transform: rotate(-90deg);
+    }
+    .progress-circle circle {
+        stroke: #e0e0e0; /* Background circle color */
+        stroke-width: 3; /* Reduced stroke width */
+    }
+    .progress-circle .progress {
+        stroke: #10AA6A; /* Your brand color */
+        stroke-width: 3; /* Reduced stroke width */
+        stroke-linecap: round;
+        transition: stroke-dasharray 0.3s ease-in-out;
+    }
+</style>
+
+<script>
+    const progressCircle = document.querySelector('.progress');
+    const radius = 12; // Updated radius
+    const circumference = radius * 2 * Math.PI; // r = 12
+
+    progressCircle.style.strokeDasharray = circumference;
+    progressCircle.style.strokeDashoffset = circumference;
+
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / totalHeight);
+        const offset = circumference - (scrollPercent * circumference);
+
+        progressCircle.style.strokeDashoffset = offset;
+    });
+</script>

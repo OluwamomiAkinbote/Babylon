@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'advert',
+    'shop',
     'tailwind',
     'theme',
     'django_browser_reload',
@@ -114,7 +115,7 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'scodynate_news',
+        'NAME': 'scodynate',
         'USER': 'root',  # Default MySQL user for XAMPP
         'PASSWORD': '',  # Default password for MySQL in XAMPP
         'HOST': 'localhost',
