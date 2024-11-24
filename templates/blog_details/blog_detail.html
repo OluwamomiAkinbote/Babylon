@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'partials/base.html' %}
 {% load static tailwind_tags %}
 {% load custom_filters %}
 
@@ -101,7 +101,7 @@
                     {% endif %}
                 </div>
                 
-                {% include 'buttons.html' %}
+                {% include 'partials/buttons.html' %}
                 
                 <!-- Post Content -->
                 <div id="contentContainer" class="py-0 overflow-hidden my-8">
@@ -116,14 +116,14 @@
             </div>
 
             {% block comment&reply %}
-               {% include 'comment&reply.html' %}
+               {% include 'partials/comment&reply.html' %}
             {% endblock %}
         </div>
 
         <!-- Sidebar with related posts -->
         <div>
             {% include 'advert/advert.html' with banner=sidebar_ad %}
-            {% include 'sidebar.html' %}
+            {% include 'partials/sidebar.html' %}
         </div>
     </div>
 

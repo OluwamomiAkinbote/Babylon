@@ -93,7 +93,7 @@
     
     
                     <div class="">
-                        {% include 'buttons.html'%}
+                        {% include 'partials/buttons.html'%}
                         
                         <div id="contentContainer" class="py-0 overflow-hidden" >
                         
@@ -114,7 +114,7 @@
                 <div class="mt-6">
 
                     {% block comment&reply %}
-                        {% include 'comment&reply.html' %}
+                        {% include 'partials/comment&reply.html' %}
                     {% endblock %}
                 </div>
             </div>
@@ -170,7 +170,7 @@
     <!-- Footer Section -->
     <footer class="bg-white border-t border-gray-200 shadow-md">
         {% block footer %}
-            {% include 'footer.html' %}
+            {% include 'partials/footer.html' %}
         {% endblock %}
     </footer>
 

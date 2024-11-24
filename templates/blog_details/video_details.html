@@ -80,7 +80,7 @@
 
 
                     <!-- Action Buttons -->
-                    {% include 'buttons.html' %}
+                    {% include 'partials/buttons.html' %}
     
                     <!-- Content -->
                     <div id="contentContainer" class="py-0 overflow-hidden">
@@ -96,14 +96,14 @@
                 <!-- Comments Section -->
                 <div>
                     {% block comment_reply %}
-                    {% include 'comment&reply.html' %}
+                    {% include 'partials/comment&reply.html' %}
                     {% endblock %}
                 </div>
             </div>
 
             <!-- Sidebar Section -->
             <aside class="w-full lg:w-4/12 px-4">
-                {% include 'trend.html' %}
+                {% include 'home/trend.html' %}
             </aside>
         </div>
     </main>
@@ -111,7 +111,7 @@
     <!-- Footer Section -->
     <footer class="bg-white border-t border-gray-200 shadow-md">
         {% block footer %}
-        {% include 'footer.html' %}
+        {% include 'partials/footer.html' %}
         {% endblock %}
     </footer>
 

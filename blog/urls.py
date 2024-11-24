@@ -14,5 +14,5 @@ urlpatterns = [
     path('category/<slug:slug>/', views.category_list, name='category_list'),
     path('videos/<slug:slug>/', views.video_detail, name='video_details'),
     
-    path('blogs<slug:slug>/', views.blog_detail, name='blog_detail'),
+    path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
 ]

@@ -94,7 +94,7 @@
             <div class="w-full lg:w-4/12 px-4 ">
                 {% include 'advert/advert.html' with banner=sidebar_ad %}
                 <div class="my-8">
-                    {% include 'trend.html' %}
+                    {% include 'home/trend.html' %}
 
                 </div>
                {% include 'advert/advert.html' with banner=home_ad %}
@@ -105,7 +105,7 @@
 
     <div class="footer">
         {% block footer %}
-            {% include 'footer.html' %}
+            {% include 'partials/footer.html' %}
         {% endblock %}
     </div>
 </body>

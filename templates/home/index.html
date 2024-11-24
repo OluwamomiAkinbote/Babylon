@@ -1,5 +1,5 @@
-<!-- blog/templates/index.html -->
-{% extends 'base.html' %}
+
+{% extends 'partials/base.html' %}
 
 
 {% block content %}
@@ -12,17 +12,20 @@
 
     <div class="mt-24">
         
-        {% include 'hero.html' %}
+        {% include 'home/hero.html' %}
 
     </div>
 
  
 
-    {% include 'latest_news.html' %}
+    {% include 'home/latest_news.html' %}
 
     {% include 'advert/advert.html' with banner=home_ad %}
 
-    {% include 'sports.html' %}
+
+    {% include 'home/global_news.html' %}
+
+    {% include 'home/sports.html' %}
 
 
     <div class="container mx-auto flex flex-col md:flex-row justify-between py-6 font-poppins ">
@@ -42,9 +45,9 @@
     </div>
 
 
-    {% include 'videos.html' %}
+    {% include 'home/videos.html' %}
 
-    {% include 'recentnews.html' %}
+    {% include 'home/recentnews.html' %}
 
 
 

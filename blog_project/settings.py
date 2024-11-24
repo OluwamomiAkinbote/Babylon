@@ -16,8 +16,8 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
-ALLOWED_HOSTS = ["*"]
+
+ALLOWED_HOSTS = ['127.0.0.1', 'https://scodynate.com.ng/']
 
 # Application definition
 
@@ -115,11 +115,10 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'scodynate',
-        'USER': 'root',  # Default MySQL user for XAMPP
-        'PASSWORD': '',  # Default password for MySQL in XAMPP
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': 'scodynat_news',
+        'USER': 'scodynat_blog',  
+        'PASSWORD': 'Ayomipo@308',  
+ 
     }
 }
 # Password validation
