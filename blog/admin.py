@@ -1,5 +1,39 @@
+
 from django.contrib import admin
-from .models import BlogPost, Trend, Category, Media, Video, Subscription
+from .models import BlogPost, Trend, Category, Media, Video, Subscription, AuthorProfile
+
+from django.contrib import admin
+from .models import AuthorProfile
+
+@admin.register(AuthorProfile)
+class AuthorProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'truncated_about', 'display_on_article', 'profile_picture')
+    search_fields = ('user__username', 'user__email', 'about')
+    list_filter = ('display_on_article',)
+    ordering = ('user',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'profile_picture', 'about', 'display_on_article')
+        }),
+        ('Social Media Links', {
+            'fields': ('twitter_url', 'facebook_url', 'linkedin_url', 'instagram_url', 'website_url'),
+        }),
+    )
+
+    def truncated_about(self, obj):
+        # Truncate the 'about' field to 30 characters for display in the list view
+        return obj.about[:30] + '...' if obj.about and len(obj.about) > 30 else obj.about
+    truncated_about.short_description = 'About'
+
+    def save_model(self, request, obj, form, change):
+        # Automatically set the user to the logged-in user if it's not set
+        if not obj.user:
+            obj.user = request.user
+
+        super().save_model(request, obj, form, change)
+
+
 
 
 # Register Category model

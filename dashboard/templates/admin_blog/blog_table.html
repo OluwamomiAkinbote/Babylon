@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody class="text-gray-700">
-            {% for post in blogposts %}
+            {% for post in page_obj %}
             <tr class="border-b">
                 <td class="px-4 py-2 text-sm border border-gray-300">{{ forloop.counter }}</td>
                 <td class="px-4 py-2 text-sm border border-gray-300">{{ post.title }}</td>
@@ -29,14 +29,10 @@
                 <td class="px-4 py-2 text-sm border border-gray-300">
                     <div class="flex items-center space-x-2">
                         <a href="{% url 'edit_blogpost' post.slug %}" class="text-blue-500 hover:underline">Edit</a>
-                        <form method="POST" action="#" class="inline-block">
-                            {% csrf_token %}
-                            <button type="submit" 
-                                    class="text-red-500 hover:underline"
-                                    onclick="return confirm('Are you sure you want to delete this post?');">
-                                Delete
-                            </button>
-                        </form>
+                        <a href="{% url 'delete_blogpost' post.slug %}" 
+                        class="text-red-500 hover:underline">
+                         Delete
+                     </a>
                     </div>
                 </td>
             </tr>
@@ -49,6 +45,56 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
+
+<!-- Pagination Controls -->
+<div class="flex justify-center mt-4">
+    <ul class="flex items-center space-x-2">
+        <!-- Previous Button -->
+        {% if page_obj.has_previous %}
+        <li>
+            <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</a>
+        </li>
+        {% else %}
+        <li>
+            <span class="px-3 py-1 bg-gray-300 rounded text-gray-500">Prev</span>
+        </li>
+        {% endif %}
+
+        <!-- Page Numbers -->
+        {% for page in page_obj.paginator.page_range %}
+        {% if page == page_obj.number %}
+        <li>
+            <span class="px-3 py-1 bg-blue-500 text-white rounded">{{ page }}</span>
+        </li>
+        {% elif page <= page_obj.number|add:-2 or page >= page_obj.number|add:2 %}
+        <li>
+            <a href="?page={{ page }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">{{ page }}</a>
+        </li>
+        {% elif page == 1 or page == page_obj.paginator.num_pages %}
+        <li>
+            <a href="?page={{ page }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">{{ page }}</a>
+        </li>
+        {% else %}
+        {% if not forloop.last and not forloop.first %}
+        <li>
+            <span class="px-3 py-1 text-gray-500">...</span>
+        </li>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+
+        <!-- Next Button -->
+        {% if page_obj.has_next %}
+        <li>
+            <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+        </li>
+        {% else %}
+        <li>
+            <span class="px-3 py-1 bg-gray-300 rounded text-gray-500">Next</span>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 
 {% endblock %}

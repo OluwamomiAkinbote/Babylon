@@ -36,6 +36,37 @@
                 rows="10" required>{{ blogpost.content }}</textarea>
         </div>
 
+        <!-- Image Upload (with preview if an image is present) -->
+        <div class="mb-6">
+            <label for="image" class="block text-lg font-medium text-gray-900 mb-2">Upload Image</label>
+            
+            <!-- Flex container for image input and preview -->
+            <div class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm flex items-center space-x-4">
+                
+                <!-- File Input -->
+                <div class="flex-grow">
+                    <input type="file" id="image" name="image" 
+                           class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm" 
+                           accept="image/*" onchange="previewImage(event)">
+                </div>
+
+                <!-- Image Preview -->
+                <div id="imagePreview" class="hidden">
+                    <p class="text-gray-700">Image Preview:</p>
+                    <img id="preview" src="" alt="Image Preview" class="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300">
+                </div>
+
+            </div>
+            
+            <!-- Show existing image if available -->
+            {% if blogpost.image %}
+            <div class="mt-4">
+                <p class="text-gray-700">Current Image:</p>
+                <img src="{{ blogpost.image.url }}" alt="Current Image" class="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300">
+            </div>
+            {% endif %}
+        </div>
+
         <!-- Submit Button -->
         <div>
             <button type="submit" 
@@ -46,8 +77,25 @@
     </form>
 </div>
 
+<!-- Add TinyMCE script -->
+<script src="{% static 'tinymce/tinymce.min.js'%}"></script>
+<script src="{% static 'js/script.js'%}"></script>
 
-    <!-- Add TinyMCE script -->
-    <script src="{% static 'tinymce/tinymce.min.js'%}"></script>
-    <script src="{% static 'js/script.js'%}"></script>
+<script>
+    // JavaScript to handle image preview
+    function previewImage(event) {
+        var reader = new FileReader();
+        var preview = document.getElementById('preview');
+        var imagePreview = document.getElementById('imagePreview');
+        
+        reader.onload = function() {
+            preview.src = reader.result;  // Set image source to file content
+            imagePreview.classList.remove('hidden');  // Show the preview container
+        };
+        
+        reader.readAsDataURL(event.target.files[0]);  // Read the selected file
+    }
+</script>
+
 {% endblock %}
+

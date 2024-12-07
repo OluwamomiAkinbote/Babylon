@@ -1,0 +1,22 @@
+
+<header class="flex items-center justify-between bg-green-100 border-b px-6 py-4 mb-8 shadow-sm">
+    <!-- Title Section -->
+    <div class="flex items-center">
+        <h1 class="text-2xl font-bold text-gray-800">{% block title %}Admin Dashboard{% endblock %}</h1>
+    </div>
+
+    <!-- Action and User Section -->
+    <div class="flex items-center space-x-6">
+        <!-- Notifications Icon -->
+        <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></span>
+        </button>
+
+        <!-- User Profile -->
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-700 font-medium">{{user}}</span>
+            <img class="w-10 h-10 rounded-full border border-gray-200" src="https://via.placeholder.com/40" alt="User Profile">
+        </div>
+    </div>
+</header>

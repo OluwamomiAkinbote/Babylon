@@ -1,33 +1,121 @@
-<aside class="w-64 bg-gray-800 text-white flex flex-col">
-    <div class="p-4">
-        <h2 class="text-2xl font-bold">Admin Panel</h2>
+{% load static %}
+
+<aside class="w-64 flex flex-col min-h-[70rem] overflow-y-auto">
+    <!-- Header Section -->
+    <div class="p-4 bg-black text-gray-200 flex flex-col items-center">
+        <img src="{% static 'images/logofooter.png' %}" alt="Logo" class="w-50 h-12 object-cover mb-2">
+        <h2 class="text-xl font-bold text-center">Admin Panel</h2>
     </div>
-    <nav class="flex-1">
+
+    <!-- Navigation Section -->
+    <nav class="flex-1 bg-green-800 text-white overflow-y-auto">
         <ul class="space-y-2 p-4">
+            <!-- Dashboard Section -->
             <li>
-                <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700">
+                <h3 class="text-center bg-green-900 text-gray-200 text-sm font-bold py-2 uppercase rounded">
                     Dashboard
-                </a>
+                </h3>
+                <ul class="ml-4 space-y-2 mt-2">
+                    <li>
+                        <a href="{% url 'user_table' %}" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-users text-xs"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-key text-xs"></i>
+                            <span>Permissions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-chart-line text-xs"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
+
+            <!-- Blog Section -->
             <li>
-                <a href="{% url 'blog_table'%}" class="block px-4 py-2 rounded hover:bg-gray-700">
-                    Blog Posts
-                </a>
+                <h3 class="text-center bg-green-900 text-gray-200 text-sm font-bold py-2 uppercase rounded">
+                    Blog
+                </h3>
+                <ul class="ml-4 space-y-2 mt-2">
+                    <li>
+                        <a href="{%url 'blog_table'%}" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-blog text-xs"></i>
+                            <span>Blog Posts</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-list text-xs"></i>
+                            <span>Blog Categories</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-fire text-xs"></i>
+                            <span>Trends</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-video text-xs"></i>
+                            <span>Videos</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
+
+            <!-- File Manager Section -->
             <li>
-                <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700">
-                    Categories
-                </a>
+                <h3 class="text-center bg-green-900 text-gray-200 text-sm font-bold py-2 uppercase rounded">
+                    File Manager
+                </h3>
+                <ul class="ml-4 space-y-2 mt-2">
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-photo-video text-xs"></i>
+                            <span>Blog Media</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
+
+            <!-- Shop Section -->
             <li>
-                <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700">
-                    Media
-                </a>
-            </li>
-            <li>
-                <a href="#" class="block px-4 py-2 rounded hover:bg-gray-700">
-                    Subscriptions
-                </a>
+                <h3 class="text-center bg-green-900 text-gray-200 text-sm font-bold py-2 uppercase rounded">
+                    Shop
+                </h3>
+                <ul class="ml-4 space-y-2 mt-2">
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-box text-xs"></i>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-tags text-xs"></i>
+                            <span>Shop Categories</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-cubes text-xs"></i>
+                            <span>Product Variants</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-images text-xs"></i>
+                            <span>Product Media</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </nav>

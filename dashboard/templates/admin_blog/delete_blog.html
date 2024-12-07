@@ -1,0 +1,50 @@
+{% extends 'admin_partials/admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 bg-gray-100 p-8">
+    <h1 class="text-4xl font-bold text-red-600 mb-6">Wait! Are You Sure?</h1>
+    
+    <div class="flex space-x-6">
+        <!-- Image Preview -->
+        <div class="flex-shrink-0">
+            {% if blogpost.image %}
+                <img src="{{ blogpost.image.url }}" alt="{{ blogpost.title }}" 
+                     class="w-40 h-40 object-cover bg-gray-200">
+            {% else %}
+                <div class="w-40 h-40 bg-gray-300 flex items-center justify-center">
+                    <span class="text-gray-500">No Image Available</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Blog Post Summary -->
+        <div>
+            <p class="text-lg text-gray-700 mb-4">
+                Deleting this blog post is irreversible. Make sure you're confident before proceeding.
+            </p>
+            <ul class="space-y-2 text-gray-800">
+                <li><strong>Post Title:</strong> {{ blogpost.title }}</li>
+                <li><strong>Category:</strong> {{ blogpost.category.name }}</li>
+                <li><strong>Author:</strong> {{ blogpost.author }}</li>
+                <li><strong>Published Date:</strong> {{ blogpost.date|date:"F j, Y" }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-8 flex justify-between">
+        <form method="post" class="inline-block">
+            {% csrf_token %}
+            <button type="submit" 
+                    class="bg-red-600 text-white px-6 py-2 font-semibold hover:bg-red-700">
+                Yes, Delete Forever
+            </button>
+        </form>
+        <a href="{% url 'blog_table' %}" 
+           class="bg-gray-300 text-gray-800 px-6 py-2 font-semibold hover:bg-gray-400">
+            No, Take Me Back
+        </a>
+    </div>
+</div>
+{% endblock %}

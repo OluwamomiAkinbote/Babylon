@@ -5,20 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class=" min-h-screen">
     <div class="flex h-screen">
         <!-- Sidebar -->
+        <div>
+            <!-- sidebar -->
+            {%include 'admin_partials/admin_sidebar.html'%}
 
-        {%include 'admin_partials/admin_sidebar.html'%}
+        </div>
 
-
+        <!-- header -->
+        
+        
         <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <header class="border-b pb-4 mb-4">
-                <h1 class="text-3xl font-bold text-gray-800">{% block title %}Admin Dashboard{% endblock %}</h1>
-            </header>
-            <section class="bg-white p-6 rounded shadow">
+        <main class="flex-1 ">
+            
+            <div class="p-0  overflow-y-auto">
+                {%include 'admin_header/admin_header.html'%}
+            </div>
+
+            <section class="bg-white p-6 rounded shadow  overflow-y-auto">
                 {% block content %}
                 
                 {% endblock %}
