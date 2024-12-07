@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'blog',
     'advert',
     'shop',
+    'dashboard',
     'tailwind',
     'theme',
     'django_browser_reload',
@@ -115,12 +116,14 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'scodynat_news',
-        'USER': 'scodynat_blog',  
-        'PASSWORD': 'Ayomipo@308',  
- 
+        'NAME': 'scodynate',               
+        'USER': 'root',                    
+        'PASSWORD': '',                    
+        'PORT': '3306',                    
     }
 }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

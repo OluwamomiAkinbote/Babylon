@@ -1,0 +1,53 @@
+{% extends 'admin_partials/admin_base.html' %}
+{% load static %}
+{% block content %}
+<div class="p-6 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-semibold mb-8 text-gray-800">Edit Blog Post</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Title -->
+        <div class="mb-6">
+            <label for="title" class="block text-lg font-medium text-gray-800 mb-2">Title</label>
+            <textarea id="title" name="title" 
+                class="w-full p-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                rows="2" required>{{ blogpost.title }}</textarea>
+        </div>
+
+        <!-- Category -->
+        <div class="mb-6">
+            <label for="category" class="block text-lg font-medium text-gray-800 mb-2">Category</label>
+            <select name="category" id="category" 
+                class="w-1/2 p-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                required>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id == blogpost.category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Content -->
+        <div class="mb-6">
+            <label for="content" class="block text-lg font-medium text-gray-800 mb-2">Content</label>
+            <textarea id="content" name="content" 
+                class="w-full p-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                rows="10" required>{{ blogpost.content }}</textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit" 
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                Update Post
+            </button>
+        </div>
+    </form>
+</div>
+
+
+    <!-- Add TinyMCE script -->
+    <script src="{% static 'tinymce/tinymce.min.js'%}"></script>
+    <script src="{% static 'js/script.js'%}"></script>
+{% endblock %}

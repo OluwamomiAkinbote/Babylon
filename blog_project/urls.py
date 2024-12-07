@@ -12,6 +12,7 @@ urlpatterns = [
     path('', include('blog.urls')), 
     path('advert/', include('advert.urls')), 
     path('shop/', include('shop.urls')), 
+    path('dashboard/', include('dashboard.urls')), 
     path("__reload__/", include("django_browser_reload.urls")),
     path('filer/', include('filer.urls')),
     path('tinymce/', include('tinymce.urls')),
