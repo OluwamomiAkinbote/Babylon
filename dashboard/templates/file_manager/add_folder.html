@@ -1,0 +1,36 @@
+{% extends 'admin_partials/admin_base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 bg-gray-50 border border-gray-300">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">Add New Folder</h1>
+
+    <!-- Back Button with Icon -->
+    <div class="mb-4">
+        <a href="{% url 'files_home' %}" class="text-gray-700 hover:text-gray-900 flex items-center space-x-2 transition-transform transform hover:scale-105">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Folder List</span>
+        </a>
+    </div>
+
+    <!-- Add Folder Form -->
+    <form method="POST" action="{% url 'add_folder' %}" class="bg-white p-8 border border-gray-300">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-semibold text-gray-700">Folder Name</label>
+            <input type="text" name="name" id="name" class="w-full p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+        </div>
+
+        <div class="mt-6">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 transition-transform transform hover:scale-105">Create Folder</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block styles %}
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome CDN for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+{% endblock %}

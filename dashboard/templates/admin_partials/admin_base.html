@@ -6,33 +6,33 @@
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
 </head>
-<body class=" min-h-screen">
-    <div class="flex h-screen">
+<body class="min-h-screen">
+
+    {% include 'admin_partials/admin_messages.html' %}
+    
+    <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div>
-            <!-- sidebar -->
-            {%include 'admin_partials/admin_sidebar.html'%}
-
+        <div class="w-64 bg-gray-800 text-white fixed h-full overflow-y-auto z-40">
+            {% include 'admin_partials/admin_sidebar.html' %}
         </div>
-
-        <!-- header -->
-        
         
         <!-- Main Content -->
-        <main class="flex-1 ">
-            
-            <div class="p-0  overflow-y-auto">
-                {%include 'admin_header/admin_header.html'%}
-            </div>
+        <div class="flex-1 ml-60 flex flex-col h-full">
+            <!-- Header -->
+            <header class="bg-white shadow fixed w-full z-10">
+                {% include 'admin_header/admin_header.html' %}
+            </header>
 
-            <section class="bg-white p-6 rounded shadow  overflow-y-auto">
-                {% block content %}
-                
-                {% endblock %}
-            </section>
-        </main>
+            <!-- Main Section -->
+            <main class="mt-24 p-6 bg-gray-100 overflow-y-auto flex-1">
+                <section class="bg-white p-6 rounded shadow">
+                    {% block content %}
+                    {% endblock %}
+                </section>
+            </main>
+        </div>
     </div>
+
 </body>
 </html>

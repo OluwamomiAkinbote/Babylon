@@ -2,23 +2,43 @@
 {% load static %}
 {% block content %}
 <div class="p-6 max-w-4xl mx-auto">
-    <h2 class="text-3xl font-semibold mb-8 text-gray-800">Edit Blog Post</h2>
+
+    <div class="flex justify-between items-center mb-6 bg-green-100  p-4 rounded-md shadow-sm">
+
+        <a href="{% url 'blog_table' %}" class="bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back
+        </a>
+
+        <h2 class="text-1xl font-bold text-gray-800 flex items-center uppercase">
+            <i class="fas fa-edit text-green-800 mr-2"></i>
+            Edit Blog Post
+        </h2>
+
+    </div>
+
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <!-- Title -->
         <div class="mb-6">
-            <label for="title" class="block text-lg font-medium text-gray-800 mb-2">Title</label>
+            <label for="title" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-heading text-gray-600 mr-2"></i>
+                Title
+            </label>
             <textarea id="title" name="title" 
-                class="w-full p-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
                 rows="2" required>{{ blogpost.title }}</textarea>
         </div>
 
         <!-- Category -->
         <div class="mb-6">
-            <label for="category" class="block text-lg font-medium text-gray-800 mb-2">Category</label>
+            <label for="category" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-tags text-gray-600 mr-2"></i>
+                Category
+            </label>
             <select name="category" id="category" 
-                class="w-1/2 p-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                class="w-1/2 p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
                 required>
                 {% for category in categories %}
                     <option value="{{ category.id }}" {% if category.id == blogpost.category.id %}selected{% endif %}>
@@ -30,47 +50,56 @@
 
         <!-- Content -->
         <div class="mb-6">
-            <label for="content" class="block text-lg font-medium text-gray-800 mb-2">Content</label>
+            <label for="content" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-align-left text-gray-600 mr-2"></i>
+                Content
+            </label>
             <textarea id="content" name="content" 
-                class="w-full p-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
                 rows="10" required>{{ blogpost.content }}</textarea>
         </div>
 
         <!-- Image Upload (with preview if an image is present) -->
         <div class="mb-6">
-            <label for="image" class="block text-lg font-medium text-gray-900 mb-2">Upload Image</label>
+            <label for="image" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-image text-gray-600 mr-2"></i>
+                Upload Image
+            </label>
             
             <!-- Flex container for image input and preview -->
-            <div class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm flex items-center space-x-4">
-                
+            <div class="w-full p-3 border border-gray-400 text-sm flex items-center space-x-4">
                 <!-- File Input -->
                 <div class="flex-grow">
                     <input type="file" id="image" name="image" 
-                           class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm" 
-                           accept="image/*" onchange="previewImage(event)">
+                        class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-sm" 
+                        accept="image/*" onchange="previewImage(event)">
                 </div>
 
                 <!-- Image Preview -->
                 <div id="imagePreview" class="hidden">
                     <p class="text-gray-700">Image Preview:</p>
-                    <img id="preview" src="" alt="Image Preview" class="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300">
+                    <img id="preview" src="" alt="Image Preview" class="w-32 h-32 object-cover mt-2 border border-gray-400">
                 </div>
-
             </div>
-            
+
             <!-- Show existing image if available -->
             {% if blogpost.image %}
             <div class="mt-4">
                 <p class="text-gray-700">Current Image:</p>
-                <img src="{{ blogpost.image.url }}" alt="Current Image" class="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300">
+                <img src="{{ blogpost.image.url }}" alt="Current Image" class="w-32 h-32 object-cover mt-2 border border-gray-400">
             </div>
             {% endif %}
         </div>
 
-        <!-- Submit Button -->
-        <div>
+        <!-- Buttons -->
+        <div class="flex justify-between items-center">
+            <a href="{% url 'blog_table' %}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back
+            </a>
             <button type="submit" 
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                <i class="fas fa-save mr-2"></i>
                 Update Post
             </button>
         </div>
@@ -98,4 +127,3 @@
 </script>
 
 {% endblock %}
-

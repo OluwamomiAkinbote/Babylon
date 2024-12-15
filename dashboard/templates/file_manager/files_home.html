@@ -1,0 +1,72 @@
+{% extends 'admin_partials/admin_base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">File Manager</h1>
+
+    <!-- Add Folder Button (aligned to the right) -->
+    <div class="mb-6 flex justify-end">
+        <a href="{% url 'add_folder' %}"
+           class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-sm flex items-center transition-transform transform hover:scale-105">
+            <i class="fas fa-plus mr-2"></i> Add Folder
+        </a>
+    </div>
+
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Loop through Folders -->
+        {% for folder in folders %}
+        <div class="bg-white border border-gray-300 rounded-lg p-6 text-center transition-transform transform hover:scale-105 duration-300">
+            <!-- Folder Icon (larger size) -->
+            <div class="mb-4">
+                <i class="fas fa-folder text-6xl h-24 text-yellow-500 mx-auto"></i>
+            </div>
+            <!-- Folder Name -->
+            <h2 class="text-lg font-semibold text-gray-700 truncate">{{ folder.name }}</h2>
+            <!-- Buttons (icons with text and interactivity) -->
+            <div class="mt-4 flex justify-around">
+                <!-- View Button with Icon and Text -->
+                <div class="text-center">
+                    <a href="{% url 'folder_detail' folder.id %}"
+                       class="text-blue-500 hover:text-blue-700 py-1 px-3 rounded text-sm flex flex-col items-center transition-transform transform hover:scale-110">
+                        <i class="fas fa-eye"></i>
+                        <span>View</span>
+                    </a>
+                </div>
+
+                <!-- Edit Button with Icon and Text -->
+                <div class="text-center">
+                    <a href="{% url 'edit_folder' folder.id %}"
+                       class="text-green-500 hover:text-green-700 py-1 px-3 rounded text-sm flex flex-col items-center transition-transform transform hover:scale-110">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit</span>
+                    </a>
+                </div>
+
+                <!-- Delete Button with Icon and Text -->
+                <div class="text-center">
+                    <a href="{% url 'delete_folder' folder.id %}"
+                       class="text-red-500 hover:text-red-700 py-1 px-3 rounded text-sm flex flex-col items-center transition-transform transform hover:scale-110">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Delete</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <!-- No Folders Message -->
+        <div class="col-span-full text-center text-gray-500">
+            <p>No folders available.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome CDN for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+{% endblock %}

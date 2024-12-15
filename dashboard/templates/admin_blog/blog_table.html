@@ -6,39 +6,48 @@
     Create Post
 </a>
 
-<div class="bg-white my-6">
+<div class="bg-white my-6 shadow-md rounded overflow-x-auto">
     <table class="min-w-full table-auto border-collapse border border-gray-300">
         <thead class="bg-gray-800 text-white">
             <tr>
-                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">#</th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">
+                    <span class="sr-only">Select</span>
+                </th>
                 <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Title</th>
                 <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Category</th>
-                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Author</th>
-                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Date</th>
+                <th class="px-4 py-2 max-w-[20rem] text-left text-sm font-medium border border-gray-300">Author</th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300 whitespace-nowrap">Date</th>
                 <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Actions</th>
             </tr>
         </thead>
         <tbody class="text-gray-700">
             {% for post in page_obj %}
-            <tr class="border-b">
-                <td class="px-4 py-2 text-sm border border-gray-300">{{ forloop.counter }}</td>
+            <tr class="border-b hover:bg-gray-100" id="row-{{ post.id }}">
+                <!-- Radio Button -->
+                <td class="px-4 py-2 text-sm border border-gray-300">
+                    <input type="radio" name="selected_post" value="{{ post.id }}" class="cursor-pointer select-post">
+                </td>
+
                 <td class="px-4 py-2 text-sm border border-gray-300">{{ post.title }}</td>
                 <td class="px-4 py-2 text-sm border border-gray-300">{{ post.category.name }}</td>
                 <td class="px-4 py-2 text-sm border border-gray-300">{{ post.author }}</td>
-                <td class="px-4 py-2 text-sm border border-gray-300">{{ post.date|date:"Y-m-d" }}</td>
+                <td class="px-4 py-2 text-sm border border-gray-300 whitespace-nowrap">{{ post.date|date:"Y-m-d" }}</td>
+
+                <!-- Actions -->
                 <td class="px-4 py-2 text-sm border border-gray-300">
-                    <div class="flex items-center space-x-2">
-                        <a href="{% url 'edit_blogpost' post.slug %}" class="text-blue-500 hover:underline">Edit</a>
-                        <a href="{% url 'delete_blogpost' post.slug %}" 
-                        class="text-red-500 hover:underline">
-                         Delete
-                     </a>
+                    <div class="flex space-x-2">
+                        <a href="{% url 'edit_blogpost' post.slug %}" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'delete_blogpost' post.slug %}" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </a>
                     </div>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" class="px-4 py-2 text-center text-gray-500">
+                <td colspan="7" class="px-4 py-2 text-center text-gray-500">
                     No blog posts available.
                 </td>
             </tr>
@@ -50,7 +59,6 @@
 <!-- Pagination Controls -->
 <div class="flex justify-center mt-4">
     <ul class="flex items-center space-x-2">
-        <!-- Previous Button -->
         {% if page_obj.has_previous %}
         <li>
             <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</a>
@@ -61,30 +69,18 @@
         </li>
         {% endif %}
 
-        <!-- Page Numbers -->
         {% for page in page_obj.paginator.page_range %}
         {% if page == page_obj.number %}
         <li>
             <span class="px-3 py-1 bg-blue-500 text-white rounded">{{ page }}</span>
         </li>
-        {% elif page <= page_obj.number|add:-2 or page >= page_obj.number|add:2 %}
-        <li>
-            <a href="?page={{ page }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">{{ page }}</a>
-        </li>
-        {% elif page == 1 or page == page_obj.paginator.num_pages %}
-        <li>
-            <a href="?page={{ page }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">{{ page }}</a>
-        </li>
         {% else %}
-        {% if not forloop.last and not forloop.first %}
         <li>
-            <span class="px-3 py-1 text-gray-500">...</span>
+            <a href="?page={{ page }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">{{ page }}</a>
         </li>
-        {% endif %}
         {% endif %}
         {% endfor %}
 
-        <!-- Next Button -->
         {% if page_obj.has_next %}
         <li>
             <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</a>
@@ -96,5 +92,35 @@
         {% endif %}
     </ul>
 </div>
+
+<script>
+    // Toggle action menu visibility
+    document.querySelectorAll('.action-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const menu = this.nextElementSibling;
+            menu.classList.toggle('hidden');
+        });
+    });
+
+    // Handle radio button selection
+    document.querySelectorAll('.select-post').forEach(radio => {
+        radio.addEventListener('change', function () {
+            // Reset background color for all rows
+            document.querySelectorAll('tbody tr').forEach(row => {
+                row.classList.remove('bg-blue-100');
+            });
+
+            // Highlight selected row
+            if (this.checked) {
+                const selectedRow = document.getElementById(`row-${this.value}`);
+                selectedRow.classList.add('bg-blue-100');
+
+                const selectedId = this.value;
+                console.log(`Selected Post ID: ${selectedId}`);
+                // Add additional functionality here, e.g., show details
+            }
+        });
+    });
+</script>
 
 {% endblock %}

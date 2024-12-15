@@ -1,22 +1,29 @@
-
-<header class="flex items-center justify-between bg-green-100 border-b px-6 py-4 mb-8 shadow-sm">
+<header class="flex items-center justify-between bg-gray-100 border-b px-6 py-4 shadow-sm">
     <!-- Title Section -->
-    <div class="flex items-center">
-        <h1 class="text-2xl font-bold text-gray-800">{% block title %}Admin Dashboard{% endblock %}</h1>
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">
+            Welcome, {{ user }}!
+        </h1>
+        <p class="text-sm text-gray-600 mt-1">
+            Manage your tasks and view updates here.
+        </p>
     </div>
 
     <!-- Action and User Section -->
     <div class="flex items-center space-x-6">
         <!-- Notifications Icon -->
-        <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
-            <i class="fas fa-bell"></i>
-            <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></span>
+        <button class="relative p-2 text-gray-600 hover:bg-gray-200 rounded-full">
+            <i class="fas fa-bell text-lg"></i>
+            <span class="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full border border-white"></span>
         </button>
 
         <!-- User Profile -->
-        <div class="flex items-center space-x-4">
-            <span class="text-gray-700 font-medium">{{user}}</span>
-            <img class="w-10 h-10 rounded-full border border-gray-200" src="https://via.placeholder.com/40" alt="User Profile">
+        <div class="flex items-center space-x-4 pr-64">
+            <img class="w-10 h-10 rounded-full border border-gray-300" src="https://via.placeholder.com/40" alt="User Profile">
+            <!-- Logout Button -->
+            <a href="{% url 'user_logout' %}" class="bg-red-500 text-white text-sm font-medium px-4 py-2 rounded hover:bg-red-600 mr-64">
+                Logout
+            </a>
         </div>
     </div>
 </header>

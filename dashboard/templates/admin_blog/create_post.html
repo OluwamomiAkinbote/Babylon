@@ -1,30 +1,46 @@
-
-
 {% extends 'admin_partials/admin_base.html' %}
 
 {% load static %}
 
 {% block content %}
-<a href="{% url 'blog_table' %}"> Back to the table</a>
-<div class="p-6 max-w-4xl mx-auto bg-gray-50">
-    <h2 class="text-3xl font-semibold mb-8 text-gray-900">Create Blog Post</h2>
-    <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
+<div class="p-6 max-w-4xl mx-auto">
 
+
+    <div class="flex justify-between items-center mb-6 bg-green-100  p-4 rounded-md shadow-sm">
+        <a href="{% url 'blog_table' %}" class="bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back
+        </a>
+    
+        <h2 class="text-1xl font-bold text-gray-800 flex items-center uppercase">
+            <i class="fas fa-plus-circle text-green-800 mr-2"></i>
+            Create Blog Post
+        </h2>
+    </div>
+    
+
+    <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
         <!-- Title -->
         <div class="mb-6">
-            <label for="title" class="block text-lg font-medium text-gray-900 mb-2">Title</label>
+            <label for="title" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-heading text-gray-600 mr-2"></i>
+                Title
+            </label>
             <textarea id="title" name="title" 
-                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
                 rows="2" placeholder="Enter the blog post title..." required></textarea>
         </div>
 
         <!-- Category -->
         <div class="mb-6">
-            <label for="category" class="block text-lg font-medium text-gray-900 mb-2">Category</label>
+            <label for="category" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-tags text-gray-600 mr-2"></i>
+                Category
+            </label>
             <select name="category" id="category" 
-                class="w-1/2 p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                class="w-1/2 p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
                 required>
                 {% for category in categories %}
                     <option value="{{ category.id }}">{{ category.name }}</option>
@@ -34,72 +50,79 @@
 
         <!-- Content -->
         <div class="mb-6">
-            <label for="content" class="block text-lg font-medium text-gray-900 mb-2">Content</label>
+            <label for="content" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-align-left text-gray-600 mr-2"></i>
+                Content
+            </label>
             <textarea id="content" name="content" 
-                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
                 rows="10" placeholder="Write your content here..." required></textarea>
         </div>
 
-        <!-- image box -->
+        <!-- Image Upload (with preview) -->
         <div class="mb-6">
-            <label for="image" class="block text-lg font-medium text-gray-900 mb-2">Upload Image</label>
+            <label for="image" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-image text-gray-600 mr-2"></i>
+                Upload Image
+            </label>
             
             <!-- Flex container for image input and preview -->
-            <div class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm flex items-center space-x-4">
-                
+            <div class="w-full p-3 border border-gray-400 text-sm flex items-center space-x-4">
                 <!-- File Input -->
                 <div class="flex-grow">
                     <input type="file" id="image" name="image" 
-                           class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm" 
-                           accept="image/*" onchange="previewImage(event)">
+                        class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-sm" 
+                        accept="image/*" onchange="previewImage(event)">
                 </div>
-                
+
                 <!-- Image Preview -->
                 <div id="imagePreview" class="hidden">
                     <p class="text-gray-700">Image Preview:</p>
-                    <img id="preview" src="" alt="Image Preview" class="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300">
+                    <img id="preview" src="" alt="Image Preview" class="w-32 h-32 object-cover mt-2 border border-gray-400">
                 </div>
-        
             </div>
         </div>
-        
+
         <!-- Error Message -->
         {% if error %}
-        <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md">
+        <div class="mb-6 p-4 bg-red-100 text-red-700 border border-red-400">
             {{ error }}
         </div>
         {% endif %}
 
-        <!-- Submit Button -->
-        <div>
+        <!-- Buttons -->
+        <div class="flex justify-between items-center">
+            <a href="{% url 'blog_table' %}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back
+            </a>
             <button type="submit" 
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide rounded-md">
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                <i class="fas fa-save mr-2"></i>
                 Create Post
             </button>
         </div>
     </form>
 </div>
 
-    <!-- Add TinyMCE script -->
-    <script src="{% static 'tinymce/tinymce.min.js'%}"></script>
-    <script src="{% static 'js/script.js'%}"></script>
+<!-- Add TinyMCE script -->
+<script src="{% static 'tinymce/tinymce.min.js'%}"></script>
+<script src="{% static 'js/script.js'%}"></script>
 
-
-    <script>
-        // JavaScript to handle image preview
-        function previewImage(event) {
-            var reader = new FileReader();
-            var preview = document.getElementById('preview');
-            var imagePreview = document.getElementById('imagePreview');
-            
-            reader.onload = function() {
-                preview.src = reader.result;  // Set image source to file content
-                imagePreview.classList.remove('hidden');  // Show the preview container
-            };
-            
-            reader.readAsDataURL(event.target.files[0]);  // Read the selected file
-        }
-    </script>
+<script>
+    // JavaScript to handle image preview
+    function previewImage(event) {
+        var reader = new FileReader();
+        var preview = document.getElementById('preview');
+        var imagePreview = document.getElementById('imagePreview');
+        
+        reader.onload = function() {
+            preview.src = reader.result;  // Set image source to file content
+            imagePreview.classList.remove('hidden');  // Show the preview container
+        };
+        
+        reader.readAsDataURL(event.target.files[0]);  // Read the selected file
+    }
+</script>
 
 {% endblock %}
-

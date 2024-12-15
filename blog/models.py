@@ -50,7 +50,7 @@ class Media(models.Model):
 class BlogPost(models.Model):
     title = models.TextField(blank=True, null=True)
     content = HTMLField()
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, default=1, null=True, related_name="blogposts")
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="blogposts")
     date = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = FilerImageField(null=True, blank=True, related_name="blog_images", on_delete=models.SET_NULL)

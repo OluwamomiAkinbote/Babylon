@@ -1,0 +1,175 @@
+{% extends 'admin_partials/admin_base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 bg-gray-50 border border-gray-300">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">{{ folder.name }} - Files</h1>
+
+    <div class="flex justify-between items-center">
+        <!-- Back to Folder List Button -->
+        <div class="mb-6 text-right">
+            <a href="{% url 'files_home' %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 transition-transform transform hover:scale-105">
+                Back to Folder List
+            </a>
+        </div>
+        
+        <!-- Upload File Button -->
+        <div class="mb-6">
+            <a href="{% url 'upload_file' folder.id %}"
+               class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 transition-transform transform hover:scale-105">
+                Upload File
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- Grid Layout for Files -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for file in files %}
+        <div class="bg-white border border-gray-300 p-4 text-center transition-transform transform hover:scale-105">
+            <!-- File Previews (Auto-Displayed Content) -->
+            {% if file.extension in image_extensions %}
+                <!-- Image Preview -->
+                <img src="{{ file.file.url }}" alt="{{ file.name }}"
+                     class="w-full h-40 object-cover mb-4 cursor-pointer open-modal-btn"
+                     data-file-id="{{ file.id }}" data-file-name="{{ file.name }} "
+                     data-file-url="{{ file.file.url }}"
+                     data-file-size="{{ file.file.size }}"
+                     data-file-dimensions="{{ file.width }}x{{ file.height }}">
+            {% elif file.extension in video_extensions %}
+                <!-- Video Preview -->
+                <video controls autoplay muted loop class="w-full h-40 object-cover mb-4 cursor-pointer open-modal-btn"
+                       data-file-id="{{ file.id }}" data-file-name="{{ file.name }}"
+                       data-file-url="{{ file.file.url }}" data-file-size="{{ file.file.size }}">
+                    <source src="{{ file.file.url }}" type="video/{{ file.extension }}">
+                    Your browser does not support the video tag.
+                </video>
+            {% elif file.extension == 'pdf' %}
+                <!-- PDF Preview -->
+                <iframe src="{{ file.file.url }}" class="w-full h-40 mb-4 cursor-pointer open-modal-btn"
+                        data-file-id="{{ file.id }}" data-file-name="{{ file.name }}"
+                        data-file-url="{{ file.file.url }}" data-file-size="{{ file.file.size }}"></iframe>
+            {% else %}
+                <!-- Unsupported File -->
+                <div class="text-gray-500 mb-4 cursor-pointer open-modal-btn"
+                     data-file-id="{{ file.id }}" data-file-name="{{ file.name }}"
+                     data-file-url="{{ file.file.url }}" data-file-size="{{ file.file.size }}">
+                    <p>Unsupported file type</p>
+                </div>
+            {% endif %}
+
+            <!-- File Name -->
+            <h2 class="font-semibold text-gray-800 truncate mb-2">{{ file.name }}</h2>
+
+            <!-- Action Buttons -->
+            <div class="space-x-2">
+                <button type="button" data-file-id="{{ file.id }}"
+                class="bg-blue-500 hover:bg-blue-600 text-white text-sm py-1 px-3 transition-transform transform hover:scale-105 open-modal-btn">
+                     Open
+                </button>
+            </div>
+        </div>
+        {% empty %}
+        <p class="col-span-full text-gray-500 text-center">No files available in this folder.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- File Details Modal -->
+<div id="fileModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 w-96 border border-gray-300">
+        <h2 class="text-2xl font-bold mb-4">File Details</h2>
+        <div id="fileModalContent">
+            <!-- Modal content will be dynamically filled -->
+        </div>
+        <div class="mt-4">
+            <button id="closeModal" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 transition-transform transform hover:scale-105">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const openModalBtns = document.querySelectorAll('.open-modal-btn');
+    const modal = document.getElementById('fileModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const fileModalContent = document.getElementById('fileModalContent');
+
+    openModalBtns.forEach(btn => {
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent default link action
+            // Extract file data from the clicked element
+            const fileId = this.dataset.fileId;
+            const fileName = this.dataset.fileName; 
+            const fileUrl = this.dataset.fileUrl;
+            const fileSize = this.dataset.fileSize;
+            const fileDimensions = this.dataset.fileDimensions || 'N/A'; // Fallback if dimensions are missing
+
+            // Default file content (text size for all files)
+            let fileProperties = ` 
+                <div class="mb-4">
+                    <strong>Name:</strong> <span>${fileName}</span>
+                </div>
+                <div class="mb-4">
+                    <strong>Size:</strong> <span>${(fileSize / 1024).toFixed(2)} KB</span>
+                </div>
+            `;
+
+            // Add specific content for image files
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                fileProperties += ` 
+                    <div class="mb-4">
+                        <img src="${fileUrl}" alt="${fileName}" class="w-full h-64 object-cover mb-4">
+                    </div>
+                    <div class="mb-4">
+                        <strong>Dimensions:</strong> <span>${fileDimensions}</span>
+                    </div>
+                `;
+            }
+
+            // Add specific content for video files
+            if (['mp4', 'avi', 'mov', 'webm'].includes(fileExtension)) {
+                fileProperties += ` 
+                    <div class="mb-4">
+                        <video controls class="w-full h-64 object-cover mb-4">
+                            <source src="${fileUrl}" type="video/${fileExtension}">
+                        </video>
+                    </div>
+                `;
+            }
+
+            // Add content for PDFs or other files
+            if (fileExtension === 'pdf') {
+                fileProperties += ` 
+                    <div class="mb-4">
+                        <iframe src="${fileUrl}" class="w-full h-64"></iframe>
+                    </div>
+                `;
+            }
+
+            // Populate modal with the file properties
+            fileModalContent.innerHTML = fileProperties;
+
+            // Show modal
+            modal.classList.remove('hidden');
+        });
+    });
+
+    // Close modal functionality
+    closeModalBtn.addEventListener('click', function() {
+        modal.classList.add('hidden');
+    });
+});
+</script>
+{% endblock %}
