@@ -59,7 +59,7 @@
                     {% for post in hero_posts %}
                     <div class="carousel-item relative">
                             {% if post.image %}
-                                <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-64 md:h-96 object-cover">
+                                <img src="{{ post.image.file.url }}" alt="{{ post.image.file.name }}" class="w-full h-64 md:h-96 object-cover">
                             {% else %}
                                 <img src="{% static 'images/Breakingnews.png' %}" alt="Placeholder image" class="w-full h-64 md:h-96 object-cover">
                             {% endif %}

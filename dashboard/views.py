@@ -14,18 +14,9 @@ from django.db.models import Q
 from django.urls import reverse
 from django.conf import settings
 from django.http import HttpResponse
-
-from filer.models import File, Image
-from filer.fields.image import FilerImageField
-from filer.models.imagemodels import Image
-
-
 from django.shortcuts import render, redirect
-
-
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
-
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
@@ -51,6 +42,8 @@ from django.shortcuts import render
 from django.utils import timezone
 from datetime import timedelta
 
+
+from file_manager.models import File  # Import the File model from file_manager
 
 def reset_password_view(request):
     if request.method == 'POST':
@@ -162,11 +155,6 @@ def dashboard_home(request):
 
 
 
-
-
-
-
-
 @login_required
 def blog_table(request):
     if not request.user.is_staff:
@@ -183,48 +171,67 @@ def blog_table(request):
 
 
 
-
 @login_required
 def create_post(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content')
         category_id = request.POST.get('category')
-        uploaded_file = request.FILES.get('image')  # Get the uploaded file
+        image_id = request.POST.get('image')  # Get the selected image ID (from file manager)
 
         try:
+            # Debug: Log the received data
+            print(f"Received data: title={title}, content={content}, category_id={category_id}, image_id={image_id}")
+
             # Fetch the category instance
             category = Category.objects.get(id=category_id)
+            print(f"Category fetched: {category}")
 
-            # Create a Filer Image instance if an image is uploaded
-            filer_image = None
-            if uploaded_file:
-                filer_image = Image.objects.create(
-                    owner=request.user,  # Set the owner to the logged-in user
-                    original_filename=uploaded_file.name,
-                    file=uploaded_file
-                )
+            # Fetch the image from the file manager (if provided)
+            image = None
+            if image_id:
+                image = File.objects.get(id=image_id)
+                print(f"Image fetched: {image}")
 
             # Save the blog post, including the logged-in user as the author
-            BlogPost.objects.create(
+            blog_post = BlogPost.objects.create(
                 title=title,
                 content=content,
                 category=category,
                 author=request.user,  # Set the author to the logged-in user
-                image=filer_image  # Assign the Filer Image instance
+                image=image  # Assign the selected image (File instance)
             )
-            return redirect('blog_table')  # Replace with your desired redirect URL
+            print(f"Blog post created successfully: {blog_post}")
+
+            return redirect('blog_table')  # Redirect to the blog table page after creating the post
 
         except Category.DoesNotExist:
-            # Handle the case where the category does not exist
+            print(f"Category with ID {category_id} does not exist.")
             return render(request, 'admin_blog/create_post.html', {
                 'categories': Category.objects.all(),
                 'error': 'Selected category does not exist.'
             })
 
+        except File.DoesNotExist:
+            print(f"File with ID {image_id} does not exist.")
+            return render(request, 'admin_blog/create_post.html', {
+                'categories': Category.objects.all(),
+                'error': f'Selected image with ID {image_id} does not exist in the file manager.'
+            })
+
+        except Exception as e:
+            # Catch all other exceptions for debugging
+            print(f"Unexpected error: {e}")
+            return render(request, 'admin_blog/create_post.html', {
+                'categories': Category.objects.all(),
+                'error': 'An unexpected error occurred while creating the post.'
+            })
+
     # Handle GET request: load the form with existing categories
     categories = Category.objects.all()
     return render(request, 'admin_blog/create_post.html', {'categories': categories})
+
+
 
 
 

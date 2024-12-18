@@ -1,0 +1,238 @@
+{% extends 'admin_partials/admin_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="p-6 max-w-4xl mx-auto">
+
+
+    <div class="flex justify-between items-center mb-6 bg-green-100  p-4 rounded-md shadow-sm">
+        <a href="{% url 'blog_table' %}" class="bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back
+        </a>
+    
+        <h2 class="text-1xl font-bold text-gray-800 flex items-center uppercase">
+            <i class="fas fa-plus-circle text-green-800 mr-2"></i>
+            Create Blog Post
+        </h2>
+    </div>
+    
+
+    <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Title -->
+        <div class="mb-6">
+            <label for="title" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-heading text-gray-600 mr-2"></i>
+                Title
+            </label>
+            <textarea id="title" name="title" 
+                class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                rows="2" placeholder="Enter the blog post title..." required></textarea>
+        </div>
+
+        <!-- Category -->
+        <div class="mb-6">
+            <label for="category" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-tags text-gray-600 mr-2"></i>
+                Category
+            </label>
+            <select name="category" id="category" 
+                class="w-1/2 p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                required>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Content -->
+        <div class="mb-6">
+            <label for="content" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-align-left text-gray-600 mr-2"></i>
+                Content
+            </label>
+            <textarea id="content" name="content" 
+                class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
+                rows="10" placeholder="Write your content here..." required></textarea>
+        </div>
+
+        <!-- Image Upload (with preview) -->
+        <div class="mb-6">
+            <label for="image" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-image text-gray-600 mr-2"></i>
+                Upload Image
+            </label>
+            
+            <!-- Flex container for image input and preview -->
+            <div class="w-full p-3 border border-gray-400 text-sm flex items-center space-x-4">
+                <!-- File Input -->
+                <div class="flex-grow">
+                    <input type="file" id="image" name="image" 
+                        class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-sm" 
+                        accept="image/*" onchange="previewImage(event)">
+                </div>
+
+                <!-- Image Preview -->
+                <div id="imagePreview" class="hidden">
+                    <p class="text-gray-700">Image Preview:</p>
+                    <img id="preview" src="" alt="Image Preview" class="w-32 h-32 object-cover mt-2 border border-gray-400">
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="mb-6 p-4 bg-red-100 text-red-700 border border-red-400">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Buttons -->
+        <div class="flex justify-between items-center">
+            <a href="{% url 'blog_table' %}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back
+            </a>
+            <button type="submit" 
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                <i class="fas fa-save mr-2"></i>
+                Create Post
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
+<script>
+    // JavaScript to handle image preview
+    function previewImage(event) {
+        var reader = new FileReader();
+        var preview = document.getElementById('preview');
+        var imagePreview = document.getElementById('imagePreview');
+        
+        reader.onload = function() {
+            preview.src = reader.result;  // Set image source to file content
+            imagePreview.classList.remove('hidden');  // Show the preview container
+        };
+        
+        reader.readAsDataURL(event.target.files[0]);  // Read the selected file
+    }
+</script>
+
+{% endblock %}
+
+
+
+{% extends 'admin_partials/admin_base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 bg-gray-50 border border-gray-300">
+    <!-- Breadcrumb for Navigation -->
+    <nav class="text-gray-600 text-sm mb-6">
+        {% if current_folder.parent_folder %}
+            <a href="{% url 'folder_detail' current_folder.parent_folder.id %}" class="hover:underline">Back</a> / 
+        {% endif %}
+        <span class="font-bold">{{ current_folder.name }}</span>
+    </nav>
+
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">{{ current_folder.name }} - Files & Folders</h1>
+
+    <div class="flex justify-between items-center">
+<!-- Back to Parent Folder Button -->
+<div class="mb-6">
+    {% if current_folder.parent_folder %}
+        <a href="{% url 'folder_detail' folder_id=current_folder.parent_folder.id %}" 
+           class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition-transform transform hover:scale-105">
+            Back to Parent Folder
+        </a>
+    {% else %}
+        <a href="{% url 'files_home' %}" 
+           class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition-transform transform hover:scale-105">
+            Back to Root
+        </a>
+    {% endif %}
+</div>
+
+        <!-- Add Subfolder Button -->
+        <div class="mb-6">
+            <a href="{% url 'add_folder' parent_folder_id=folder.id %}"
+               class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition-transform transform hover:scale-105">
+                Add Subfolder
+            </a>
+        </div>
+
+
+        <!-- Upload File Button -->
+        <div class="mb-6">
+            <a href="{% url 'upload_file' folder.id %}" 
+               class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition-transform transform hover:scale-105">
+                Upload File
+            </a>
+        </div>
+    </div>
+
+    <!-- Subfolders Section -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Subfolders</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for subfolder in subfolders %}
+            <div class="bg-white border border-gray-300 rounded-lg p-4 text-center transition-transform transform hover:scale-105">
+                <i class="fas fa-folder text-6xl text-yellow-500 mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-800 truncate">{{ subfolder.name }}</h3>
+                <div class="mt-4">
+                    <a href="{% url 'folder_detail' subfolder.id %}" 
+                       class="text-blue-500 hover:text-blue-700 text-sm py-1 px-3 transition-transform transform hover:scale-110">
+                        Open
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-gray-500">No subfolders available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Files Section -->
+    <div>
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Files</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for file in files %}
+            <div class="bg-white border border-gray-300 p-4 text-center transition-transform transform hover:scale-105">
+                {% if file.file_type == 'image' %}
+                    <!-- Image Preview -->
+                    <img src="{{ file.file.url }}" alt="{{ file.name }}" class="w-full h-40 object-cover mb-4">
+                {% elif file.file_type == 'video' %}
+                    <!-- Video Preview -->
+                    <video controls class="w-full h-40 object-cover mb-4">
+                        <source src="{{ file.file.url }}" type="video/{{ file.extension }}">
+                    </video>
+                {% elif file.file_type == 'pdf' %}
+                    <!-- PDF Preview -->
+                    <iframe src="{{ file.file.url }}" class="w-full h-40 mb-4"></iframe>
+                {% else %}
+                    <!-- Unsupported File -->
+                    <p class="text-gray-500 mb-4">Unsupported File Type</p>
+                {% endif %}
+                <h3 class="font-semibold text-gray-800 truncate">{{ file.name }}</h3>
+                <a href="{% url 'file_details' file.id %}" 
+                   class="bg-blue-500 hover:bg-blue-600 text-white text-sm py-1 px-3 mt-2 rounded transition-transform transform hover:scale-105">
+                    Open
+                </a>
+            </div>
+            {% empty %}
+            <p class="col-span-full text-gray-500 text-center">No files available in this folder.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}

@@ -1,135 +1,126 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.core.paginator import Paginator
 from .models import Folder, File
-from mimetypes import guess_type
+from .utils import detect_file_type
 
-
-# Home view to list all folders
 def files_home(request):
-    # Get all folders in the file manager
-    folders = Folder.objects.all()
+    # Query for root folders (folders with no parent)
+    folders = Folder.objects.filter(parent_folder__isnull=True).order_by('-date')
     return render(request, 'file_manager/files_home.html', {'folders': folders})
 
 
-# Folder detail view to show files within a specific folder
+
 def folder_detail(request, folder_id):
     folder = get_object_or_404(Folder, id=folder_id)
-    files = File.objects.filter(folder=folder)
+    files = folder.files.all().order_by('-date')  # Directly retrieve files in the folder
 
-    # Define file type categories
-    image_extensions = ['jpg', 'jpeg', 'png', 'gif']
-    video_extensions = ['mp4', 'avi', 'mov', 'webm', 'mkv']
-    pdf_extensions = ['pdf']
-    document_extensions = ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'txt']
-
-    # Add `extension` and `file_type` attributes to each file
+    # Add additional file metadata for display
     for file in files:
-        file.extension = file.file.url.split('.')[-1].lower()  # Extract and normalize file extension
-        mime_type, _ = guess_type(file.file.url)
-        file.file_type = 'image' if file.extension in image_extensions else (
-            'video' if file.extension in video_extensions else (
-                'pdf' if file.extension in pdf_extensions else (
-                    'document' if file.extension in document_extensions else 'unsupported'
-                )
-            )
-        )
+        file.extension = file.file.url.split('.')[-1].lower()
+        file.file_type = detect_file_type(file.file.url)
 
     return render(request, 'file_manager/folder_details.html', {
         'folder': folder,
-        'files': files,
-        'image_extensions': image_extensions,
-        'video_extensions': video_extensions,
+        'files': files,  # Only files are passed
     })
 
 
-# File upload view to handle uploading files to a specific folder
+
 def upload_file(request, folder_id):
+    # Retrieve the folder by ID or return 404
     folder = get_object_or_404(Folder, id=folder_id)
+
     if request.method == 'POST' and request.FILES.get('file'):
         uploaded_file = request.FILES['file']
 
-        # Determine file type (image or video based on file extension)
-        file_type = 'image' if uploaded_file.name.lower().endswith(('jpg', 'jpeg', 'png')) else 'video'
-
-        # Create a new File object for the uploaded file
-        new_file = File.objects.create(
-            folder=folder,
-            file=uploaded_file,
-            name=uploaded_file.name,
-        )
-
-        # Redirect to folder detail page after successful file upload
+        # Check if a file with the same name already exists in the folder
+        if folder.files.filter(name=uploaded_file.name).exists():
+            messages.error(request, f"A file named '{uploaded_file.name}' already exists in this folder.")
+        else:
+            # Create the file object and associate it with the folder
+            File.objects.create(folder=folder, file=uploaded_file, name=uploaded_file.name)
+            messages.success(request, "File uploaded successfully.")
+        
         return redirect('folder_detail', folder_id=folder.id)
 
-    # Return upload file form page if request method is GET
     return render(request, 'file_manager/upload_file.html', {'folder': folder})
 
 
-# File rename view to rename an existing file
-def rename_file(request, file_id):
-    file = get_object_or_404(File, id=file_id)
-    if request.method == 'POST':
-        new_name = request.POST.get('name')
-        file.name = new_name
-        file.save()
 
-        # Redirect to the folder detail page after renaming
-        return redirect('folder_detail', folder_id=file.folder.id)
+def add_folder(request, parent_folder_id=None):
+    parent_folder = get_object_or_404(Folder, id=parent_folder_id) if parent_folder_id else None
 
-    # Render the rename file form
-    return render(request, 'file_manager/rename_file.html', {'file': file})
-
-
-# Add folder view to create a new folder
-def add_folder(request):
     if request.method == 'POST':
         folder_name = request.POST.get('name')
-
-        # Ensure folder name is provided
         if not folder_name:
             messages.error(request, "Folder name cannot be empty.")
-            return redirect('add_folder')
+        elif parent_folder and parent_folder.subfolders.filter(name=folder_name).exists():
+            messages.error(request, f"A subfolder named '{folder_name}' already exists.")
+        else:
+            Folder.objects.create(name=folder_name, parent_folder=parent_folder)
+            messages.success(request, "Folder created successfully.")
+            return redirect('folder_detail', folder_id=parent_folder.id) if parent_folder else redirect('files_home')
 
-        # Create new folder
-        new_folder = Folder.objects.create(name=folder_name)
-
-        # Redirect to home or folder details after creating
-        return redirect('files_home')  # or redirect('folder_detail', folder_id=new_folder.id)
-
-    # Render add folder form
-    return render(request, 'file_manager/add_folder.html')
+    return render(request, 'file_manager/add_folder.html', {'parent_folder': parent_folder})
 
 
-# Edit folder view to update an existing folder's details
 def edit_folder(request, folder_id):
     folder = get_object_or_404(Folder, id=folder_id)
+
     if request.method == 'POST':
         folder_name = request.POST.get('name')
-
-        # Ensure folder name is provided
         if not folder_name:
             messages.error(request, "Folder name cannot be empty.")
-            return redirect('edit_folder', folder_id=folder.id)
+        elif folder.parent_folder and folder.parent_folder.subfolders.filter(name=folder_name).exclude(id=folder.id).exists():
+            messages.error(request, f"A folder named '{folder_name}' already exists in the parent folder.")
+        else:
+            folder.name = folder_name
+            folder.save()
+            messages.success(request, "Folder updated successfully.")
+            return redirect('folder_detail', folder_id=folder.id)
 
-        folder.name = folder_name
-        folder.save()
-
-        # Redirect to folder detail page after updating
-        return redirect('files_home')
-
-    # Render edit folder form
     return render(request, 'file_manager/edit_folder.html', {'folder': folder})
 
 
-# Folder delete view to confirm and delete folder
 def delete_folder(request, folder_id):
     folder = get_object_or_404(Folder, id=folder_id)
-    
-    if request.method == 'POST':
-        # Delete the folder if the request is POST
-        folder.delete()
-        messages.success(request, f"Folder '{folder.name}' has been deleted successfully.")
-        return redirect('files_home')
 
-    # If the request is GET, show the confirmation page
+    if request.method == 'POST':
+        parent_folder_id = folder.parent_folder.id if folder.parent_folder else None
+        folder.delete()
+        messages.success(request, f"Folder '{folder.name}' deleted successfully.")
+        return redirect('folder_detail', folder_id=parent_folder_id) if parent_folder_id else redirect('files_home')
+
     return render(request, 'file_manager/delete_confirmation.html', {'folder': folder})
+
+
+def file_details(request, file_id):
+    file = get_object_or_404(File, id=file_id)
+
+    if request.method == 'POST':
+        new_name = request.POST.get('name')
+        if new_name and not file.folder.files.filter(name=new_name).exclude(id=file.id).exists():
+            file.name = new_name
+            file.save()
+            messages.success(request, "File name updated successfully.")
+        else:
+            messages.error(request, f"A file named '{new_name}' already exists in this folder.")
+        return redirect('folder_detail', folder_id=file.folder.id)
+
+    file.extension = file.file.url.split('.')[-1].lower()
+    file.file_type = detect_file_type(file.file.url)
+
+    return render(request, 'file_manager/file_details.html', {'file': file})
+
+
+def delete_file(request, file_id):
+    file = get_object_or_404(File, id=file_id)
+    folder_id = file.folder.id
+
+    if request.method == 'POST':
+        file.delete()
+        messages.success(request, f"File '{file.name}' deleted successfully.")
+        return redirect('folder_detail', folder_id=folder_id)
+
+    return render(request, 'file_manager/delete_confirmation.html', {'file': file})

@@ -16,7 +16,7 @@
                             <div class="flex-shrink-0">
                                 {% if post.video %}
                                     <video controls class="w-32 h-auto rounded">
-                                        <source src="{{ post.video.url }}" type="video/mp4">
+                                        <source src="{{ post.video.file.url }}" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>
                                 {% elif post.image %}
@@ -58,7 +58,7 @@
                     {% for post in recommended_posts %}
                         <div class="mb-4 flex shadow-md">
                             {% if post.image %}
-                                <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                                <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
                             {% else %}
                                 <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                             {% endif %}

@@ -1,0 +1,58 @@
+{% extends 'admin_partials/admin_base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 bg-gray-50 border border-gray-300 max-w-xl">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">File Details</h1>
+
+    <!-- File Details Section -->
+    <div class="bg-white border border-gray-300 p-6 text-center">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">{{ file.name }}</h2>
+
+        <!-- Centered File Preview Section -->
+        <div class="mx-auto mb-4" style="width: 100%; max-width: 300px; height: 300px;">
+            {% if file.extension in image_extensions %}
+                <!-- Image Preview -->
+                <img src="{{ file.file.url }}" alt="{{ file.name }}" class="object-cover mx-auto" style="width: 100%; height: 100%;">
+            {% elif file.extension in video_extensions %}
+                <!-- Video Preview -->
+                <video controls class="object-cover mx-auto" style="width: 100%; height: 100%;">
+                    <source src="{{ file.file.url }}" type="{{ file.mime_type }}">
+                    Your browser does not support the video tag.
+                </video>
+            {% elif file.extension in pdf_extensions %}
+                <!-- PDF Preview -->
+                <iframe src="{{ file.file.url }}" class="object-cover mx-auto" style="width: 100%; height: 100%;"></iframe>
+            {% else %}
+                <!-- Unsupported File Type -->
+                <p class="text-gray-500">Preview not available for this file type.</p>
+            {% endif %}
+        </div>
+
+        <!-- File Details -->
+        <div class="mt-4 text-left">
+            <p><strong>Name:</strong> {{ file.name }}</p>
+            <p><strong>Size:</strong> {{ file.file.size|filesizeformat }}</p>
+            <p><strong>Type:</strong> {{ file.mime_type }}</p>
+            <p><strong>Uploaded On:</strong> {{ file.uploaded_at|date:"F j, Y, g:i a" }}</p>
+        </div>
+
+        <!-- Rename File Form -->
+        <form method="POST" class="mt-6">
+            {% csrf_token %}
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Rename File:</label>
+            <input type="text" id="name" name="name" value="{{ file.name }}"
+                class="block w-48 mx-auto border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 transition-transform transform hover:scale-105">
+                Save Changes
+            </button>
+        </form>
+    </div>
+
+    <!-- Back to Folder Button -->
+    <div class="mt-6 text-center">
+        <a href="{% url 'folder_detail' file.folder.id %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 transition-transform transform hover:scale-105">
+            Back to Folder
+        </a>
+    </div>
+</div>
+{% endblock %}

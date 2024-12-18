@@ -44,7 +44,7 @@
                                     <div class="snap-center flex-shrink-0 w-full bg-black border-gray-300 rounded-md shadow-lg overflow-hidden">
                                         <a href="{% url 'video_details' post.slug %}">
                                             <div class="relative">
-                                                <img class="w-full h-48 object-cover cursor-pointer video-thumbnail" data-video-src="{{ post.video_file.url }}" alt="{{ post.title }}">
+                                                <img class="w-full h-48 object-cover cursor-pointer video-thumbnail" data-video-src="{{ post.video_file.file.url }}" alt="{{ post.title }}">
                                                 <div class="absolute inset-0 flex items-center justify-center">
                                                     <i class="fas fa-play-circle text-white text-4xl bg-gray-800 bg-opacity-50 p-3 rounded-full"></i>
                                                 </div>
@@ -59,7 +59,7 @@
                                     <!-- Display blog post -->
                                     <a href="{% url 'blog_detail' post.slug %}">
                                         {% if post.image %}
-                                            <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
+                                            <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
                                         {% else %}
                                             <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-full h-44 object-cover mb-4">
                                         {% endif %}
@@ -134,7 +134,7 @@
                         {% for post in recommended_posts %}
                             <div class="mb-4 flex shadow-md ">
                             {% if post.image %}
-                                <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                                <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
                             {% else %}
                                 <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                             {% endif %}

@@ -7,7 +7,8 @@ urlpatterns = [
     path('folder/<int:folder_id>/upload/', views.upload_file, name='upload_file'),
     path('folder/<int:folder_id>/edit/', views.edit_folder, name='edit_folder'),
     path('folder/<int:folder_id>/delete/', views.delete_folder, name='delete_folder'),  
-    path('folder/add/', views.add_folder, name='add_folder'),
-    path('file/<int:file_id>/rename/', views.rename_file, name='rename_file'),
+    path('file_manager/folder/<int:parent_folder_id>/add/', views.add_folder, name='add_folder'),
+    path('file_manager/folder/add/', views.add_folder, name='add_folder_no_parent'), 
+    path('file/<int:file_id>/', views.file_details, name='file_details'),
 ]
 

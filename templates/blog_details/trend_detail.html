@@ -61,10 +61,10 @@
    
                     <div class="bg-white overflow-hidden mb-4">
                         {% if trend.image %}
-                            <img src="{{ trend.image.url }}" alt="{{ trend.title }}" class="w-full object-cover">
+                            <img src="{{ trend.image.file.url }}" alt="{{ trend.title }}" class="w-full object-cover">
                         {% elif trend.video %}
                             <video controls class="w-full h-auto">
-                                <source src="{{ trend.video.url }}" type="video/mp4">
+                                <source src="{{ trend.video.file.url }}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         {% else %}
@@ -138,7 +138,7 @@
                         {% for post in recommended_posts %}
                             <div class="mb-4 flex shadow-md ">
                             {% if post.image %}
-                                <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                                <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
                             {% else %}
                                 <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                             {% endif %}

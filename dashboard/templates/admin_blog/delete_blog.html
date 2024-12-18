@@ -9,7 +9,7 @@
         <!-- Image Preview -->
         <div class="flex-shrink-0">
             {% if blogpost.image %}
-                <img src="{{ blogpost.image.url }}" alt="{{ blogpost.title }}" 
+                <img src="{{ blogpost.image.file.url }}" alt="{{ blogpost.title }}" 
                      class="w-40 h-40 object-cover bg-gray-200">
             {% else %}
                 <div class="w-40 h-40 bg-gray-300 flex items-center justify-center">

@@ -2,6 +2,7 @@
 {% load static tailwind_tags %}
 {% load custom_filters %}
 
+
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -95,7 +96,7 @@
             <div class="">
                 <div class="relative my-4">
                     {% if post.image %}
-                        <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-full h-auto">
+                        <img src="{{ post.image.file.url }}" alt="{{ post.image.file.name }}" class="w-full h-auto">
                     {% else %}
                         <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
                     {% endif %}

@@ -15,7 +15,7 @@
         {% for post in global_news_posts %}
         <div class="relative bg-gray-800 rounded-lg shadow-lg overflow-hidden">
             {% if post.image %}
-                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+                <img src="{{ post.image.file.url }}" alt="{{ post.image.file.name }}" class="w-full h-48 object-cover">
             {% else %}
                 <img src="{% static 'images/Breakingnews.png' %}" alt="Breaking News" class="w-full h-48 object-cover">
             {% endif %}

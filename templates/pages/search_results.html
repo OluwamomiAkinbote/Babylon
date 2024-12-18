@@ -34,7 +34,7 @@
                             <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-950">
                                 <a href="{% url 'blog_detail' result.slug %}">
                                     {% if result.image %}
-                                        <img src="{{ result.image.url }}" alt="{{ result.title }}" class="w-full h-44 object-cover mb-4">
+                                        <img src="{{ result.image.file.url }}" alt="{{ result.title }}" class="w-full h-44 object-cover mb-4">
                                     {% else %}
                                         <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-44 object-cover mb-4">
                                     {% endif %}
