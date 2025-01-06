@@ -2,6 +2,8 @@
 
 {% block content %}
 
+
+<!-- Create Post Button -->
 <a href="{% url 'create_post' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
     Create Post
 </a>
@@ -13,27 +15,33 @@
                 <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">
                     <span class="sr-only">Select</span>
                 </th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Image</th>
                 <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Title</th>
                 <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Category</th>
-                <th class="px-4 py-2 max-w-[20rem] text-left text-sm font-medium border border-gray-300">Author</th>
-                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300 whitespace-nowrap">Date</th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Author</th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Date</th>
                 <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Actions</th>
             </tr>
         </thead>
         <tbody class="text-gray-700">
             {% for post in page_obj %}
             <tr class="border-b hover:bg-gray-100" id="row-{{ post.id }}">
-                <!-- Radio Button -->
                 <td class="px-4 py-2 text-sm border border-gray-300">
                     <input type="radio" name="selected_post" value="{{ post.id }}" class="cursor-pointer select-post">
                 </td>
-
+                <td class="px-4 py-2 text-sm border border-gray-300">
+                    {% if post.image %}
+                    <img src="{{ post.image.file.url }}" alt="{{ post.title }}" class="w-16 h-16 object-cover rounded">
+                    {% else %}
+                    <span class="text-gray-500 italic">No image</span>
+                    {% endif %}
+                </td>
                 <td class="px-4 py-2 text-sm border border-gray-300">{{ post.title }}</td>
                 <td class="px-4 py-2 text-sm border border-gray-300">{{ post.category.name }}</td>
                 <td class="px-4 py-2 text-sm border border-gray-300">{{ post.author }}</td>
-                <td class="px-4 py-2 text-sm border border-gray-300 whitespace-nowrap">{{ post.date|date:"Y-m-d" }}</td>
-
-                <!-- Actions -->
+                <td class="px-4 py-2 text-sm border border-gray-300 whitespace-nowrap">
+                    {{ post.date|date:"Y-m-d" }}
+                </td>
                 <td class="px-4 py-2 text-sm border border-gray-300">
                     <div class="flex space-x-2">
                         <a href="{% url 'edit_blogpost' post.slug %}" class="text-blue-600 hover:text-blue-800">
@@ -61,14 +69,13 @@
     <ul class="flex items-center space-x-2">
         {% if page_obj.has_previous %}
         <li>
-            <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</a>
+            <a href="?{% with request.GET.urlencode|slice:":-6" as querystring %}{{ querystring }}&page={{ page_obj.previous_page_number }}{% endwith %}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</a>
         </li>
         {% else %}
         <li>
             <span class="px-3 py-1 bg-gray-300 rounded text-gray-500">Prev</span>
         </li>
         {% endif %}
-
         {% for page in page_obj.paginator.page_range %}
         {% if page == page_obj.number %}
         <li>
@@ -80,7 +87,6 @@
         </li>
         {% endif %}
         {% endfor %}
-
         {% if page_obj.has_next %}
         <li>
             <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</a>
@@ -92,6 +98,9 @@
         {% endif %}
     </ul>
 </div>
+
+
+
 
 <script>
     // Toggle action menu visibility

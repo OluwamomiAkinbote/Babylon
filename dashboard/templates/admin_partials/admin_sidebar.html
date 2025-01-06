@@ -22,6 +22,24 @@
                             <span class="ml-2">Overview</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-user text-xs w-4"></i>
+                            <span class="ml-2">User Profile</span>
+                        </a>
+                    </li>
+                </li>
+                                    <li>
+                    <a href="{% url 'files_home'%}" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
+                        <i class="fas fa-folder text-xs w-4"></i>
+                        <span class="ml-2">File Manager</span>
+                    </a>
+                </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-envelope text-xs w-4"></i>
+                            <span class="ml-2">Subscriptions</span>
+                        </a>
                 </ul>
             </li>
 
@@ -38,40 +56,26 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'category_table' %}" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
-                            <i class="fas fa-list text-xs w-4"></i>
-                            <span class="ml-2">Blog Categories</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
+                        <a href="{% url 'trend_table' %}" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
                             <i class="fas fa-fire text-xs w-4"></i>
                             <span class="ml-2">Trends</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
+                        <a href="{% url 'video_table'%}" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
                             <i class="fas fa-video text-xs w-4"></i>
                             <span class="ml-2">Videos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'category_table' %}" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
+                            <i class="fas fa-list text-xs w-4"></i>
+                            <span class="ml-2">Blog Categories</span>
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <!-- File Manager Section -->
-            <li>
-                <h3 class="text-center bg-gray-800 text-gray-300 text-xs font-bold py-2 uppercase rounded">
-                    File Manager
-                </h3>
-                <ul class="mt-2 space-y-1">
-                    <li>
-                        <a href="{% url 'files_home'%}" class="flex items-center px-3 py-2 rounded hover:bg-gray-700 text-sm">
-                            <i class="fas fa-photo-video text-xs w-4"></i>
-                            <span class="ml-2">Blog Media</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
 
             <!-- Shop Section -->
             <li>

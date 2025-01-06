@@ -10,5 +10,6 @@ urlpatterns = [
     path('file_manager/folder/<int:parent_folder_id>/add/', views.add_folder, name='add_folder'),
     path('file_manager/folder/add/', views.add_folder, name='add_folder_no_parent'), 
     path('file/<int:file_id>/', views.file_details, name='file_details'),
+    path('file/<int:file_id>/delete_file', views.delete_file, name='delete_file'),
 ]
 

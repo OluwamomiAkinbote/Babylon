@@ -1,33 +1,82 @@
 {% extends 'admin_partials/admin_base.html' %}
 
-
 {% block content %}
 <div class="container mx-auto px-4 py-8 bg-gray-50 border border-gray-300">
-    <nav class="text-gray-600 text-sm mb-6">
-        {% if current_folder.parent_folder %}
-            <a href="{% url 'folder_detail' current_folder.parent_folder.id %}" class="hover:underline">Back</a> / 
-        {% endif %}
-        <span class="font-bold">{{ current_folder.name }}</span>
-    </nav>
+      
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">{{ folder.name }} - Files</h1>
 
-    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">{{ current_folder.name }} - Files</h1>
+    <div class="p-6 mx-auto flex justify-between items-center space-x-6 mb-6">
+        <!-- Back Home Button -->
+        <div class="flex">
+            <a href="{% url 'files_home' %}" 
+               class="bg-gray-700 text-white hover:bg-gray-800 font-medium py-3 px-4 rounded-md shadow-md transition-transform transform  focus:outline-none focus:ring-2 focus:ring-gray-700">
+                Back Home
+            </a>
+        </div>
+    
+        <!-- Search and Add Folder Section -->
+        <div class="flex items-center space-x-6">
+            <!-- Search Input -->
+            <div class="relative">
+                <input type="text" 
+                       id="folder-search" 
+                       class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400" 
+                       placeholder="Search for file" 
+                       value="">
+                <span class="absolute right-4 top-3 text-gray-500"><i class="fa fa-search"></i></span>
+            </div>
+    
+            <!-- Add Folder Button -->
+            <div class="flex">
+                <a href="{% url 'upload_file' folder.id %}" 
+                   class="bg-blue-100 text-black hover:bg-blue-200 font-semibold py-3 px-4 rounded-md shadow-md  focus:outline-none focus:ring-2 focus:ring-blue-100">
+                   Upload File
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+  
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {% for file in files %}
-        <div class="bg-white border border-gray-300 p-4 text-center transition-transform transform hover:scale-105 cursor-pointer"
-             onclick="selectFile('{{ file.id }}', '{{ file.file.url }}')">
+        <div 
+            class="bg-white border border-gray-300 p-4 text-center transition-transform transform hover:scale-105 cursor-pointer"
+            onclick="selectFile('{{ file.id|escapejs }}', '{{ file.file.url|escapejs }}', '{{ file.file_type|escapejs }}')">
+            
+            <!-- File Previews -->
             {% if file.file_type == 'image' %}
                 <img src="{{ file.file.url }}" alt="{{ file.name }}" class="w-full h-40 object-cover mb-4">
             {% elif file.file_type == 'video' %}
                 <video controls class="w-full h-40 object-cover mb-4">
                     <source src="{{ file.file.url }}" type="video/{{ file.extension }}">
+                    Your browser does not support the video tag.
                 </video>
             {% elif file.file_type == 'pdf' %}
                 <iframe src="{{ file.file.url }}" class="w-full h-40 mb-4"></iframe>
             {% else %}
-                <p class="text-gray-500 mb-4">Unsupported File Type</p>
+                <div class="text-gray-500 mb-4 flex items-center justify-center h-40">
+                    <i class="fas fa-file-alt text-4xl"></i>
+                </div>
             {% endif %}
+
+            <!-- File Name -->
             <h3 class="font-semibold text-gray-800 truncate">{{ file.name }}</h3>
+
+            <!-- View and Delete Icons -->
+            <div class="mt-4 flex justify-around text-gray-600">
+                <!-- View Button with Icon -->
+                <a href="{% url 'file_details' file.id %}" class="text-blue-500 hover:text-blue-700">
+                    <i class="fas fa-eye"></i> View
+                </a>
+
+                <!-- Delete Button with Icon -->
+                <a href="{% url 'delete_file' file.id %}" class="text-red-500 hover:text-red-700">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </a>
+            </div>
         </div>
         {% empty %}
         <p class="col-span-full text-gray-500 text-center">No files available in this folder.</p>
@@ -35,11 +84,21 @@
     </div>
 </div>
 
+<!-- JavaScript to Handle File Selection -->
 <script>
-    function selectFile(fileId, fileUrl) {
-        // Pass the file data back to the Create Post page
-        window.opener.selectFile(fileId, fileUrl);
-        window.close(); // Close the File Manager
+    function selectFile(fileId, fileUrl, fileType) {
+        console.log('Selected file:', { fileId, fileUrl, fileType }); // Debugging output
+        
+        // Communicate with the parent window
+        if (window.opener && typeof window.opener.selectFile === 'function') {
+            window.opener.selectFile(fileId, fileUrl, fileType);
+            console.log('File selection sent to parent window.');
+        } else {
+            console.error('Parent window function selectFile not found.');
+        }
+
+        // Close the file manager
+        window.close();
     }
 </script>
 {% endblock %}

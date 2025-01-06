@@ -92,7 +92,7 @@ def delete_folder(request, folder_id):
         messages.success(request, f"Folder '{folder.name}' deleted successfully.")
         return redirect('folder_detail', folder_id=parent_folder_id) if parent_folder_id else redirect('files_home')
 
-    return render(request, 'file_manager/delete_confirmation.html', {'folder': folder})
+    return render(request, 'file_manager/delete_folder.html', {'folder': folder})
 
 
 def file_details(request, file_id):
@@ -123,4 +123,4 @@ def delete_file(request, file_id):
         messages.success(request, f"File '{file.name}' deleted successfully.")
         return redirect('folder_detail', folder_id=folder_id)
 
-    return render(request, 'file_manager/delete_confirmation.html', {'file': file})
+    return render(request, 'file_manager/delete_file.html', {'file': file})

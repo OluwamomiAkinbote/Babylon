@@ -62,7 +62,7 @@ class TrendAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'date')  # Added 'author'
     search_fields = ('title', 'content', 'author__username')  # Search by author's username
     ordering = ('-date',)
-    fields = ('title', 'content', 'author', 'image', 'video', 'slug')  # Added 'author'
+    fields = ('title', 'content', 'author', 'file', 'slug')  # Added 'author'
     prepopulated_fields = {'slug': ('title',)}
 
 

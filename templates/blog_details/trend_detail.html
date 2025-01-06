@@ -58,19 +58,23 @@
                 <h2 class="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-8">{{ trend.title | title }}</h2>
                 
                 <div>
-   
                     <div class="bg-white overflow-hidden mb-4">
-                        {% if trend.image %}
-                            <img src="{{ trend.image.file.url }}" alt="{{ trend.title }}" class="w-full object-cover">
-                        {% elif trend.video %}
-                            <video controls class="w-full h-auto">
-                                <source src="{{ trend.video.file.url }}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
+                        {% if trend.file %}
+                            {% if trend.file.is_image %}
+                                <img src="{{ trend.file.file.url }}" alt="{{ trend.title }}" class="w-full object-cover">
+                            {% elif trend.file.is_video %}
+                                <video controls class="w-full h-auto">
+                                    <source src="{{ trend.file.file.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
+                            {% endif %}
                         {% else %}
-                        <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
+                            <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
                         {% endif %}
                     </div>
+            
                     <div class="flex flex-col sm:flex-row items-start sm:items-center font-poppins mb-4">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-gray-700 font-medium">
                             <!-- Author Info -->
@@ -82,42 +86,31 @@
                             </div>
                             <!-- Date Info -->
                             <div class="flex items-center space-x-2 text-gray-600 text-md sm:text-base font-md">
-                                <!-- Date Icon -->
                                 <i class="fas fa-calendar-day text-green-700"></i>
-                                <!-- Date Text -->
                                 <p>{{ trend.date|date:"F j, Y" }}</p>
                             </div>
                         </div>
                     </div>
-                    
-    
-    
-                    <div class="">
-                        {% include 'partials/buttons.html'%}
-                        
-                        <div id="contentContainer" class="py-0 overflow-hidden" >
-                        
-                                {{ advert|first_letter_richtext | safe | linebreaks }}
-                            
+            
+                    <div>
+                        {% include 'partials/buttons.html' %}
+                        <div id="contentContainer" class="py-0 overflow-hidden my-8">
+                            {{ advert|first_letter_richtext | safe | linebreaks }}
                         </div>
-    
                     </div>
-                   
-   
                 </div>
-
-
+            
                 <div class="shop">
                     {% include 'shop/blog_shop.html' %}
                 </div>
-
+            
                 <div class="mt-6">
-
                     {% block comment&reply %}
                         {% include 'partials/comment&reply.html' %}
                     {% endblock %}
                 </div>
             </div>
+            
 
             <!-- Sidebar Section -->
             <div class="w-full lg:w-4/12 px-4">

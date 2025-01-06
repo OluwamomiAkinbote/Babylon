@@ -69,8 +69,8 @@ class Trend(models.Model):
     title = models.TextField(blank=True, null=True)
     content = HTMLField()
     author = models.ForeignKey(User, on_delete=models.SET_NULL, default=1, null=True, related_name="trends") 
-    image = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL, related_name='trend_images')
-    video = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL, related_name='trend_videos')
+    file = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL, related_name='trend_file')
+
     date = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 

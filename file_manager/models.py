@@ -1,9 +1,11 @@
 from django.db import models
 import mimetypes
+import os
 
 def upload_to(instance, filename):
     """Dynamic upload path based on the folder structure."""
-    return f"file_manager/{instance.folder.name}/{filename}"
+    folder_name = instance.folder.name if instance.folder else "default"
+    return f"file_manager/{folder_name}/{filename}"
 
 class Folder(models.Model):
     name = models.CharField(max_length=255)
@@ -32,7 +34,7 @@ class Folder(models.Model):
         return self.subfolders.all()
 
     def calculate_size(self):
-        """Calculate the total size of immediate files in this folder."""
+        """Calculate the total size of all immediate files in this folder."""
         return sum(file.file.size for file in self.files.all())
 
 class File(models.Model):
@@ -54,8 +56,31 @@ class File(models.Model):
         return self.name
 
     def get_file_type(self):
-        """Determine the type of file."""
+        """
+        Determine the type of file based on MIME type.
+        Returns "image", "video", "audio", "text", "application", or "unknown".
+        """
         mime_type, _ = mimetypes.guess_type(self.file.name)
         if mime_type:
-            return mime_type.split('/')[0]  # e.g., "image", "video", "application"
+            return mime_type.split('/')[0]  # Extract the category from the MIME type
         return "unknown"
+
+    def is_image(self):
+        """Check if the file is an image."""
+        return self.get_file_type() == "image"
+
+    def is_video(self):
+        """Check if the file is a video."""
+        return self.get_file_type() == "video"
+
+    def is_audio(self):
+        """Check if the file is an audio file."""
+        return self.get_file_type() == "audio"
+
+    def extension(self):
+        """Get the file extension."""
+        return os.path.splitext(self.file.name)[1].lower()
+
+    def size_in_mb(self):
+        """Get the file size in MB, rounded to 2 decimal places."""
+        return round(self.file.size / (1024 * 1024), 2)

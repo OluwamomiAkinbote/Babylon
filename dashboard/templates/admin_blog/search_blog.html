@@ -1,0 +1,48 @@
+
+<div class="search-container">
+    <form method="get" action="{% url 'search_blog_posts' %}">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" placeholder="Search by title..." value="{{ title_query }}">
+        </div>
+        <div>
+            <label for="category">Category:</label>
+            <select name="category" id="category">
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category.name }}" {% if category_query == category.name %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="author">Author:</label>
+            <input type="text" name="author" id="author" placeholder="Search by author..." value="{{ author_query }}">
+        </div>
+        <div>
+            <label for="date">Date:</label>
+            <input type="date" name="date" id="date" value="{{ date_query }}">
+        </div>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+{% if results %}
+    <h2>Search Results</h2>
+    <ul>
+        {% for post in results %}
+            <li>
+                <a href="{% url 'blog_post_detail' post.slug %}">
+                    {{ post.title }}
+                </a>
+                <p>Author: {{ post.author }}</p>
+                <p>Date: {{ post.date }}</p>
+                <p>Category: {{ post.category }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+

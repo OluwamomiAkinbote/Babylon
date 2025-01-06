@@ -1,0 +1,102 @@
+{% extends 'admin_partials/admin_base.html' %}
+
+{% block content %}
+
+<!-- Create Trend Button -->
+<a href="{% url 'create_trend' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+    Create Trend
+</a>
+
+<div class="bg-white my-6 shadow-md rounded overflow-x-auto">
+    <table class="min-w-full table-auto border-collapse border border-gray-300">
+        <thead class="bg-gray-700 text-white">
+            <tr>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Image/Video</th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Title</th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Author</th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Date</th>
+                <th class="px-4 py-2 text-left text-sm font-medium border border-gray-300">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="text-gray-800">
+            {% for trend in page_obj %}
+            <tr class="{% cycle 'bg-gray-100' 'bg-white' %} border-b hover:bg-gray-200">
+                <td class="px-4 py-2 text-sm border border-gray-300">
+                    {% if trend.file %}
+                        {% if trend.file.get_file_type == "image" %}
+                            <img src="{{ trend.file.file.url }}" alt="Trend Image" class="w-16 h-16 object-cover rounded">
+                        {% elif trend.file.get_file_type == "video" %}
+                            <video class="w-16 h-16 object-cover rounded" controls>
+                                <source src="{{ trend.file.file.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% else %}
+                            <span class="text-gray-500 italic">Unsupported File Type</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="text-gray-500 italic">No File</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-2 text-sm border border-gray-300">{{ trend.title }}</td>
+                <td class="px-4 py-2 text-sm border border-gray-300">{{ trend.author }}</td>
+                <td class="px-4 py-2 text-sm border border-gray-300 whitespace-nowrap">
+                    {{ trend.date|date:"Y-m-d" }}
+                </td>
+                <td class="px-4 py-2 text-sm border border-gray-300">
+                    <div class="flex space-x-2">
+                        <a href="{% url 'edit_trend' trend.slug %}" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'delete_trend' trend.slug %}" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="px-4 py-2 text-center text-gray-500">
+                    No trends available.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination Controls -->
+<div class="flex justify-center mt-4">
+    <ul class="flex items-center space-x-2">
+        {% if page_obj.has_previous %}
+        <li>
+            <a href="?{% with request.GET.urlencode|slice:":-6" as querystring %}{{ querystring }}&page={{ page_obj.previous_page_number }}{% endwith %}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</a>
+        </li>
+        {% else %}
+        <li>
+            <span class="px-3 py-1 bg-gray-300 rounded text-gray-500">Prev</span>
+        </li>
+        {% endif %}
+        {% for page in page_obj.paginator.page_range %}
+        {% if page == page_obj.number %}
+        <li>
+            <span class="px-3 py-1 bg-blue-500 text-white rounded">{{ page }}</span>
+        </li>
+        {% else %}
+        <li>
+            <a href="?page={{ page }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">{{ page }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li>
+            <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+        </li>
+        {% else %}
+        <li>
+            <span class="px-3 py-1 bg-gray-300 rounded text-gray-500">Next</span>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+
+{% endblock %}

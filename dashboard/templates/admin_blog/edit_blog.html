@@ -3,21 +3,18 @@
 {% block content %}
 <div class="p-6 max-w-4xl mx-auto">
 
-    <div class="flex justify-between items-center mb-6 bg-green-100  p-4 rounded-md shadow-sm">
-
+    <div class="flex justify-between items-center mb-6 bg-green-100 p-4 rounded-md shadow-sm">
         <a href="{% url 'blog_table' %}" class="bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
             <i class="fas fa-arrow-left mr-2"></i>
             Back
         </a>
-
         <h2 class="text-1xl font-bold text-gray-800 flex items-center uppercase">
             <i class="fas fa-edit text-green-800 mr-2"></i>
             Edit Blog Post
         </h2>
-
     </div>
 
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" action="{% url 'edit_blogpost' blogpost.slug %}">
         {% csrf_token %}
 
         <!-- Title -->
@@ -59,37 +56,39 @@
                 rows="10" required>{{ blogpost.content }}</textarea>
         </div>
 
-        <!-- Image Upload (with preview if an image is present) -->
+        <!-- Select Image from File Manager -->
         <div class="mb-6">
             <label for="image" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
                 <i class="fas fa-image text-gray-600 mr-2"></i>
-                Upload Image
+                Select Image
             </label>
-            
-            <!-- Flex container for image input and preview -->
-            <div class="w-full p-3 border border-gray-400 text-sm flex items-center space-x-4">
-                <!-- File Input -->
-                <div class="flex-grow">
-                    <input type="file" id="image" name="image" 
-                        class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-sm" 
-                        accept="image/*" onchange="previewImage(event)">
-                </div>
 
-                <!-- Image Preview -->
-                <div id="imagePreview" class="hidden">
-                    <p class="text-gray-700">Image Preview:</p>
-                    <img id="preview" src="" alt="Image Preview" class="w-32 h-32 object-cover mt-2 border border-gray-400">
-                </div>
+            <!-- Hidden input for file ID -->
+            <input type="hidden" id="image" name="image" value="{% if blogpost.image %}{{ blogpost.image.id }}{% endif %}">
+
+            <!-- Preview Section -->
+            <div id="imagePreviewContainer" class="{% if blogpost.image %}p-3 border border-gray-400 mb-4 text-center{% else %}hidden{% endif %}">
+                <p class="text-gray-700 mb-2">Selected Image:</p>
+                <img id="imagePreview" 
+                     src="{% if blogpost.image %}{{ blogpost.image.file.url }}{% endif %}" 
+                     alt="Selected Image" 
+                     class="w-32 h-32 object-cover mx-auto">
             </div>
 
-            <!-- Show existing image if available -->
-            {% if blogpost.image %}
-            <div class="mt-4">
-                <p class="text-gray-700">Current Image:</p>
-                <img src="{{ blogpost.image.url }}" alt="Current Image" class="w-32 h-32 object-cover mt-2 border border-gray-400">
-            </div>
-            {% endif %}
+            <!-- Open File Manager Button -->
+            <button type="button" onclick="openFileManager()" 
+                class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 text-sm">
+                <i class="fas fa-folder-open mr-2"></i>
+                Open File Manager
+            </button>
         </div>
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="mb-6 p-4 bg-red-100 text-red-700 border border-red-400">
+            {{ error }}
+        </div>
+        {% endif %}
 
         <!-- Buttons -->
         <div class="flex justify-between items-center">
@@ -106,24 +105,19 @@
     </form>
 </div>
 
-<!-- Add TinyMCE script -->
-<script src="{% static 'tinymce/tinymce.min.js'%}"></script>
-<script src="{% static 'js/script.js'%}"></script>
-
 <script>
-    // JavaScript to handle image preview
-    function previewImage(event) {
-        var reader = new FileReader();
-        var preview = document.getElementById('preview');
-        var imagePreview = document.getElementById('imagePreview');
-        
-        reader.onload = function() {
-            preview.src = reader.result;  // Set image source to file content
-            imagePreview.classList.remove('hidden');  // Show the preview container
-        };
-        
-        reader.readAsDataURL(event.target.files[0]);  // Read the selected file
+    function openFileManager() {
+        window.open("{% url 'files_home' %}", "_blank", "width=800,height=600");
+    }
+    function selectFile(fileId, fileUrl) {
+        // Update the hidden input and preview image
+        document.getElementById('image').value = fileId;
+        document.getElementById('imagePreview').src = fileUrl;
+        document.getElementById('imagePreviewContainer').classList.remove('hidden');
     }
 </script>
 
+<!-- Add TinyMCE script -->
+<script src="{% static 'tinymce/tinymce.min.js'%}"></script>
+<script src="{% static 'js/script.js'%}"></script>
 {% endblock %}

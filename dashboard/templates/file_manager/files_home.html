@@ -6,14 +6,38 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">File Manager</h1>
 
-    <!-- Add Folder Button (aligned to the right) -->
-    <div class="mb-6 flex justify-end">
-        <a href="{% url 'add_folder_no_parent' %}"
-        class="bg-blue-500 text-white hover:bg-blue-600 font-semibold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400">
-        Add Folder
-        </a>
+    <div class="p-6 mx-auto bg-white flex justify-between items-center space-x-6">
+        <!-- Back Home Button -->
+        <div class="flex">
+            <a href="{% url 'dashboard_home' %}" 
+               class="bg-gray-700 text-white hover:bg-gray-800 font-medium py-3 px-4 rounded-md shadow-md transition-transform transform  focus:outline-none focus:ring-2 focus:ring-gray-700">
+                Back Home
+            </a>
+        </div>
+    
+        <!-- Search and Add Folder Section -->
+        <div class="flex items-center space-x-6">
+            <!-- Search Input -->
+            <div class="relative">
+                <input type="text" 
+                       id="folder-search" 
+                       class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400" 
+                       placeholder="Search for a folder" 
+                       value="">
+                <span class="absolute right-4 top-3 text-gray-500"><i class="fa fa-search"></i></span>
+            </div>
+    
+            <!-- Add Folder Button -->
+            <div class="flex">
+                <a href="{% url 'add_folder_no_parent' %}" 
+                   class="bg-blue-100 text-black hover:bg-blue-200 font-semibold py-3 px-4 rounded-md shadow-md  focus:outline-none focus:ring-2 focus:ring-blue-100">
+                    Add Folder
+                </a>
+            </div>
+        </div>
     </div>
-
+    
+    
 
     <!-- Grid Layout -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

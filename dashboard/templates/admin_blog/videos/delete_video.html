@@ -1,0 +1,40 @@
+{% extends 'admin_partials/admin_base.html' %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-8 mt-10">
+    <h1 class="text-2xl font-extrabold text-gray-800 mb-4">Confirm Video Deletion</h1>
+    <p class="text-gray-700 mb-6 leading-relaxed">
+        You are about to permanently delete the video titled 
+        <span class="font-semibold text-gray-900">"{{ video.title }}"</span>. 
+        This action cannot be undone. Deleting this video will remove it from all related categories, playlists, and user access. 
+        Please confirm your decision.
+    </p>
+
+    <!-- Video Preview and Text Content with Flex Layout -->
+    <div class="flex items-center justify-between space-x-6">
+        <div class="flex-1">
+            <h2 class="text-lg font-bold text-gray-800 mb-3">Video Preview:</h2>
+            {% if video.video_file %}
+            <video controls class="w-64 h-36 rounded-lg shadow-md">
+                <source src="{{ video.video_file.file.url }}" type="video/mp4" autoplay>
+                Your browser does not support the video tag.
+            </video>
+            {% else %}
+            <p class="text-gray-500 italic">No video file attached to this entry.</p>
+            {% endif %}
+        </div>
+        <div class="flex-1">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-lg shadow-lg font-medium transition duration-300 ease-in-out">
+                        Yes, Delete Video
+                    </button>
+                    <a href="{% url 'video_table' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-6 rounded-lg shadow-lg font-medium transition duration-300 ease-in-out">
+                        No, Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

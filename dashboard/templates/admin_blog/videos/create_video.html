@@ -1,0 +1,134 @@
+{% extends 'admin_partials/admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="p-6 max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6 bg-green-100 p-4 rounded-md shadow-sm">
+        <a href="{% url 'video_table' %}" class="bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back
+        </a>
+        <h2 class="text-1xl font-bold text-gray-800 flex items-center uppercase">
+            <i class="fas fa-plus-circle text-green-800 mr-2"></i>
+            Create Video
+        </h2>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Title -->
+        <div class="mb-6">
+            <label for="title" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-heading text-gray-600 mr-2"></i>
+                Title
+            </label>
+            <input type="text" id="title" name="title" value="{{ video.title|default:'' }}"
+                class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm"
+                placeholder="Enter video title" required>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-6">
+            <label for="description" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-file-alt text-gray-600 mr-2"></i>
+                Description
+            </label>
+            <textarea id="content" name="description"
+                class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm"
+                rows="4" placeholder="Write a description for your video..." required>{{ video.description|default:'' }}</textarea>
+        </div>
+
+        <!-- Category -->
+        <div class="mb-6">
+            <label for="category" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-tags text-gray-600 mr-2"></i>
+                Category
+            </label>
+            <select id="category" name="category"
+                class="w-1/2 p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm">
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if video and video.category.id == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Select File -->
+        <div class="mb-6">
+            <label for="file" class="block text-lg font-medium text-gray-800 mb-2 flex items-center">
+                <i class="fas fa-file text-gray-600 mr-2"></i>
+                Select File (Image or Video)
+            </label>
+            <input type="hidden" name="video_file" id="video_file">
+            <div class="flex items-center space-x-4">
+                <button type="button" class="p-3 w-full border border-gray-400 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition"
+                    onclick="openFileManager()">Select File from File Manager</button>
+            </div>
+
+            <div id="filePreviewContainer" class="hidden space-x-4 p-3 border border-gray-300 rounded-md bg-gray-100 shadow-md mt-4">
+                <p class="text-gray-700 font-medium">Selected File:</p>
+                <div class="flex items-center justify-center">
+                    <img id="fileImagePreview" src="" alt="Selected File" class="hidden w-32 h-32 object-cover rounded-md border border-gray-200">
+                    <video id="fileVideoPreview" class="hidden w-48 h-auto rounded-md border border-gray-200" controls autoplay>
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="mb-6 p-4 bg-red-100 text-red-700 border border-red-400">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Buttons -->
+        <div class="flex justify-between items-center">
+            <a href="{% url 'video_table' %}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back
+            </a>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 uppercase text-sm tracking-wide">
+                <i class="fas fa-save mr-2"></i>
+                Save Video
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function openFileManager() {
+        window.open("{% url 'files_home' %}", "_blank", "width=800,height=600");
+    }
+
+    function selectFile(fileId, fileUrl, mimeType) {
+        document.getElementById('video_file').value = fileId;
+
+        const imagePreview = document.getElementById('fileImagePreview');
+        const videoPreview = document.getElementById('fileVideoPreview');
+        const previewContainer = document.getElementById('filePreviewContainer');
+
+        if (mimeType.startsWith('image')) {
+            imagePreview.src = fileUrl;
+            imagePreview.classList.remove('hidden');
+            videoPreview.classList.add('hidden');
+        } else if (mimeType.startsWith('video')) {
+            videoPreview.src = fileUrl;
+            videoPreview.classList.remove('hidden');
+            imagePreview.classList.add('hidden');
+        } else {
+            imagePreview.classList.add('hidden');
+            videoPreview.classList.add('hidden');
+        }
+
+        previewContainer.classList.remove('hidden');
+    }
+</script>
+
+<script src="{% static 'tinymce/tinymce.min.js'%}"></script>
+<script src="{% static 'js/script.js'%}"></script>
+{% endblock %}

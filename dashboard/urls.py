@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     # Dashboard and Analytics
     path('', views.dashboard_home, name='dashboard_home'),
+    
     path('blog-analysis', views.analytics_view, name='analytics_view'),
 
     # User authentication
@@ -22,6 +23,16 @@ urlpatterns = [
     path('categories/add/', views.create_category, name='create_category'),
     path('categories/<slug:slug>/edit/', views.edit_category, name='edit_category'),
     path('categories/<slug:slug>/delete/', views.delete_category, name='delete_category'),
+
+    path('trend/', views.trend_table, name='trend_table'),
+    path('create/', views.create_trend, name='create_trend'),
+    path('edit/<slug:slug>/', views.edit_trend, name='edit_trend'),
+    path('delete/<slug:slug>/', views.delete_trend, name='delete_trend'),
+
+    path('video', views.video_table, name='video_table'),
+    path('create-video/', views.create_video, name='create_video'),
+    path('<slug:slug>/edit/', views.edit_video, name='edit_video'),
+    path('<slug:slug>/delete/', views.delete_video, name='delete_video'),
 
     # Password reset
     path('password-reset/', views.reset_password_view, name='password_reset'),

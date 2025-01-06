@@ -1,0 +1,21 @@
+{% extends 'admin_partials/admin_base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 bg-gray-50 border border-gray-300 max-w-xl">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">Delete File</h1>
+
+    <div class="bg-white border border-gray-300 p-6 text-center">
+        <p>Are you sure you want to delete the file <strong>{{ file.name }}</strong>?</p>
+        
+        <form method="POST" class="mt-6">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-500 text-white hover:bg-red-600 py-2 px-4 transition-transform transform hover:scale-105">
+                Yes, delete it
+            </button>
+            <a href="{% url 'folder_detail' folder_id=file.folder.id %}" class="bg-gray-500 text-white hover:bg-gray-600 py-2 px-4 ml-4 transition-transform transform hover:scale-105">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}
