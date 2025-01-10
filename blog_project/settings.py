@@ -1,11 +1,13 @@
 from pathlib import Path
 from decouple import config, Csv
 import os
-
+from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -17,8 +19,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'https://scodynate.com.ng/']
-
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS =[]
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'filer',
     'django.contrib.sites', 
+    'whitenoise.runserver_nostatic', 
 
 
 ]
@@ -91,6 +94,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
+    'whitenosie.middleware.WhiteNoiseMiddleware'
    
 ]
 
@@ -119,11 +123,12 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'scodynate',               
-        'USER': 'root',                    
-        'PASSWORD': '',                    
-        'PORT': '3306',                    
+        'ENGINE': os.getenv('DATABASE_ENGINE'),
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT'),
     }
 }
 
@@ -183,13 +188,12 @@ LOGIN_URL = 'user_login'
 
 
 
-# settings.py (for production)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'oluwamomis@gmail.com'  
-EMAIL_HOST_PASSWORD = 'bovh hmjg irub sbnm'  
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))  # Default to 587 if not set
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'  # Convert string to boolean
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') 
 
 
 
