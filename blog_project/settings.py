@@ -19,8 +19,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS =[]
+ALLOWED_HOSTS = ['https://babylon-production-0398.up.railway.app']
+CSRF_TRUSTED_ORIGINS =['https://babylon-production-0398.up.railway.app']
 # Application definition
 
 INSTALLED_APPS = [
