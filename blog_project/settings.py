@@ -19,7 +19,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = ['https://babylon-production-0398.up.railway.app']
+ALLOWED_HOSTS = [ 'localhost','127.0.0.1','babylon-production-0398.up.railway.app']
 CSRF_TRUSTED_ORIGINS =['https://babylon-production-0398.up.railway.app']
 # Application definition
 
