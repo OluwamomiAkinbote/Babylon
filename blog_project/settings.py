@@ -31,7 +31,6 @@ CSRF_TRUSTED_ORIGINS =['https://babylon-production-0398.up.railway.app']
 INSTALLED_APPS = [
 
     'django.contrib.admin',
-    'jazzmin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
