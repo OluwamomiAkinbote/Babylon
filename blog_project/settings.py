@@ -14,12 +14,17 @@ load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
-
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+if ENVIRONMENT=='development':
+    DEBUG = True
+else:
+    DEBUG = False
+
 
 
 ALLOWED_HOSTS = [ 'localhost','127.0.0.1','babylon-production-0398.up.railway.app']
+ALLOWED_HOSTS = [ '*']
 CSRF_TRUSTED_ORIGINS =['https://babylon-production-0398.up.railway.app']
 # Application definition
 
@@ -94,7 +99,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
-    'whitenosie.middleware.WhiteNoiseMiddleware'
+  
    
 ]
 
