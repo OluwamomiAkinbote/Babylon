@@ -9,3 +9,4 @@ django-tailwind==3.8.0
 pillow==10.3.0
 django-tinymce==4.1.0
 beautifulsoup4==4.12.3
+django-browser-reload==1.13.0
