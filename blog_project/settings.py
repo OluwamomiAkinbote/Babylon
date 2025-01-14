@@ -124,12 +124,16 @@ WSGI_APPLICATION = 'blog_project.wsgi.application'
 
 
 
+
 # Default database configuration
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,  # Keep database connections open for 600 seconds
+        ssl_require=True   # Enforce SSL for secure database connections
     )
 }
+
 
 
 # Password validation
