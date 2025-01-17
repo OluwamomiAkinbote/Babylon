@@ -25,5 +25,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 EXPOSE 8000
 
 # Command to run the app
-CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:$PORT"]
+# Existing Dockerfile content...
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:$PORT"]
+
 

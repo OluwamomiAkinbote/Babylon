@@ -16,6 +16,11 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
+PORT = os.getenv('PORT')  # Railway sets this automatically
+
+if not PORT:
+    raise ValueError("No PORT environment variable found.")
+
 if ENVIRONMENT=='development':
     DEBUG = True
 else:
