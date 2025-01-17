@@ -7,6 +7,12 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'blog_project.settings')
+    
+    # Set default port from environment variable if running the server
+    if len(sys.argv) > 1 and sys.argv[1] == 'runserver':
+        port = os.environ.get('PORT', '8000')  # Default to 8000 if PORT is not set
+        sys.argv[2:] = [f"0.0.0.0:{port}"]
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

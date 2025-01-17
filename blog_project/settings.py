@@ -16,19 +16,14 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
-PORT = os.getenv('PORT')  # Railway sets this automatically
-
-if not PORT:
-    raise ValueError("No PORT environment variable found.")
-
 if ENVIRONMENT=='development':
     DEBUG = True
 else:
     DEBUG = False
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'babylon-production-0398.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://babylon-production-0398.up.railway.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'babylon-1.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://babylon-1.onrender.com']
 
 INSTALLED_APPS = [
 
