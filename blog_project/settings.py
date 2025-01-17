@@ -22,8 +22,8 @@ else:
     DEBUG = False
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'babylon-1.onrender.com']
-CSRF_TRUSTED_ORIGINS = ['https://babylon-1.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'newstropy.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://newstropy.onrender.com']
 
 INSTALLED_APPS = [
 
