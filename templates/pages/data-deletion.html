@@ -1,0 +1,24 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Data Deletion Instructions</title>
+    {% tailwind_css %}
+
+</head>
+<body>
+        <h1>Data Deletion Request</h1>
+        <p>If you wish to delete your data, please send an email to <a href="mailto:privacy@newstropy.com.ng">privacy@newstropy.com.ng</a>.</p>
+        <p>Alternatively, you can use the following URL to submit a data deletion request:</p>
+        <p><a href="https://newstropy.com.ng/delete-data">https://newstropy.com.ng/delete-data</a></p>
+</body>
+</html>

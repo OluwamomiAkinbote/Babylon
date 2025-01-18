@@ -9,6 +9,13 @@ from blog.models import BlogPost, Category, Video, Trend
 from advert.models import AdBanner, AdCategory
 from blog.utils import insert_ad_banner
 from shop.models import Product
+from django.http import JsonResponse
+
+def data_deletion(request):
+    return JsonResponse({
+        "url": "https://newstropy.com.ng/data-deletion",
+        "message": "Data deletion request received. We will process your request shortly.",
+    })
 
 
 def video_reels(request):
@@ -147,3 +154,12 @@ def privacy_policy(request):
     }
 
     return render(request, 'pages/privacy_policy.html', context)
+
+
+
+
+def data_deletion(request):
+    return JsonResponse({
+        "url": "https://newstropy.com.ng/data-deletion",
+        "message": "Data deletion request received. We will process your request shortly.",
+    })
