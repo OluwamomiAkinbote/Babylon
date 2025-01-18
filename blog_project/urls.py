@@ -8,7 +8,7 @@ from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('news-admin/', admin.site.urls),
     path('', include('blog.urls')), 
     path('advert/', include('advert.urls')), 
     path('shop/', include('shop.urls')), 
