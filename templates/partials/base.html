@@ -7,17 +7,39 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'site.webmanifest' %}">
 
-    <title>Newstropy | Breaking News | Sports | Trends</title>
+    <title> Newstropy |{%block title%}{%endblock%} </title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{% block og-caption %}{% endblock %}">
+    <meta property="og:description" content="{% block og-description %}{% endblock %}">
+    <meta property="og:url" content="http://{{ request.META.HTTP_HOST }}{{ request.path }}">
+    <meta property="og:image" content="http://{{ request.META.HTTP_HOST }}{% block og-image %}{% endblock %}">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block tw-caption %}{% endblock %}">
+    <meta name="twitter:description" content="{% block tw-description %}{% endblock %}">
+    <meta name="twitter:image" content="http://{{ request.META.HTTP_HOST }}{% block tw-image %}{% endblock %}">
+    <meta name="twitter:url" content="http://{{ request.META.HTTP_HOST }}{{ request.path }}">
+
+
+
+
+
+
+
+
+
+
+
+
+
     <meta name="description" content="Newstropy - Your source for the latest updates in politics, sports, global news, and more. Stay informed with in-depth articles and expert opinions." />
     
-    <meta name="description" content="Welcome to Newstropy - the ultimate destination for breaking news, in-depth analysis, and comprehensive coverage of the latest stories from around the world." />
 
-    <meta name="keywords" content="breaking news, latest news, Newstropy, world news, news updates" />
-    
-    <meta name="keywords" content="News, Nigeria News, Nigeria Updates, Politics, Sports, Global News, Newstropy" />
 
     <link rel="canonical" href="https://www.scodynate.com/" />
 

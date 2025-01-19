@@ -48,11 +48,11 @@ class CategoryAdmin(admin.ModelAdmin):
 # Register BlogPost model
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'date', 'category')  # Added 'author'
-    search_fields = ('title', 'content', 'author__username')  # Search by author's username
-    list_filter = ('date', 'category', 'author')  # Added 'author' to filters
+    list_display = ('title', 'date', 'category')
+    search_fields = ('title', 'content') 
+    list_filter = ('date', 'category')  
     ordering = ('-date',)
-    fields = ('title', 'content', 'author', 'category', 'image', 'slug')  # Added 'author'
+    fields = ('title', 'content',  'category', 'image', 'slug')  
     prepopulated_fields = {'slug': ('title',)}
 
 
