@@ -2,28 +2,29 @@
 {% load static tailwind_tags %}
 {% load custom_filters %}
 
-{% block title%} {{post.title}} {%endblock%}
-{% block og-caption%} {{post.title}} {%endblock%}
-{% block og-description%} {{ advert|first_letter_richtext | safe | linebreaks|truncatechars:80 }} {%endblock%}
-{% block og-image %}
-    {% if post.image %}
-        {{ post.image.file.url }}
-    {% else %}
-        {% static 'images/Breakingnews.png' %}
-    {% endif %}
-{% endblock %}
 
-<!-- twitter og -->
+{% block title %}{{ post.title }}{% endblock %}
 
-{% block tw-caption%} {{post.title}} {%endblock%}
-{% block tw-description%} {{ advert|first_letter_richtext | safe | linebreaks|truncatechars:80 }}  {%endblock%}
-{% block tw-image %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.title }}{% endblock %}
+{% block og_image %}
     {% if post.image %}
         {{ post.image.url }}
     {% else %}
         {% static 'images/Breakingnews.png' %}
     {% endif %}
 {% endblock %}
+
+{% block tw_title %}{{ post.title }}{% endblock %}
+{% block tw_description %}{{ post.title }}{% endblock %}
+{% block tw_image %}
+    {% if post.image %}
+        {{ post.image.url }}
+    {% else %}
+        {% static 'images/Breakingnews.png' %}
+    {% endif %}
+{% endblock %}
+
 
 
 

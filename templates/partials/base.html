@@ -13,18 +13,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="{% block og-caption %}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{% endblock %}">
     <meta property="og:type" content="website">
-    <meta property="og:description" content="{% block og-description %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% endblock %}">
     <meta property="og:url" content="http://{{ request.META.HTTP_HOST }}{{ request.path }}">
-    <meta property="og:image" content="http://{{ request.META.HTTP_HOST }}{% block og-image %}{% endblock %}">
+    <meta property="og:image" content="http://{{ request.META.HTTP_HOST }}{% block og_image %}{% endblock %}">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block tw-caption %}{% endblock %}">
-    <meta name="twitter:description" content="{% block tw-description %}{% endblock %}">
-    <meta name="twitter:image" content="http://{{ request.META.HTTP_HOST }}{% block tw-image %}{% endblock %}">
+    <meta name="twitter:title" content="{% block tw_title %}{% endblock %}">
+    <meta name="twitter:description" content="{% block tw_description %}{% endblock %}">
+    <meta name="twitter:image" content="http://{{ request.META.HTTP_HOST }}{% block tw_image %}{% endblock %}">
     <meta name="twitter:url" content="http://{{ request.META.HTTP_HOST }}{{ request.path }}">
+
+
+
 
 
 
