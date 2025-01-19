@@ -4,7 +4,7 @@
 
 {% block title%} {{post.title}} {%endblock%}
 {% block og-caption%} {{post.title}} {%endblock%}
-{% block og-description%} {{ post.content|truncatechars:80 }} {%endblock%}
+{% block og-description%} {{ advert|first_letter_richtext | safe | linebreaks|truncatechars:80 }} {%endblock%}
 {% block og-image %}
     {% if post.image %}
         {{ post.image.file.url }}
@@ -16,10 +16,10 @@
 <!-- twitter og -->
 
 {% block tw-caption%} {{post.title}} {%endblock%}
-{% block tw-description%} {{ post.content|truncatechars:80 }} {%endblock%}
+{% block tw-description%} {{ advert|first_letter_richtext | safe | linebreaks|truncatechars:80 }}  {%endblock%}
 {% block tw-image %}
     {% if post.image %}
-        {{ post.image.file.url }}
+        {{ post.image.url }}
     {% else %}
         {% static 'images/Breakingnews.png' %}
     {% endif %}
@@ -115,7 +115,7 @@
             <div class="">
                 <div class="relative my-4">
                     {% if post.image %}
-                        <img src="{{ post.image.file.url }}" alt="{{ post.image.file.name }}" class="w-full h-auto">
+                        <img src="{{ post.image.url }}" alt="{{ post.image.file.name }}" class="w-full h-auto">
                     {% else %}
                         <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
                     {% endif %}

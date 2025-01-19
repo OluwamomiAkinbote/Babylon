@@ -14,6 +14,7 @@
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="{% block og-caption %}{% endblock %}">
+    <meta property="og:type" content="website">
     <meta property="og:description" content="{% block og-description %}{% endblock %}">
     <meta property="og:url" content="http://{{ request.META.HTTP_HOST }}{{ request.path }}">
     <meta property="og:image" content="http://{{ request.META.HTTP_HOST }}{% block og-image %}{% endblock %}">
