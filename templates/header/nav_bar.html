@@ -19,7 +19,7 @@
 
         <!-- Logo -->
         <div class="logo">
-            <img src="{% static 'images/logoheader.png' %}" alt="Logo" class="h-16 w-auto md:h-16 object-contain transition-transform transform hover:scale-105">
+            <img src="{% static 'images/logoheader.png' %}" alt="Logo" class="h-10 scale-150 w-auto md:h-16 object-contain transition-transform transform ">
         </div>
 
 
@@ -34,7 +34,7 @@
   
     
         
-    <div class="flex justify-between items-center space-x-6 py-4 bg-white shadow-lg px-6 sm:hidden backdrop-blur-md bg-opacity-75">
+    <div class="flex justify-between items-center space-x-4 py-2 bg-white shadow-lg px-6 sm:hidden backdrop-blur-md bg-opacity-75">
     
         <!-- Home Link -->
         <div class="flex flex-col items-center text-gray-600 hover:text-[#10AA6A] transition-colors">
@@ -137,3 +137,52 @@
             </a>
         </div>
     </div>
+
+
+
+    <script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const navbar = document.querySelector('.navbar');
+        const categoryContainer = document.getElementById('category-container');
+        const searchContainer = document.getElementById('search-container');
+        const searchButton = document.getElementById('mobile-search-button');
+        const searchInput = document.getElementById('mobile-search-input');
+        const suggestionList = document.getElementById('search-suggestions');
+
+        // Toggle navbar visibility based on screen width
+        const toggleNavbarVisibility = () => {
+            navbar.style.display = window.innerWidth < 657 ? 'none' : 'flex';
+        };
+
+        // Fetch and display suggestions
+        const updateSuggestions = (query) => {
+            if (query) {
+                fetch(`/get-suggestions/?query=${query}`)
+                    .then((res) => res.json())
+                    .then((data) => {
+                        suggestionList.innerHTML = data
+                            .map((item) => `<option value="${item}"></option>`)
+                            .join('');
+                    });
+            } else {
+                suggestionList.innerHTML = '';
+            }
+        };
+
+        // Event listeners
+        document.getElementById('menu-button').addEventListener('click', () => categoryContainer.classList.toggle('hidden'));
+        document.getElementById('search-toggle').addEventListener('click', () => searchContainer.classList.toggle('hidden'));
+        searchInput.addEventListener('input', () => updateSuggestions(searchInput.value.trim()));
+        searchButton.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            if (query) window.location.href = `/search/?query=${encodeURIComponent(query)}`;
+        });
+
+        // Initial setup
+        toggleNavbarVisibility();
+        window.addEventListener('resize', toggleNavbarVisibility);
+    });
+
+
+    </script>

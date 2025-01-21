@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scodynate New | Video List</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -12,96 +11,95 @@
 </head>
 <body class="bg-gray-100">
 
-    <div class="container mx-auto ">
-        
-            <!-- Heading Section -->
-            <div class="section m-4">
-                <div class="heading">
-                    <h2>VIDEOS</h2>
-                </div>
-                <div class="line">
-                    <div class="highlight"></div>
-                </div>
-            </div>
-            
-            <div class="relative">
-                <!-- Scroll container -->
-                <div id="video-carousel" class="overflow-x-auto snap-x snap-mandatory bg-green-500 border flex space-x-4 p-4 mb-4 scroll-smooth">
-                    {% for video in video_posts %}
-                        <div class="snap-center flex-shrink-0 w-72 bg-green-100 border-gray-300 rounded-md shadow-lg overflow-hidden relative">
-                            <a href="{% url 'video_details' video.slug %}">
-                                <img class="w-full h-48 object-cover cursor-pointer" data-video-src="{{ video.video_file.file.url }}" alt="{{ video.title }}">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <i class="fas fa-play-circle text-white text-4xl bg-gray-800 bg-opacity-50 p-3 rounded-full"></i>
-                                </div>
-                                <div class="p-4 text-left">
-                                    <p class="text-sm font-md text-black mb-4">{{ video.title }}</p>
-                                    <p class="text-xs font-[300] text-black">{{ video.date }}</p>
-                                </div>
-                            </a>
-                        </div>
-                    {% endfor %}
-                </div>
-        
-                <!-- Previous Button -->
-                <button id="prev-button" class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-red-800  text-white p-3 rounded-md shadow-lg hover:bg-red-700 ">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-        
-                <!-- Next Button -->
-                <button id="next-button" class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-red-800  text-white p-3 rounded-md shadow-lg hover:bg-red-700 ">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-
-
-
-
+<div class="container mx-auto">
+    
+    <!-- Heading Section -->
+    <div class="section m-4">
+        <div class="heading">
+            <h2>VIDEOS</h2>
+        </div>
+        <div class="line">
+            <div class="highlight"></div>
+        </div>
     </div>
+    
+    <!-- Video Container -->
+    <div class="relative">
+        <!-- Scroll container -->
+        <div id="video-carousel" class="relative overflow-x-auto snap-x snap-mandatory bg-green-500 border flex space-x-4 p-4 mb-4 scroll-smooth">
+            {% for video in video_posts %}
+                <div class="snap-center flex-shrink-0 w-72 bg-green-100 border-gray-300 rounded-md shadow-lg overflow-hidden relative">
+                    <a href="{% url 'video_details' video.slug %}">
+                        <img class="w-full h-48 object-cover cursor-pointer" data-video-src="{{ video.video_file.file.url }}" alt="{{ video.title }}">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-play-circle text-white text-4xl bg-gray-800 bg-opacity-50 p-3 rounded-full"></i>
+                        </div>
+                        <div class="p-4 text-left">
+                            <p class="text-sm font-md text-black mb-4">{{ video.title }}</p>
+                            <p class="text-xs font-[300] text-black">{{ video.date }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
 
-    <!-- JavaScript for thumbnail and scroll handling -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const thumbnails = document.querySelectorAll('.snap-center img');
-            const carousel = document.getElementById('video-carousel');
-            const prevButton = document.getElementById('prev-button');
-            const nextButton = document.getElementById('next-button');
-            const scrollAmount = 300; // Amount to scroll in pixels
+        <!-- Controls positioned within the video container -->
+        <div class="absolute top-0 right-0 m-4 flex space-x-2 z-10">
+            <!-- Previous Button -->
+            <button id="prev-button" class="bg-red-800 text-white p-3 rounded-md shadow-lg hover:bg-red-700">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <!-- Next Button -->
+            <button id="next-button" class="bg-red-800 text-white p-3 rounded-md shadow-lg hover:bg-red-700">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
 
-            thumbnails.forEach(thumbnail => {
-                const videoUrl = thumbnail.getAttribute('data-video-src');
-                const video = document.createElement('video');
-                video.src = videoUrl;
+<!-- JavaScript for thumbnail and scroll handling -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const thumbnails = document.querySelectorAll('.snap-center img');
+        const carousel = document.getElementById('video-carousel');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const scrollAmount = 300; // Amount to scroll in pixels
 
-                video.addEventListener('loadeddata', function() {
-                    if (video.readyState >= 2) { // HAVE_CURRENT_DATA
-                        const canvas = document.createElement('canvas');
-                        const context = canvas.getContext('2d');
-                        const width = video.videoWidth;
-                        const height = video.videoHeight;
-                        canvas.width = width;
-                        canvas.height = height;
-                        context.drawImage(video, 0, 0, width, height);
-                        thumbnail.src = canvas.toDataURL('image/jpeg');
-                    }
-                });
-            });
+        thumbnails.forEach(thumbnail => {
+            const videoUrl = thumbnail.getAttribute('data-video-src');
+            const video = document.createElement('video');
+            video.src = videoUrl;
 
-            // Scroll Controls
-            prevButton.addEventListener('click', () => {
-                carousel.scrollBy({
-                    left: -scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
-
-            nextButton.addEventListener('click', () => {
-                carousel.scrollBy({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
+            video.addEventListener('loadeddata', function() {
+                if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    const width = video.videoWidth;
+                    const height = video.videoHeight;
+                    canvas.width = width;
+                    canvas.height = height;
+                    context.drawImage(video, 0, 0, width, height);
+                    thumbnail.src = canvas.toDataURL('image/jpeg');
+                }
             });
         });
-    </script>
+
+        // Scroll Controls
+        prevButton.addEventListener('click', () => {
+            carousel.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        nextButton.addEventListener('click', () => {
+            carousel.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
 </body>
 </html>

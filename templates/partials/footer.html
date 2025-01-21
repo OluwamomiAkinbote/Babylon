@@ -98,42 +98,30 @@
 
 
 
-<!-- JavaScript -->
 <script>
     document.getElementById('subscribe-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-    
+        event.preventDefault();
+        
         const formData = new FormData(this);
         const messageDiv = document.getElementById('message');
-        const form = this; // Reference to the form element
-    
+        const form = this;
+
         fetch(this.action, {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                messageDiv.innerHTML = `<div class="bg-green-500 text-white p-4 rounded">${data.message}</div>`;
-            } else {
-                messageDiv.innerHTML = `<div class="bg-red-500 text-white p-4 rounded">${data.error}</div>`;
-            }
-            setTimeout(() => {
-                messageDiv.innerHTML = ''; // Clear the message after 5 seconds
-            }, 5000);
+            messageDiv.innerHTML = `<div class="p-4 rounded ${data.success ? 'bg-green-500' : 'bg-red-500'} text-white">${data.success ? data.message : data.error}</div>`;
         })
-        .catch(error => {
+        .catch(() => {
             messageDiv.innerHTML = `<div class="bg-red-500 text-white p-4 rounded">An unexpected error occurred. Please try again later.</div>`;
-            setTimeout(() => {
-                messageDiv.innerHTML = ''; // Clear the message after 5 seconds
-            }, 5000);
         })
         .finally(() => {
-            form.reset(); // Clear the form fields regardless of success or error
+            setTimeout(() => messageDiv.innerHTML = '', 5000);
+            form.reset();
         });
     });
-    </script>
-    
+</script>
+

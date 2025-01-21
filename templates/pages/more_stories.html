@@ -1,112 +1,101 @@
+{% extends 'partials/base.html' %}
 {% load static tailwind_tags %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'site.webmanifest' %}">
-    <title>Scodynate  News | More Latest Stories</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-{% tailwind_css %}    
-</head>
-<body class="bg-white text-gray-900 font-poppins">
-    <div class="relative mx-auto ">
-        {% include 'advert/advert.html' with banner=leaderboard_ad %}
-        <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
-            <!-- Header Section -->
-            {% block content %}
-                {% include 'header/header.html' %}
-            {% endblock %}
-        </header>
-    </div>
 
-    <div class="container mx-auto px-4 mb-8 font-poppins">
-        <h2 class="capitalize font-poppins font-bold text-4xl mb-8">more latest stories</h2>
+{% block title %}Category | More Latest Stories{% endblock %}
 
-        <div class="flex flex-wrap -mx-4">
-            <!-- Main Content -->
-            <div class="w-full lg:w-8/12 px-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
-                    {% for post in page_obj %}
-                        <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl">
-                            <a href="{% url 'blog_detail' post.slug %}">
-                                {% if post.image %}
-                                    <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
-                                {% else %}
-                                    <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
-                                {% endif %}
-                            </a>
-                            <div class="px-2">
-                                <h2 class="text-sm font-bold mb-2 text-white hover:text-green-500">
-                                    <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
-                                </h2>
-                                <p class="text-green-400 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
+{% block content %}
+
+    <body class="bg-white text-gray-900 font-cheltenham">
+        
+        <div class="container mx-auto px-4 mb-8 font-poppins mt-56">
+            <div class="relative mx-auto ">
+                {% include 'advert/advert.html' with banner=leaderboard_ad %}
+        
+            </div>
+            <h2 class="capitalize font-poppins font-bold text-4xl my-8">more latest stories</h2>
+
+            <div class="flex flex-wrap -mx-4">
+                <!-- Main Content -->
+                <div class="w-full lg:w-8/12 px-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
+                        {% for post in page_obj %}
+                            <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl">
+                                <a href="{% url 'blog_detail' post.slug %}">
+                                    {% if post.image %}
+                                        <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
+                                    {% else %}
+                                        <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
+                                    {% endif %}
+                                </a>
+                                <div class="px-2">
+                                    <h2 class="text-sm font-bold mb-2 text-white hover:text-green-500">
+                                        <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                                    </h2>
+                                    <p class="text-green-400 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
+                                </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
 
-                </div>
+                    </div>
 
-                {% include 'advert/advert.html' with banner=home_ad %}
-                
-                <!-- Pagination -->
-                <div class="my-8 flex justify-center items-center space-x-2">
-                    {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
-                            &lt; PREV
-                        </a>
-                    {% else %}
-                        <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
-                            &lt; PREV
-                        </span>
-                    {% endif %}
-
-                    {% for page_num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == page_num %}
-                            <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
-                                {{ page_num }}
-                            </span>
-                        {% else %}
-                            <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100">
-                                {{ page_num }}
+                    {% include 'advert/advert.html' with banner=home_ad %}
+                    
+                    <!-- Pagination -->
+                    <div class="my-8 flex justify-center items-center space-x-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                                &lt; PREV
                             </a>
+                        {% else %}
+                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                                &lt; PREV
+                            </span>
                         {% endif %}
-                    {% endfor %}
 
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
-                            NEXT &gt;
-                        </a>
-                    {% else %}
-                        <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
-                            NEXT &gt;
-                        </span>
-                    {% endif %}
+                        {% for page_num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == page_num %}
+                                <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
+                                    {{ page_num }}
+                                </span>
+                            {% else %}
+                                <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100">
+                                    {{ page_num }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                                NEXT &gt;
+                            </a>
+                        {% else %}
+                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                                NEXT &gt;
+                            </span>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
 
-            <!-- Sidebar -->
-            
-            <div class="w-full lg:w-4/12 px-4 ">
-                {% include 'advert/advert.html' with banner=sidebar_ad %}
-                <div class="my-8">
-                    {% include 'home/trend.html' %}
+                <!-- Sidebar -->
+                
+                <div class="w-full lg:w-4/12 px-4 ">
+                    {% include 'advert/advert.html' with banner=sidebar_ad %}
+                    <div class="my-8">
+                        {% include 'home/trend.html' %}
 
+                    </div>
+                {% include 'advert/advert.html' with banner=home_ad %}
                 </div>
-               {% include 'advert/advert.html' with banner=home_ad %}
-            </div>
 
+            </div>
         </div>
-    </div>
 
-    <div class="footer">
-        {% block footer %}
-            {% include 'partials/footer.html' %}
-        {% endblock %}
-    </div>
-</body>
-</html>
+    
+    </body>
+
+{%endblock%}
+
+    
+
+

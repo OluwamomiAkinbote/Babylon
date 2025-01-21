@@ -37,14 +37,12 @@
                                     <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
                                         <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
                                     </div>
-                                    <p class="font-semibold text-gray-900 text-sm sm:text-base">Scodynate News</p>
+                                    <p class="font-semibold text-gray-900 text-sm sm:text-base">Newstropy</p>
                                 </div>
                                 <!-- Date Info -->
-                                <div class="text-gray-600 text-sm sm:text-base">
-                                    <p class="text-gray-600">
-                                        <i class="fas fa-clock text-red-500 text-sm "></i>
-                                        <span class="post-date" data-date="{{ main_post.date|date:'U' }}"></span>
-                                    </p>
+                                <div class="meta text-xs text-gray-600 flex items-center mt-2">
+                                    <i class="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
+                                    <p class="text-gray-700 text-sm ">{{ main_post.date|date:"F j, Y" }}</p>
                                 </div>
                             </div>
                             <div class="font-open-sans font-[400] md:text-sm">
@@ -66,12 +64,10 @@
                             <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class="w-[120px] h-[86px] mr-4 object-cover">
                         {% endif %}
                         <div class="md:w-2/3 sm:w-full">
-                            <a href="{% url 'blog_detail' post.slug %}" class="text-sm font-semibold hover:underline">{{ post.title|truncatechars:75 }}</a>
+                            <a href="{% url 'blog_detail' post.slug %}" class="text-md font-semibold hover:underline">{{ post.title|truncatechars:75 }}</a>
                             <div class="meta text-xs text-gray-600 flex items-center mt-2">
-                                <p class="text-gray-600">
-                                    <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
-                                    <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
-                                </p>
+                                <i class="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
+                                <p class="text-gray-700 text-sm ">{{ post.date|date:"F j, Y" }}</p>
                             </div>
                         </div>
                     </div>
@@ -86,10 +82,10 @@
                             <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
                         </div>
                         <div class="flex-1">
-                            <a href="{% url 'blog_detail' post.slug %}" class="text-sm font-semibold hover:underline block">{{ post.title|truncatechars:80 }}</a>
+                            <a href="{% url 'blog_detail' post.slug %}" class="text-md font-semibold hover:underline block">{{ post.title|truncatechars:80 }}</a>
                             <div class="meta text-xs text-gray-600 flex items-center mt-2">
-                                <i class="fas fa-clock text-red-500 text-[0.6rem] mr-1"></i>
-                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
+                                <i class="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
+                                <p class="text-gray-700 text-sm ">{{ post.date|date:"F j, Y" }}</p>
                             </div>
                         </div>
                     </div>
@@ -98,5 +94,4 @@
         </div>
     </div>
 
-    <script  src="{% static 'js/date-utils.js' %}"></script>
 </body>

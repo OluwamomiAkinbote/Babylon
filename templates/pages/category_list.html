@@ -1,196 +1,185 @@
+{% extends 'partials/base.html' %}
 {% load static tailwind_tags %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
-    <meta name="description" content="Explore the latest articles in the {{ category.name }} category on Scodynate News. Stay updated with expert insights and detailed coverage on {{ category.name }} topics." />
-    <meta name="keywords" content="Scodynate News, {{ category.name }}, {{ category.name }} news, latest {{ category.name }} updates" />
 
+{% block title %}Category | {{ category.name }}{% endblock %}
 
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'site.webmanifest' %}">
-    <title>Scodynate News | Category | {{ category.name }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-{% tailwind_css %}
-</head>
-<body class="bg-white text-gray-900 font-poppins ">
-    <div class="relative mx-auto">
-        {% include 'advert/advert.html' with banner=leaderboard_ad %}
+{% block content %}
 
-        <header class="sticky top-0 z-20 backdrop-blur-md bg-opacity-75">
-            <!-- Header Section -->
-            {% block content %}
-                {% include 'header/header.html' %}
-            {% endblock %}
-        </header>
-    </div>
-
-    <div class="container mx-auto">
-        <h2 class="capitalize font-poppins font-bold text-4xl mb-8">{{ category.name }}</h2>
-
-        <div class="flex flex-wrap -mx-4">
-            <!-- Main Content -->
-            <div class="w-full lg:w-8/12 px-4 ">
-                {% if page_obj %}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
-                        {% for post in page_obj %}
-                            <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl overflow-hidden">
-                                {% if post.video_file %}
-                                    <!-- Display video post -->
-                                    <div class="snap-center flex-shrink-0 w-full bg-black border-gray-300 rounded-md shadow-lg overflow-hidden">
-                                        <a href="{% url 'video_details' post.slug %}">
-                                            <div class="relative">
-                                                <img class="w-full h-48 object-cover cursor-pointer video-thumbnail" data-video-src="{{ post.video_file.file.url }}" alt="{{ post.title }}">
-                                                <div class="absolute inset-0 flex items-center justify-center">
-                                                    <i class="fas fa-play-circle text-white text-4xl bg-gray-800 bg-opacity-50 p-3 rounded-full"></i>
-                                                </div>
-                                            </div>
-                                            <div class="p-4 text-left">
-                                                <p class="text-sm font-medium text-white mb-4">{{ post.title }}</p>
-                                                <p class="text-xs font-light text-white">{{ post.date|date:"F j, Y" }}</p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                {% else %}
-                                    <!-- Display blog post -->
-                                    <a href="{% url 'blog_detail' post.slug %}">
-                                        {% if post.image %}
-                                            <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
-                                        {% else %}
-                                            <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-full h-44 object-cover mb-4">
-                                        {% endif %}
-                                    </a>
-                                    <div class=" px-2">
-                                        <h2 class="text-sm font-bold mb-2 text-white hover:text-green-500">
-                                            <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
-                                        </h2>
-                                        <p class="text-green-400 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
-
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
+    <body class="bg-white text-gray-900 font-poppins ">
+        
+        <div class="container mx-auto mt-56">
+            <div class="relative mx-auto ">
     
-                    </div>
-                    {% include 'advert/advert.html' with banner=home_ad %}
-
-                    <!-- Pagination -->
-                    <div class="mt-8 flex justify-center items-center space-x-2">
-                        {% if page_obj.has_previous %}
-                            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-green-100 bg-black hover:bg-green-50 flex items-center">
-                                &lt; PREV
-                            </a>
-                        {% else %}
-                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
-                                &lt; PREV
-                            </span>
-                        {% endif %}
-
-                        {% for page_num in page_obj.paginator.page_range %}
-                            {% if page_obj.number == page_num %}
-                                <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
-                                    {{ page_num }}
-                                </span>
-                            {% else %}
-                                <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-green-400 bg-black hover:bg-gray-100">
-                                    {{ page_num }}
-                                </a>
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-green-100 bg-black hover:bg-green-50 flex items-center">
-                                NEXT &gt;
-                            </a>
-                        {% else %}
-                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
-                                NEXT &gt;
-                            </span>
-                        {% endif %}
-                    </div>
-                {% endif %}
+                {% include 'advert/advert.html' with banner=leaderboard_ad %}
+    
             </div>
+            <h2 class="capitalize font-poppins font-bold text-4xl mb-8">{{ category.name }}</h2>
 
-            <!-- Sidebar -->
-            <div class="w-full lg:w-4/12 px-4">
+            <div class="flex flex-wrap -mx-4">
+                <!-- Main Content -->
+                <div class="w-full lg:w-8/12 px-4 ">
+                    {% if page_obj %}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+                            {% for post in page_obj %}
+                                <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl overflow-hidden">
+                                    {% if post.video_file %}
+                                        <!-- Display video post -->
+                                        <div class="snap-center flex-shrink-0 w-full bg-black border-gray-300 rounded-md shadow-lg overflow-hidden">
+                                            <a href="{% url 'video_details' post.slug %}">
+                                                <div class="relative">
+                                                    <img class="w-full h-48 object-cover cursor-pointer video-thumbnail" data-video-src="{{ post.video_file.file.url }}" alt="{{ post.title }}">
+                                                    <div class="absolute inset-0 flex items-center justify-center">
+                                                        <i class="fas fa-play-circle text-white text-4xl bg-gray-800 bg-opacity-50 p-3 rounded-full"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="p-4 text-left">
+                                                    <p class="text-sm font-medium text-white mb-4">{{ post.title }}</p>
+                                                    <p class="text-xs font-light text-white">{{ post.date|date:"F j, Y" }}</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <!-- Display blog post -->
+                                        <a href="{% url 'blog_detail' post.slug %}">
+                                            {% if post.image %}
+                                                <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-full h-44 object-cover mb-4">
+                                            {% else %}
+                                                <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-full h-44 object-cover mb-4">
+                                            {% endif %}
+                                        </a>
+                                        <div class=" px-2">
+                                            <h2 class="text-sm font-bold mb-2 text-white hover:text-green-500">
+                                                <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                                            </h2>
+                                            <p class="text-green-400 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
 
-                {% include 'advert/advert.html' with banner=sidebar_ad %}
-               <!-- Recommended posts -->
-                <div class="my-8">
-                    <!-- heading -->
-                    <div class="section flex-row items-center">
-                        <div class="heading">
-                            <h2 class="text-xs font-bold uppercase">Recommended</h2>
-                        </div>
-                        <div class="line">
-                            <div class="highlight"></div>
-                        </div>
-                    </div>
-                    <div>
-                        {% for post in recommended_posts %}
-                            <div class="mb-4 flex shadow-md ">
-                            {% if post.image %}
-                                <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
-                            {% else %}
-                                <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
-                            {% endif %}
-                                <div>
-                                    <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:50|title }}</a>
-                                    <div class="meta text-xs text-gray-600 flex items-center mt-2">
-                                        <p class="text-gray-600">
-                                            <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
-                                            <span class="text-gray-700 text-sm mb-2">{{ post.date|date:"F j, Y" }}</span>
-                                        </p>
-                                    </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            </div>
-                        {% empty %}
-                            <p>No recommended posts available.</p>
-                        {% endfor %}
-                    </div>
+                            {% endfor %}
+        
+                        </div>
+                        {% include 'advert/advert.html' with banner=home_ad %}
 
+                        <!-- Pagination -->
+                        <div class="mt-8 flex justify-center items-center space-x-2">
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-green-100 bg-black hover:bg-green-50 flex items-center">
+                                    &lt; PREV
+                                </a>
+                            {% else %}
+                                <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                                    &lt; PREV
+                                </span>
+                            {% endif %}
+
+                            {% for page_num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == page_num %}
+                                    <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
+                                        {{ page_num }}
+                                    </span>
+                                {% else %}
+                                    <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-green-400 bg-black hover:bg-gray-100">
+                                        {{ page_num }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-green-100 bg-black hover:bg-green-50 flex items-center">
+                                    NEXT &gt;
+                                </a>
+                            {% else %}
+                                <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                                    NEXT &gt;
+                                </span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
 
-                {% include 'advert/advert.html' with banner=home_ad %}
-                
+                <!-- Sidebar -->
+                <div class="w-full lg:w-4/12 px-4">
+
+                    {% include 'advert/advert.html' with banner=sidebar_ad %}
+                <!-- Recommended posts -->
+                    <div class="my-8">
+                        <!-- heading -->
+                        <div class="section flex-row items-center">
+                            <div class="heading">
+                                <h2 class="text-xs font-bold uppercase">Recommended</h2>
+                            </div>
+                            <div class="line">
+                                <div class="highlight"></div>
+                            </div>
+                        </div>
+                        <div>
+                            {% for post in recommended_posts %}
+                                <div class="mb-4 flex shadow-md ">
+                                {% if post.image %}
+                                    <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                                {% else %}
+                                    <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
+                                {% endif %}
+                                    <div>
+                                        <a href="{% url 'blog_detail' post.slug %}" class="text-black hover:text-gray-800 font-semibold text-[0.9rem]">{{ post.title|truncatechars:50|title }}</a>
+                                        <div class="meta text-xs text-gray-600 flex items-center mt-2">
+                                            <p class="text-gray-600">
+                                                <i class="fas fa-clock text-red-500 text-[0.6rem] font-bold"></i>
+                                                <span class="text-gray-700 text-sm mb-2">{{ post.date|date:"F j, Y" }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p>No recommended posts available.</p>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                    {% include 'advert/advert.html' with banner=home_ad %}
+                    
+                </div>
+
             </div>
-
         </div>
-    </div>
 
-    <div class="footer mt-8">
-        {% block footer %}
-            {% include 'partials/footer.html' %}
-        {% endblock %}
-    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const thumbnails = document.querySelectorAll('.video-thumbnail');
 
-            thumbnails.forEach(thumbnail => {
-                const videoUrl = thumbnail.getAttribute('data-video-src');
-                const video = document.createElement('video');
-                video.src = videoUrl;
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const thumbnails = document.querySelectorAll('.video-thumbnail');
 
-                video.addEventListener('loadeddata', function() {
-                    if (video.readyState >= 2) { // HAVE_CURRENT_DATA
-                        const canvas = document.createElement('canvas');
-                        const context = canvas.getContext('2d');
-                        const width = video.videoWidth;
-                        const height = video.videoHeight;
-                        canvas.width = width;
-                        canvas.height = height;
-                        context.drawImage(video, 0, 0, width, height);
-                        thumbnail.src = canvas.toDataURL('image/jpeg');
-                    }
+                thumbnails.forEach(thumbnail => {
+                    const videoUrl = thumbnail.getAttribute('data-video-src');
+                    const video = document.createElement('video');
+                    video.src = videoUrl;
+
+                    video.addEventListener('loadeddata', function() {
+                        if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            const width = video.videoWidth;
+                            const height = video.videoHeight;
+                            canvas.width = width;
+                            canvas.height = height;
+                            context.drawImage(video, 0, 0, width, height);
+                            thumbnail.src = canvas.toDataURL('image/jpeg');
+                        }
+                    });
                 });
             });
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+
+
+
+
+
+{% endblock %}
+
+
+
+

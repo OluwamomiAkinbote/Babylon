@@ -9,9 +9,9 @@
 <!-- top_bar -->
 
      
-    <div class="bg-white shadow-md relative z-20 backdrop-blur-md bg-opacity-75">
+    <div class="bg-gray-50 shadow-md relative z-20 backdrop-blur-md bg-opacity-75">
         <!-- First Container: Social Links, Logo, and Search Bar -->
-        <div class="py-2 flex justify-between items-center px-2 hidden sm:flex">
+        <div class="py-2 flex justify-evenly items-center px-2 hidden sm:flex">
 
             <div class="social-links flex space-x-4 text-gray-900">
                 <!-- Facebook -->
@@ -74,7 +74,7 @@
             <div class="category">
                 <ul class="flex space-x-6 capitalize">
                     {% for category in navbar_categories %}
-                    <li class="hover:underline hover:text-green-800 transition-colors">
+                    <li class="hover:underline hover:text-green-800 transition-colors border-t border-b border-green-900">
                         <a href="{% url 'category_list' category.slug %}" class="text-lg">{{ category.name }}</a>
                     </li>
                     {% endfor %}
@@ -91,9 +91,68 @@
 
         
     </div>
-    <script src="{% static 'js/mobile_navbar.js' %}"></script>
     
     
 
-<script src="{% static 'js/search.js'%}"></script>
+
+<script>
+    // Debounce function
+    const debounce = (func, delay) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
+    // DOM Elements
+    const searchInput = document.getElementById('search-input');
+    const suggestionBox = document.getElementById('suggestion-box');
+    const searchButton = document.getElementById('search-button');
+
+    // Fetch and display suggestions
+    const fetchSuggestions = debounce(async (query) => {
+        if (!query) return suggestionBox.classList.add('hidden');
+        try {
+            const response = await fetch(`/get-suggestions/?query=${query}`);
+            const suggestions = await response.json();
+            suggestionBox.innerHTML = suggestions.length
+                ? suggestions.map((item) =>
+                      `<div class="p-2 hover:bg-gray-100 cursor-pointer border-b">${item}</div>`
+                  ).join('')
+                : `<div class="p-2 text-gray-500">No results found</div>`;
+            suggestionBox.classList.remove('hidden');
+
+            // Add click handlers to suggestions
+            suggestionBox.querySelectorAll('div').forEach((el) =>
+                el.addEventListener('click', () => {
+                    searchInput.value = el.textContent;
+                    suggestionBox.classList.add('hidden');
+                })
+            );
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+        }
+    }, 300);
+
+    // Event listeners
+    searchInput.addEventListener('input', () => fetchSuggestions(searchInput.value.trim()));
+    searchButton.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (query) window.location.href = `/search/?query=${query}`;
+    });
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const query = searchInput.value.trim();
+            if (query) window.location.href = `/search/?query=${query}`;
+        }
+    });
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !suggestionBox.contains(e.target)) {
+            suggestionBox.classList.add('hidden');
+        }
+    });
+</script>
+
+
 </body>

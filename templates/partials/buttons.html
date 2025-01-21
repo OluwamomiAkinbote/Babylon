@@ -30,7 +30,7 @@
         <button id="fontChangeButton" class="px-4 py-2 bg-black border border-gray-700 text-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-200 text-xs sm:text-sm md:text-base">
             <i class="fas fa-font mr-2"></i>
         </button>
-        <div id="fontSizeChangeText" class="hidden absolute whitespace-nowrap top-full left-0 mt-1 px-2 py-1 bg-black text-gray-50 text-xs rounded-md shadow-md">Change Font-Size</div>
+        <div id="fontSizeChangeText" class="hidden absolute whitespace-nowrap top-full left-0 mt-1 px-2 py-1 bg-black text-gray-50 text-xs rounded-md shadow-md">Change Font</div>
     </div>
 
     <!-- Text Size Change Button -->
@@ -73,85 +73,55 @@
 <script>
     function copyLink() {
         const headline = "{% if post.title %}{{ post.title|escapejs }}{% elif video.title %}{{ video.title|escapejs }}{% else %}{{ trend.title|escapejs }}{% endif %}";
+        const link = `${headline}\n${window.location.href}`;
 
-        const link = window.location.href;
-        const combinedText = `${headline}\n${link}`;
+        navigator.clipboard.writeText(link).then(() => {
+            const confirmation = document.getElementById('copy-confirmation');
+            confirmation.classList.remove('hidden');
 
-        const tempInput = document.createElement('textarea');
-        tempInput.value = combinedText;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
+            const button = document.getElementById('copy-link-button');
+            button.innerHTML = '<i class="fas fa-link text-xs mr-2"></i> Copied!';
 
-        const confirmation = document.getElementById('copy-confirmation');
-        confirmation.classList.remove('hidden');
-
-        const button = document.getElementById('copy-link-button');
-        button.innerHTML = '<i class="fas fa-link text-xs mr-2"></i> Copied!';
-
-        setTimeout(function() {
-            confirmation.classList.add('hidden');
-            button.innerHTML = '<i class="fas fa-link text-xs mr-2"></i> Copy Link';
-        }, 2000);
+            setTimeout(() => {
+                confirmation.classList.add('hidden');
+                button.innerHTML = '<i class="fas fa-link text-xs mr-2"></i> Copy Link';
+            }, 2000);
+        });
     }
-</script>
 
+    document.addEventListener('DOMContentLoaded', () => {
+        const shareButton = document.getElementById('share-button');
+        const shareDropdown = document.getElementById('share-dropdown');
+        const contentContainer = document.getElementById('contentContainer');
+        const fontChangeButton = document.getElementById('fontChangeButton');
+        const textSizeChangeButton = document.getElementById('textSizeChangeButton');
+        const fonts = ["Poppins", "Roboto", "Arial", "Georgia", "Helvetica", "Times New Roman"];
+        const textSizes = ["text-sm", "text-base", "text-lg", "text-xl"];
+        let currentFontIndex = 0, currentTextSizeIndex = 1;
 
+        shareButton.addEventListener('click', () => shareDropdown.classList.toggle('hidden'));
+        document.addEventListener('click', (e) => {
+            if (!shareButton.contains(e.target) && !shareDropdown.contains(e.target)) {
+                shareDropdown.classList.add('hidden');
+            }
+        });
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const shareButton = document.getElementById('share-button');
-    const shareDropdown = document.getElementById('share-dropdown');
+        fontChangeButton.addEventListener("click", () => {
+            currentFontIndex = (currentFontIndex + 1) % fonts.length;
+            contentContainer.style.fontFamily = fonts[currentFontIndex];
+        });
 
-    shareButton.addEventListener('click', function () {
-        shareDropdown.classList.toggle('hidden');
+        textSizeChangeButton.addEventListener("click", () => {
+            contentContainer.classList.remove(...textSizes);
+            currentTextSizeIndex = (currentTextSizeIndex + 1) % textSizes.length;
+            contentContainer.classList.add(textSizes[currentTextSizeIndex]);
+        });
+
+        ["fontChangeButton", "textSizeChangeButton"].forEach((id, idx) => {
+            const button = document.getElementById(id);
+            const text = document.getElementById(idx === 0 ? "fontSizeChangeText" : "textSizeChangeText");
+            button.addEventListener("mouseenter", () => text.classList.remove("hidden"));
+            button.addEventListener("mouseleave", () => text.classList.add("hidden"));
+        });
     });
-
-    document.addEventListener('click', function (event) {
-        if (!shareButton.contains(event.target) && !shareDropdown.contains(event.target)) {
-            shareDropdown.classList.add('hidden');
-        }
-    });
-
-    const contentContainer = document.getElementById("contentContainer");
-    const fontChangeButton = document.getElementById("fontChangeButton");
-    const textSizeChangeButton = document.getElementById("textSizeChangeButton");
-
-    const fonts = ["Poppins", "Roboto", "Arial", "Georgia", "Helvetica", "Times New Roman"];
-    let currentFontIndex = 0;
-
-    const textSizes = ["text-sm", "text-base", "text-lg", "text-xl"];
-    let currentTextSizeIndex = 1;
-
-    fontChangeButton.addEventListener("click", function () {
-        currentFontIndex = (currentFontIndex + 1) % fonts.length;
-        contentContainer.style.fontFamily = fonts[currentFontIndex];
-    });
-
-    textSizeChangeButton.addEventListener("click", function () {
-        textSizes.forEach(size => contentContainer.classList.remove(size));
-        currentTextSizeIndex = (currentTextSizeIndex + 1) % textSizes.length;
-        contentContainer.classList.add(textSizes[currentTextSizeIndex]);
-    });
-
-    const fontSizeChangeText = document.getElementById("fontSizeChangeText");
-    const textSizeChangeText = document.getElementById("textSizeChangeText");
-
-    fontChangeButton.addEventListener("mouseenter", function () {
-        fontSizeChangeText.classList.remove("hidden");
-    });
-
-    fontChangeButton.addEventListener("mouseleave", function () {
-        fontSizeChangeText.classList.add("hidden");
-    });
-
-    textSizeChangeButton.addEventListener("mouseenter", function () {
-        textSizeChangeText.classList.remove("hidden");
-    });
-
-    textSizeChangeButton.addEventListener("mouseleave", function () {
-        textSizeChangeText.classList.add("hidden");
-    });
-});
 </script>

@@ -29,14 +29,12 @@
                       <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class="w-[120px] h-[86px] mr-4 object-cover">
                     {% endif %}
                     <div class="w-2/3">
-                        <a href="{% url 'blog_detail' post.slug %}" class="text-gray-900 md:text-sm sm:text-sm font-semibold hover:underline tracking-tight">
+                        <a href="{% url 'blog_detail' post.slug %}" class="text-gray-900 md:text-md sm:text-md font-semibold hover:underline tracking-tight">
                             {{ post.title|truncatechars:60 }}
                         </a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
-                            <p class="text-gray-600">
-                                <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
-                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
-                            </p>
+                            <i class="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
+                            <p class="text-gray-700 text-sm ">{{ post.date|date:"F j, Y" }}</p>
                         </div>
                     </div>
                 </div>
@@ -64,14 +62,12 @@
                        <img src="{% static 'images/Breakingnews.png' %}" alt="{{ post.image.alt_text }}" class="w-[120px] h-[86px] mr-4 object-cover">
                     {% endif %}
                     <div class="w-2/3">
-                        <a href="{% url 'blog_detail' post.slug %}" class="text-gray-900 md:text-sm sm:text-sm font-semibold hover:underline tracking-tight">
+                        <a href="{% url 'blog_detail' post.slug %}" class="text-gray-900 md:text-md sm:text-md font-semibold hover:underline tracking-tight">
                             {{ post.title|truncatechars:60 }}
                         </a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
-                            <p class="text-gray-600">
-                                <i class="fas fa-clock text-red-500 text-[0.6rem]"></i>
-                                <span class="post-date" data-date="{{ post.date|date:'U' }}"></span>
-                            </p>
+                            <i class="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
+                            <p class="text-gray-700 text-sm ">{{ post.date|date:"F j, Y" }}</p>
                         </div>
                     </div>
                 </div>
@@ -81,6 +77,8 @@
     </div>
 
 
+
+        
 
 </body>
 </html>
