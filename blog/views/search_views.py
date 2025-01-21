@@ -11,6 +11,22 @@ from advert.models import AdBanner
 from datetime import datetime
 
 
+def get_common_context():
+    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
+    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
+    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
+
+    return {
+        'navbar_categories': navbar_categories,
+        'leaderboard_ad': leaderboard_ad,
+        'sidebar_ad': sidebar_ad,
+        'home_ad': home_ad,
+        'email': 'contact@scodynatenews.com',
+        'current_time': datetime.now()
+    }
+
+
 def subscribe(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -50,12 +66,7 @@ def search_view(request):
         'query': query,
         'trends': Trend.objects.all().order_by('-date')[:10],
         'page_obj': page_obj,
-        'current_time': datetime.now(),
-        'email': 'contact@scodynatenews.com',
-        'navbar_categories': Category.objects.filter(show_on_navbar=True).order_by('priority'),
-        'leaderboard_ad': AdBanner.objects.filter(category='Leaderboard', active=True).first(),
-        'sidebar_ad': AdBanner.objects.filter(category='Sidebar', active=True).first(),
-        'home_ad': AdBanner.objects.filter(category='Home', active=True).first(),
+        **get_common_context()
     }
     return render(request, 'pages/search_results.html', context)
 
