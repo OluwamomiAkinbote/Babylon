@@ -2,8 +2,6 @@
 from django.contrib import admin
 from .models import BlogPost, Trend, Category, Media, Video, Subscription, AuthorProfile
 
-from django.contrib import admin
-from .models import AuthorProfile
 
 @admin.register(AuthorProfile)
 class AuthorProfileAdmin(admin.ModelAdmin):
