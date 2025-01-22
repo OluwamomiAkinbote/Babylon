@@ -34,9 +34,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
+    'django.contrib.sites', 
     'blog',
-    'advert',
     'shop',
+    'advert',
     'dashboard',
     'file_manager',
     'tailwind',
@@ -47,7 +48,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'easy_thumbnails',
     'filer',
-    'django.contrib.sites', 
+   
     'whitenoise.runserver_nostatic', 
 
 

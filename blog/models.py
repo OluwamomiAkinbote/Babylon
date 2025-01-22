@@ -36,6 +36,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return f'/category/{self.slug}/'
 
 
 class Media(models.Model):
@@ -62,6 +65,9 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return f'/blog/{self.slug}/'
 
 
 class Trend(models.Model):
@@ -80,6 +86,9 @@ class Trend(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return f'/trend/{self.slug}/'
 
 
 class Video(models.Model):
@@ -98,6 +107,9 @@ class Video(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return f'/video/{self.slug}/'
 
 
 class Subscription(models.Model):
