@@ -15,27 +15,27 @@
     <meta name="facebook-domain-verification" content="jwzcg45hlqgqzlul4aurs3mqaj46he" />
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="{% block og_title %}{% endblock %}">
-    <meta property="og:type" content="website">
-    <meta property="og:description" content="{% block og_description %}{% endblock %}">
-    <meta property="og:url" content="http://{{ request.META.HTTP_HOST }}{{ request.path }}">
-    <meta property="og:image" content="http://{{ request.META.HTTP_HOST }}{% block og_image %}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}Default Title{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Default Description{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'images/logoheader.png' %}{% endblock %}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ request.path }}">
 
+    
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block tw_title %}{% endblock %}">
     <meta name="twitter:description" content="{% block tw_description %}{% endblock %}">
-    <meta name="twitter:image" content="http://{{ request.META.HTTP_HOST }}{% block tw_image %}{% endblock %}">
-    <meta name="twitter:url" content="http://{{ request.META.HTTP_HOST }}{{ request.path }}">
-
+    <meta name="twitter:image" content="{% block tw_image %}{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'images/logoheader.png' %}{% endblock %}">
+    <meta name="twitter:url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ request.path }}">
 
     
 
-    <meta name="description" content="Newstropy - Your source for the latest updates in politics, sports, global news, and more. Stay informed with in-depth articles and expert opinions." />
+    <meta name="description" content="Newstropy: Latest updates in politics, sports, global news, and more. Stay informed with in-depth articles and expert opinions." />
+
     
 
 
-    <link rel="canonical" href="https://www.scodynate.com/" />
+    <link rel="canonical" href="https://newstropy.com.ng/" />
 
     <script src="https://cdn.tailwindcss.com"></script> 
 
