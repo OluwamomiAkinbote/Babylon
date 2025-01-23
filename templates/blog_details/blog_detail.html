@@ -126,7 +126,7 @@
             <div class="">
                 <div class="relative my-4">
                     {% if post.image %}
-                        <img src="{{ post.image.url }}" alt="{{ post.image.file.name }}" class="w-full h-auto">
+                        <img src="{{ post.image.url }}" alt="{{ post.image.name }}" class="w-full h-auto">
                     {% else %}
                         <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
                     {% endif %}
