@@ -6,11 +6,17 @@
 
 {% block og_title %}{{ post.title }}{% endblock %}
 {% block og_description %}{{ post.title }}{% endblock %}
-{% block og_image %}{{post.image}}{% endblock %}
+{% block og_image %}
+    {{ absolute_image_url }}
+{% endblock %}
+
 
 {% block tw_title %}{{ post.title }}{% endblock %}
 {% block tw_description %}{{ post.title }}{% endblock %}
-{% block tw_image %} {{post.image}}{% endblock %}
+{% block tw_image %}
+  {{ absolute_image_url }}
+
+{% endblock %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -93,27 +99,19 @@
                 </div>
             </div>
             <!-- Post Image -->
-            <div class="">
-                <div class="relative my-4">
-                    {% if post.image %}
-                        <img src="{{ post.image.url }}" alt="{{ post.image.name }}" class="w-full h-auto">
-                    {% else %}
-                        <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
-                    {% endif %}
-                </div>
-                {% include 'partials/buttons.html' %}
-                <!-- Post Content -->
-                <div id="contentContainer" class="py-0 overflow-hidden my-8">
-                    {{ advert|first_letter_richtext | safe | linebreaks }}
-                </div>
-                {% include 'advert/advert.html' with banner=home_ad %}
+            <div class="relative my-4">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.image.name }}" class="w-full h-auto">
+                {% else %}
+                    <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
+                {% endif %}
             </div>
-            <div class="shop">
-                {% include 'shop/blog_shop.html' %}
+            {% include 'partials/buttons.html' %}
+            <!-- Post Content -->
+            <div id="contentContainer" class="py-0 overflow-hidden my-8">
+                {{ advert|first_letter_richtext | safe | linebreaks }}
             </div>
-            {% block comment&reply %}
-               {% include 'partials/comment&reply.html' %}
-            {% endblock %}
+            {% include 'advert/advert.html' with banner=home_ad %}
         </div>
         <!-- Sidebar with related posts -->
         <div>

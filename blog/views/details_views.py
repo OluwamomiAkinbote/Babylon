@@ -27,16 +27,22 @@ def get_common_context():
         'current_time': timezone.now()
     }
 
-
 def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
     related_posts = BlogPost.objects.filter(category=post.category).exclude(slug=slug)[:5]
     all_other_posts = BlogPost.objects.exclude(category=post.category).exclude(slug=slug)
+
+    # Fallback image URL
+    fallback_image_url = request.build_absolute_uri(static('images/Breakingnews.png'))
+    try:
+        absolute_image_url = request.build_absolute_uri(post.image.url)
+    except AttributeError:
+        absolute_image_url = fallback_image_url
+
     recommended_posts = random.sample(list(all_other_posts), min(len(all_other_posts), 5))
 
     common_context = get_common_context()
     advert_content = insert_ad_banner(post.content, common_context['ads'])
-    absolute_image_url = request.build_absolute_uri(post.image.url) if post.image else request.build_absolute_uri(static('images/Breakingnews.png'))
 
     context = {
         'post': post,
@@ -48,6 +54,7 @@ def blog_detail(request, slug):
     }
 
     return render(request, 'blog_details/blog_detail.html', context)
+
 
 
 
