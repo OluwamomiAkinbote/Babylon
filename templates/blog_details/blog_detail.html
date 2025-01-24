@@ -2,32 +2,19 @@
 {% load static tailwind_tags %}
 {% load custom_filters %}
 
-
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block og_title %}{{ post.title }}{% endblock %}
 {% block og_description %}{{ post.title }}{% endblock %}
 {% block og_image %}
-    {% if post.image %}
-        {{ post.image.url }}
-    {% else %}
-        {% static 'images/Breakingnews.png' %}
-    {% endif %}
+    <meta property="og:image" content="{{ absolute_image_url }}" />
 {% endblock %}
 
 {% block tw_title %}{{ post.title }}{% endblock %}
 {% block tw_description %}{{ post.title }}{% endblock %}
 {% block tw_image %}
-    {% if post.image %}
-        {{ post.image.url }}
-    {% else %}
-        {% static 'images/Breakingnews.png' %}
-    {% endif %}
+    <meta name="twitter:image" content="{{ absolute_image_url }}" />
 {% endblock %}
-
-
-
-
 
 {% block content %}
 <!DOCTYPE html>
@@ -38,7 +25,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
-  
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM0s4HRZ06k6nyJ8Bwhe1g1dZ9IejdBBSskVQ2" crossorigin="anonymous">
     <script src="{% static 'js/date-utils.js' %}"></script>
@@ -48,11 +34,9 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-V80Z4XJ73J');
     </script>
  
-
     {% tailwind_css %}
     
     <style>
@@ -82,8 +66,6 @@
     <div class="mt-40">
         {% include 'advert/advert.html' with banner=leaderboard_ad %}
     </div>
-
-   
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 font-poppins overflow-hidden">  
         <div class="p-6 sm:col-span-2 overflow-hidden">
@@ -157,7 +139,6 @@
             {% include 'partials/sidebar.html' %}
         </div>
     </div>
-
 
 </body>
 </html>

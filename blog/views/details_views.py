@@ -6,7 +6,7 @@ from advert.models import AdBanner, AdCategory
 from blog.utils import insert_ad_banner
 from shop.models import Product
 import random
-
+from django.templatetags.static import static
 
 def get_common_context():
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
@@ -36,16 +36,19 @@ def blog_detail(request, slug):
 
     common_context = get_common_context()
     advert_content = insert_ad_banner(post.content, common_context['ads'])
+    absolute_image_url = request.build_absolute_uri(post.image.url) if post.image else request.build_absolute_uri(static('images/Breakingnews.png'))
 
     context = {
         'post': post,
         'related_posts': related_posts,
         'recommended_posts': recommended_posts,
         'advert': advert_content,
+        'absolute_image_url': absolute_image_url,
         **common_context
     }
 
     return render(request, 'blog_details/blog_detail.html', context)
+
 
 
 def video_detail(request, slug):
