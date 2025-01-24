@@ -46,15 +46,15 @@
 <div id="share-dropdown" class="hidden absolute mx-4 left-0 w-44 bg-white shadow-md rounded border border-gray-200 z-10">
     <div class="p-2 text-xs">
         <!-- Twitter Share -->
-        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-500 hover:bg-blue-100">
+        <a href="https://twitter.com/intent/tweet?text={% if post.title %}{{ post.title }}{% else %}{{ trend.title }}{% endif %}&url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-500 hover:bg-blue-100">
             <i class="fab fa-x-twitter text-xs mr-2"></i> X(Twitter)
         </a>
         <!-- Facebook Share -->
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-600 hover:bg-blue-100">
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}&quote={% if post.title %}{{ post.title }}{% else %}{{ trend.title }}{% endif %}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-600 hover:bg-blue-100">
             <i class="fab fa-facebook-f text-xs mr-2"></i> Facebook
         </a>
         <!-- LinkedIn Share -->
-        <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-700 hover:bg-blue-100">
+        <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={% if post.title %}{{ post.title }}{% else %}{{ trend.title }}{% endif %}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-blue-700 hover:bg-blue-100">
             <i class="fab fa-linkedin-in text-xs mr-2"></i> LinkedIn
         </a>
         <!-- WhatsApp Share -->
@@ -69,6 +69,7 @@
         <span id="copy-confirmation" class="hidden text-green-500 text-sm ml-2">Link copied!</span>
     </div>
 </div>
+
 
 <script>
     function copyLink() {
@@ -95,7 +96,7 @@
         const contentContainer = document.getElementById('contentContainer');
         const fontChangeButton = document.getElementById('fontChangeButton');
         const textSizeChangeButton = document.getElementById('textSizeChangeButton');
-        const fonts = ["Poppins", "Roboto", "Arial", "Georgia", "Helvetica", "Times New Roman"];
+        const fonts = ["Poppins", "Georgia", "Arial", "Roboto", "Helvetica", "Times New Roman"];
         const textSizes = ["text-sm", "text-base", "text-lg", "text-xl"];
         let currentFontIndex = 0, currentTextSizeIndex = 1;
 
