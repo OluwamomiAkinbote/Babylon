@@ -6,25 +6,21 @@
 
 {% block og_title %}{{ post.title }}{% endblock %}
 {% block og_description %}{{ post.title }}{% endblock %}
-{% block og_image %}
-    <meta property="og:image" content="{{ absolute_image_url }}" />
-{% endblock %}
+{% block og_image %}{{post.image}}{% endblock %}
 
 {% block tw_title %}{{ post.title }}{% endblock %}
 {% block tw_description %}{{ post.title }}{% endblock %}
-{% block tw_image %}
-    <meta name="twitter:image" content="{{ absolute_image_url }}" />
-{% endblock %}
+{% block tw_image %} {{post.image}}{% endblock %}
 
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
+    <meta name="twitter:image" content="{{ absolute_image_url }}" />
+    <meta property="og:image" content="{{ absolute_image_url }}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM0s4HRZ06k6nyJ8Bwhe1g1dZ9IejdBBSskVQ2" crossorigin="anonymous">
     <script src="{% static 'js/date-utils.js' %}"></script>
@@ -36,9 +32,7 @@
     gtag('js', new Date());
     gtag('config', 'G-V80Z4XJ73J');
     </script>
- 
     {% tailwind_css %}
-    
     <style>
         #contentContainer {
             max-width: 800px;
@@ -47,7 +41,6 @@
             line-height: 1.75;
             color: #333;
         }
-
         .first-letter {
             color: #228B22;
             font-size: 4rem;
@@ -62,11 +55,9 @@
     </style>
 </head>
 <body class="bg-white">
-   
     <div class="mt-40">
         {% include 'advert/advert.html' with banner=leaderboard_ad %}
     </div>
-
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 font-poppins overflow-hidden">  
         <div class="p-6 sm:col-span-2 overflow-hidden">
             <!-- Breadcrumb -->
@@ -81,12 +72,10 @@
                     </li>
                 </ol>
             </nav>
-
             <!-- Heading -->
             <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold font-helvetica text-[#228B22] mb-3 leading-tight sm:leading-none overflow-hidden">
                 {{ post.title|title }}
             </h1>
-            
             <div class="flex flex-col sm:flex-row items-start sm:items-center font-poppins overflow-hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-gray-700 font-medium overflow-hidden">
                     <!-- Author Info -->
@@ -103,7 +92,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Post Image -->
             <div class="">
                 <div class="relative my-4">
@@ -113,33 +101,26 @@
                         <img src="{% static 'images/Breakingnews.png' %}" alt="Default Image" class="w-full h-auto">
                     {% endif %}
                 </div>
-                
                 {% include 'partials/buttons.html' %}
-                
                 <!-- Post Content -->
                 <div id="contentContainer" class="py-0 overflow-hidden my-8">
                     {{ advert|first_letter_richtext | safe | linebreaks }}
                 </div>
-
                 {% include 'advert/advert.html' with banner=home_ad %}
             </div>
-
             <div class="shop">
                 {% include 'shop/blog_shop.html' %}
             </div>
-
             {% block comment&reply %}
                {% include 'partials/comment&reply.html' %}
             {% endblock %}
         </div>
-
         <!-- Sidebar with related posts -->
         <div>
             {% include 'advert/advert.html' with banner=sidebar_ad %}
             {% include 'partials/sidebar.html' %}
         </div>
     </div>
-
 </body>
 </html>
 {% endblock %}
