@@ -17,7 +17,7 @@
             {% for post in related_posts %}
                 <div class="mb-4 flex shadow-md">
                 {% if post.image %}
-                    <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                    <img src="{{ post.image.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
                 {% else %}
                     <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                 {% endif %}
@@ -51,7 +51,7 @@
             {% for post in recommended_posts %}
                 <div class="mb-4 flex shadow-md">
                 {% if post.image %}
-                    <img src="{{ post.image.file.url }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
+                    <img src="{{ MEDIA_URL }}{{ post.image }}" alt="{{ post.image.alt_text }}" class="w-20 h-20 object-cover mr-4">
                 {% else %}
                     <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-20 h-20 object-cover mr-4">
                 {% endif %}

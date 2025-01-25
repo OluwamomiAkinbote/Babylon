@@ -17,7 +17,7 @@
                     <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl">
                         <a href="{% url 'blog_detail' post.slug %}">
                             {% if post.image %}
-                                <img src="{{ post.image.file.url }}" alt="{{ post.image.file.name }}" class="w-full h-44 object-cover mb-4">
+                                <img src="{{ post.image.url }}" alt="{{ post.image.name }}" class="w-full h-44 object-cover mb-4">
                             {% else %}
                                 <img src="{% static 'images/Breakingnews.png' %}" alt="Breaking News" class="w-full h-44 object-cover mb-4">
                             {% endif %}
