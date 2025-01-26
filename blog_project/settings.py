@@ -2,8 +2,6 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
-import helpers.cloudflare.settings
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,6 +45,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'easy_thumbnails',
     'filer',
+    'storages',
     'whitenoise.runserver_nostatic',
 ]
 
@@ -131,22 +130,36 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_TZ = True
 
-# Static files and Media Files - Using Cloudflare R2 for both
-STATIC_URL = "https://99229f791b9c70f0b8239aed244a9a02.r2.cloudflarestorage.com/newstropy/"
 
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_KEY")
+AWS_STORAGE_BUCKET_NAME = "boltzmann"
+AWS_S3_REGION_NAME = "us-east-1"
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
 
-MEDIA_URL = '/media/'
+# Static files
+STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STORAGES = {
+    # Media file (image) management   
     "default": {
-        "BACKEND": "helpers.cloudflare.storages.MediaFileStorage",
-        "OPTIONS": helpers.cloudflare.settings.CLOUDFLARE_R2_CONFIG_OPTIONS,
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
+    
+    # CSS and JS file management
     "staticfiles": {
-        "BACKEND": "helpers.cloudflare.storages.StaticFileStorage",
-        "OPTIONS": helpers.cloudflare.settings.CLOUDFLARE_R2_CONFIG_OPTIONS,
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
     },
 }
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'user_login'
