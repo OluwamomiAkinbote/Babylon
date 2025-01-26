@@ -1,10 +1,10 @@
 from pathlib import Path
-
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import helpers.cloudflare.settings
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
@@ -16,7 +16,7 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
-if ENVIRONMENT=='development':
+if ENVIRONMENT == 'development':
     DEBUG = True
 else:
     DEBUG = False
@@ -26,7 +26,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'newstropy.onrender.com', 'newstropy.
 CSRF_TRUSTED_ORIGINS = ['https://newstropy.onrender.com']
 
 INSTALLED_APPS = [
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,14 +47,10 @@ INSTALLED_APPS = [
     'polymorphic',
     'easy_thumbnails',
     'filer',
-   
-    'whitenoise.runserver_nostatic', 
-
-
+    'whitenoise.runserver_nostatic',
 ]
 
 SITE_ID = 2
-
 
 TINYMCE_DEFAULT_CONFIG = {
     'height': 360,
@@ -66,14 +61,9 @@ TINYMCE_DEFAULT_CONFIG = {
     'content_css': 'default',
 }
 
-
-
-
 TAILWIND_APP_NAME = 'theme'
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+INTERNAL_IPS = ["127.0.0.1"]
 
 FILER_CANONICAL_URL = 'sharing/'
 
@@ -97,8 +87,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
-  
-   
 ]
 
 ROOT_URLCONF = 'blog_project.urls'
@@ -121,13 +109,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_project.wsgi.application'
 
-
-
-
-
-
-
-# Default database configuration
+# Database settings
 DATABASES = {
     'default': dj_database_url.config(
         default=os.getenv('DATABASE_URL'),
@@ -136,80 +118,42 @@ DATABASES = {
     )
 }
 
-
-
 # Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
-
+# Localization
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
+USE_TZ = True
 
-USE_TZ = True 
-# USE_I18N = True
+# Static files and Media Files - Using Cloudflare R2 for both
+STATIC_URL = "https://99229f791b9c70f0b8239aed244a9a02.r2.cloudflarestorage.com/newstropy/"
 
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
-if not DEBUG:
-    STATIC_ROOT = BASE_DIR / 'staticfiles'
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-else:
-    STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Media files (uploaded by users)
 MEDIA_URL = '/media/'
-if not DEBUG:
-    MEDIA_ROOT = '/var/media'  # Matches the mount path for the Render disk
-else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-#
-
+STORAGES = {
+    "default": {
+        "BACKEND": "helpers.cloudflare.storages.MediaFileStorage",
+        "OPTIONS": helpers.cloudflare.settings.CLOUDFLARE_R2_CONFIG_OPTIONS,
+    },
+    "staticfiles": {
+        "BACKEND": "helpers.cloudflare.storages.StaticFileStorage",
+        "OPTIONS": helpers.cloudflare.settings.CLOUDFLARE_R2_CONFIG_OPTIONS,
+    },
+}
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = 'user_login' 
-
-
+LOGIN_URL = 'user_login'
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))  # Default to 587 if not set
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'  # Convert string to boolean
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') 
-
-
-DEFAULT_FILE_STORAGE = 'blog_project.bunny_storage.BunnyStorage'
-
-
-
-
-
-
-
-
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

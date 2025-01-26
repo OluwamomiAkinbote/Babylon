@@ -2,6 +2,8 @@ from django.db import models
 import mimetypes
 import os
 
+
+
 def upload_to(instance, filename):
     """Dynamic upload path based on the folder structure."""
     folder_name = instance.folder.name if instance.folder else "default"

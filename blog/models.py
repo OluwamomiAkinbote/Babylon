@@ -41,14 +41,6 @@ class Category(models.Model):
         return f'/category/{self.slug}/'
 
 
-class Media(models.Model):
-    title = models.CharField(max_length=255)
-    image = FilerImageField(null=True, blank=True, on_delete=models.SET_NULL, related_name='media_images')
-    file = FilerFileField(null=True, blank=True, on_delete=models.SET_NULL, related_name='media_files')
-
-    def __str__(self):
-        return self.title
-
 
 class BlogPost(models.Model):
     title = models.TextField(blank=True, null=True)

@@ -1,6 +1,6 @@
 
 from django.contrib import admin
-from .models import BlogPost, Trend, Category, Media, Video, Subscription, AuthorProfile
+from .models import BlogPost, Trend, Category,  Video, Subscription, AuthorProfile
 
 
 @admin.register(AuthorProfile)
@@ -64,11 +64,6 @@ class TrendAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
 
-# Register Media model
-@admin.register(Media)
-class MediaAdmin(admin.ModelAdmin):
-    list_display = ['title', 'image', 'file']
-    search_fields = ['title']
 
 
 # Register Video model
