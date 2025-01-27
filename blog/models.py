@@ -62,12 +62,13 @@ class BlogPost(models.Model):
         return f'/blog/{self.slug}/'
 
 
+
+
 class Trend(models.Model):
     title = models.TextField(blank=True, null=True)
     content = HTMLField()
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, default=1, null=True, related_name="trends") 
-    file =  FilerFileField(null=True, blank=True, on_delete=models.SET_NULL, related_name='trend_file')
-
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, default=1, null=True, related_name="trends")
+    file = FilerFileField(null=True, blank=True, on_delete=models.SET_NULL, related_name='trend_file')
     date = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
@@ -78,9 +79,17 @@ class Trend(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
         return f'/trend/{self.slug}/'
+
+    @property
+    def is_image(self):
+        return self.file and self.file.extension.lower() in ['png', 'jpg', 'jpeg', 'gif']
+
+    @property
+    def is_video(self):
+        return self.file and self.file.extension.lower() == 'mp4'
 
 
 class Video(models.Model):

@@ -1,17 +1,39 @@
-{% load static %}
+{% extends 'partials/base.html' %}
+{% load static tailwind_tags %}
 {% load custom_filters %}
+
+{% block title %}{{ trend.title }}{% endblock %}
+
+{% block og_title %}{{ trend.title }}{% endblock %}
+{% block og_description %}{{ trend.description }}{% endblock %}
+{% block og_image %}{{ absolute_image_url }}{% endblock %}
+
+{% block tw_title %}{{ trend.title }}{% endblock %}
+{% block tw_description %}{{ trend.description }}{% endblock %}
+{% block tw_image %}{{ absolute_image_url }}{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'site.webmanifest' %}">
-    <title>Scodynate News | {{ trend.title }}</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="twitter:image" content="{{ absolute_image_url }}" />
+    <meta property="og:image" content="{{ absolute_image_url }}" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM0s4HRZ06k6nyJ8Bwhe1g1dZ9IejdBBSskVQ2" crossorigin="anonymous">
+    <script src="{% static 'js/date-utils.js' %}"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V80Z4XJ73J"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V80Z4XJ73J');
+    </script>
+    {% tailwind_css %}
+
     <style>
 
         #contentContainer {
@@ -41,15 +63,9 @@
 </head>
 <body class="bg-white text-gray-900 ">
 
-    <!-- Header Section -->
-    <header class="sticky top-0 z-20 bg-white bg-opacity-80 shadow-md backdrop-blur-md">
-        {% block content %}
-            {% include 'header/header.html' %}
-        {% endblock %}
-    </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8 font-helvetica">
+    <main class="container mx-auto px-4 py-8 font-helvetica my-40">
         {% include 'advert/advert.html' with banner=leaderboard_ad %}
         <div class="flex flex-wrap -mx-4">
             
@@ -60,11 +76,11 @@
                 <div>
                     <div class="bg-white overflow-hidden mb-4">
                         {% if trend.file %}
-                            {% if trend.file.is_image %}
-                                <img src="{{ trend.file.file.url }}" alt="{{ trend.title }}" class="w-full object-cover">
-                            {% elif trend.file.is_video %}
-                                <video controls class="w-full h-auto">
-                                    <source src="{{ trend.file.file.url }}" type="video/mp4">
+                            {% if trend.is_image %}
+                                <img src="{{ trend.file.url }}" alt="{{ trend.title }}" class="w-full object-cover">
+                            {% elif trend.is_video %}
+                                <video controls class="w-full h-72">
+                                    <source src="{{ trend.file.url }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             {% else %}
@@ -161,12 +177,14 @@
     </main>
 
     <!-- Footer Section -->
-    <footer class="bg-white border-t border-gray-200 shadow-md">
-        {% block footer %}
-            {% include 'partials/footer.html' %}
-        {% endblock %}
-    </footer>
+>
 
 </body>
 </html>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/main.js' %}"></script>
+
+{% endblock %}
 

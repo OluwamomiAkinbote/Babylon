@@ -9,6 +9,7 @@ import random
 from django.templatetags.static import static
 
 def get_common_context():
+    
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
     leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
     sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
@@ -64,30 +65,44 @@ def video_detail(request, slug):
 
     common_context = get_common_context()
     advert_content = insert_ad_banner(video.description, common_context['ads'])
+    
+    fallback_image_url = request.build_absolute_uri(static('images/Breakingnews.png'))
+    try:
+        absolute_image_url = request.build_absolute_uri(video.file.url)
+    except AttributeError:
+        absolute_image_url = fallback_image_url
 
     context = {
         'video': video,
         'trends': trends,
         'advert': advert_content,
+        'absolute_image_url': absolute_image_url,
         **common_context
     }
 
     return render(request, 'blog_details/video_details.html', context)
 
 
+
 def trend_detail(request, slug):
     trend = get_object_or_404(Trend, slug=slug)
-
     posts = BlogPost.objects.all()
     recommended_posts = random.sample(list(posts), min(len(posts), 5))
-
     common_context = get_common_context()
     advert_content = insert_ad_banner(trend.content, common_context['ads'])
+    
+    fallback_image_url = request.build_absolute_uri(static('images/Breakingnews.png'))
+    try:
+        absolute_image_url = request.build_absolute_uri(trend.file.url)
+    except AttributeError:
+        absolute_image_url = fallback_image_url
+
 
     context = {
         'trend': trend,
         'recommended_posts': recommended_posts,
         'advert': advert_content,
+        'absolute_image_url': absolute_image_url,
         **common_context
     }
 
