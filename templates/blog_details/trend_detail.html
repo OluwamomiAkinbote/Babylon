@@ -8,7 +8,7 @@
 <head>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="{{ trend.title }}" />
-    <meta property="og:description" content="{{ trend.content|truncatewords:30 }}" />
+    <meta property="og:description" content="{{ trend.content|truncatewords:30 |safe }}" />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:type" content="{% if trend.is_video %}video.other{% else %}article{% endif %}" />
 
@@ -31,7 +31,7 @@
 
     <!-- Additional Meta Tags -->
     <meta name="twitter:title" content="{{ trend.title }}" />
-    <meta name="twitter:description" content="{{ trend.content|truncatewords:30 }}" />
+    <meta name="twitter:description" content="{{ trend.content|truncatewords:30 | safe }}" />
 
     <!-- Styles and Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>

@@ -67,6 +67,14 @@ class BlogPost(models.Model):
 
 
 
+from django.db import models
+from django.utils.text import slugify
+from django.utils import timezone
+from django.templatetags.static import static
+from filer.fields.file import FilerFileField
+from tinymce.models import HTMLField
+from django.contrib.auth.models import User
+
 class Trend(models.Model):
     title = models.TextField(blank=True, null=True)
     content = HTMLField()
@@ -95,10 +103,12 @@ class Trend(models.Model):
         return self.file and self.file.extension.lower() == 'mp4'
 
     @property
-    def file_url(self):
+    def absolute_file_url(self):
+        """Return the absolute URL for the file or fallback to a default image."""
         if self.file:
             return self.file.url
         return static('images/Breakingnews.png')
+
 
 
 
