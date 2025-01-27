@@ -6,7 +6,8 @@ from filer.fields.image import FilerImageField
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
 from django.contrib.auth.models import User
-from file_manager.models import File 
+from django.utils.text import slugify
+from django.templatetags.static import static
 
 class AuthorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author_profile')
@@ -64,6 +65,8 @@ class BlogPost(models.Model):
 
 
 
+
+
 class Trend(models.Model):
     title = models.TextField(blank=True, null=True)
     content = HTMLField()
@@ -90,6 +93,13 @@ class Trend(models.Model):
     @property
     def is_video(self):
         return self.file and self.file.extension.lower() == 'mp4'
+
+    @property
+    def file_url(self):
+        if self.file:
+            return self.file.url
+        return static('images/Breakingnews.png')
+
 
 
 class Video(models.Model):
