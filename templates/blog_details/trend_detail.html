@@ -2,40 +2,55 @@
 {% load static tailwind_tags %}
 {% load custom_filters %}
 
-{% block title %}{{ trend.title }}{% endblock %}
-
-{% block og_title %}{{ trend.title }}{% endblock %}
-{% block og_description %}{{ trend.description }}{% endblock %}
-{% block og_image %}{{ absolute_image_url }}{% endblock %}
-
-{% block tw_title %}{{ trend.title }}{% endblock %}
-{% block tw_description %}{{ trend.description }}{% endblock %}
-{% block tw_image %}{{ absolute_image_url }}{% endblock %}
+{% block title %} {{ trend.title }}{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="twitter:image" content="{{ absolute_image_url }}" />
-    <meta property="og:image" content="{{ absolute_image_url }}" />
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="{{ trend.title }}" />
+    <meta property="og:description" content="{{ trend.description }}" />
+    
+    {% if trend.is_video %}
+        <!-- Open Graph Video Tags -->
+        <meta property="og:type" content="video.other" />
+        <meta property="og:video" content="{{ trend.file.url }}" />
+        <meta property="og:video:secure_url" content="{{ trend.file.url }}" />
+        <meta property="og:video:type" content="video/mp4" />
+        <meta property="og:video:width" content="1280" />
+        <meta property="og:video:height" content="720" />
+    {% elif trend.is_image %}
+        <!-- Open Graph Image Tags -->
+        <meta property="og:type" content="article" />
+        <meta property="og:image" content="{{ trend.file.url }}" />
+    {% else %}
+        <!-- Default Fallback Image -->
+        <meta property="og:type" content="article" />
+        <meta property="og:image" content="{% static 'images/Breakingnews.png' %}" />
+    {% endif %}
+
+    <!-- Twitter Metadata -->
+    <meta name="twitter:card" content="{% if trend.is_video %}player{% else %}summary_large_image{% endif %}" />
+    <meta name="twitter:title" content="{{ trend.title }}" />
+    <meta name="twitter:description" content="{{ trend.description }}" />
+    <meta name="twitter:image" content="{% if trend.is_image %}{{ trend.file.url }}{% else %}{% static 'images/Breakingnews.png' %}{% endif %}" />
+    {% if trend.is_video %}
+        <meta name="twitter:player" content="{{ trend.file.url }}" />
+        <meta name="twitter:player:width" content="1280" />
+        <meta name="twitter:player:height" content="720" />
+    {% endif %}
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM0s4HRZ06k6nyJ8Bwhe1g1dZ9IejdBBSskVQ2" crossorigin="anonymous">
     <script src="{% static 'js/date-utils.js' %}"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V80Z4XJ73J"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-V80Z4XJ73J');
-    </script>
     {% tailwind_css %}
 
     <style>
-
         #contentContainer {
             max-width: 800px;
             margin: 15px auto;
@@ -43,7 +58,6 @@
             line-height: 1.75;
             color: #333;
         }
-
         .first-letter {
             color: #228B22;
             font-size: 4rem;
@@ -55,12 +69,9 @@
             padding-bottom: 0.15em;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); 
         }
-
-
-
-
     </style>
 </head>
+
 <body class="bg-white text-gray-900 ">
 
 
