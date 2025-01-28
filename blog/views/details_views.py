@@ -59,28 +59,6 @@ def blog_detail(request, slug):
 
 
 
-def video_detail(request, slug):
-    video = get_object_or_404(Video, slug=slug)
-    trends = Trend.objects.all().order_by('-date')[:10]
-
-    common_context = get_common_context()
-    advert_content = insert_ad_banner(video.description, common_context['ads'])
-    
-    fallback_image_url = request.build_absolute_uri(static('images/Breakingnews.png'))
-    try:
-        absolute_image_url = request.build_absolute_uri(video.file.url)
-    except AttributeError:
-        absolute_image_url = fallback_image_url
-
-    context = {
-        'video': video,
-        'trends': trends,
-        'advert': advert_content,
-        'absolute_image_url': absolute_image_url,
-        **common_context
-    }
-
-    return render(request, 'blog_details/video_details.html', context)
 
 
 
@@ -110,3 +88,26 @@ def trend_detail(request, slug):
     return render(request, 'blog_details/trend_detail.html', context)
 
 
+
+def video_detail(request, slug):
+    video = get_object_or_404(Video, slug=slug)
+    trends = Trend.objects.all().order_by('-date')[:10]
+
+    common_context = get_common_context()
+    advert_content = insert_ad_banner(video.description, common_context['ads'])
+    
+    fallback_image_url = request.build_absolute_uri(static('images/Breakingnews.png'))
+    try:
+        absolute_video_url = request.build_absolute_uri(video.file.url)
+    except AttributeError:
+        absolute_video_url = fallback_image_url
+
+    context = {
+        'video': video,
+        'trends': trends,
+        'advert': advert_content,
+        'absolute_video_url': absolute_video_url,
+        **common_context
+    }
+
+    return render(request, 'blog_details/video_details.html', context)
