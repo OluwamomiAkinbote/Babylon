@@ -46,7 +46,7 @@ def index(request):
 
     # Exclude categories for non-exclusive posts
     all_posts = BlogPost.objects.all().order_by('-date')
-    non_exclusive_posts = all_posts.exclude(category__in=filter(None, [exclusive_category, global_news_category]))[:4]
+    non_exclusive_posts = all_posts.exclude(category__in=filter(None, [exclusive_category, global_news_category,]))[:4]
 
     # Other data
     trends = Trend.objects.all().order_by('-date')[:5]

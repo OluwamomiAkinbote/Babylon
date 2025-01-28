@@ -79,7 +79,7 @@
                 </ol>
             </nav>
             <!-- Heading -->
-            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold font-helvetica text-[#228B22] mb-3 leading-tight sm:leading-none overflow-hidden">
+            <h1 class="text-2xl sm:text-4xl md:text-4xl font-extrabold font-helvetica text-[#228B22] mb-3 leading-tight sm:leading-none overflow-hidden">
                 {{ post.title|title }}
             </h1>
             <div class="flex flex-col sm:flex-row items-start sm:items-center font-poppins overflow-hidden">
@@ -112,6 +112,14 @@
                 {{ advert|first_letter_richtext | safe | linebreaks }}
             </div>
             {% include 'advert/advert.html' with banner=home_ad %}
+
+            <div class="shop my-8">
+                {% include 'shop/blog_shop.html' %}
+            </div>
+
+            <div class="mt-6">
+                {% include 'partials/comment&reply.html' %}
+            </div>
         </div>
         <!-- Sidebar with related posts -->
         <div>
