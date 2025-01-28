@@ -39,14 +39,17 @@ def index(request):
         reverse=True
     )
 
-    # Hero posts and main post
+    # Hero posts
     three_days_ago = timezone.now() - timedelta(days=3)
     hero_posts = BlogPost.objects.filter(date__date=three_days_ago.date()).order_by('-date')[:5]
-    main_post = BlogPost.objects.order_by('?').first()
 
     # Exclude categories for non-exclusive posts
     all_posts = BlogPost.objects.all().order_by('-date')
-    non_exclusive_posts = all_posts.exclude(category__in=filter(None, [exclusive_category, global_news_category,]))[:4]
+    non_exclusive_posts = all_posts.exclude(category__in=filter(None, [exclusive_category, global_news_category]))[:4]
+
+    # Combine exclusive and non-exclusive posts for random selection
+    combined_posts = list(chain(exclusive_posts, non_exclusive_posts))
+    main_post = choice(combined_posts) if combined_posts else None
 
     # Other data
     trends = Trend.objects.all().order_by('-date')[:5]
