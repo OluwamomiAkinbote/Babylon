@@ -5,29 +5,11 @@
 <html lang="en">
 
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scodynate News | {{ video.title }}</title>
 
-    <!-- Open Graph Metadata -->
-    <meta property="og:type" content="video.other">
-    <meta property="og:title" content="{{ video.title }}">
-    <meta property="og:description" content="{{ video.description|truncatechars:150 }}">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:video" content="{{ absolute_video_url }}">
-    <meta property="og:video:type" content="video/mp4">
-    <meta property="og:video:width" content="800">
-    <meta property="og:video:height" content="450">
-
-    <!-- Twitter Metadata -->
-    <meta name="twitter:card" content="player">
-    <meta name="twitter:title" content="{{ video.title }}">
-    <meta name="twitter:description" content="{{ video.description|truncatechars:150 }}">
-    <meta name="twitter:player" content="{{ absolute_video_url }}">
-    <meta name="twitter:player:width" content="800">
-    <meta name="twitter:player:height" content="450">
-
+    
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/android-chrome-512x512.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
@@ -37,7 +19,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
    
-
     <style>
         #contentContainer {
             max-width: 800px;
@@ -78,9 +59,8 @@
             <div class="w-full lg:w-8/12 px-4 mb-8">
                 <h2 class="text-4xl font-bold text-gray-900 mb-8">{{ video.title }}</h2>
 
-
                 <div>
-                    <video controls class="w-full h-auto ">
+                    <video controls class="w-full h-auto">
                         <source src="{{ video.video_file.file.url }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -98,7 +78,6 @@
                         </div>
                     </div>
 
-
                     <!-- Action Buttons -->
                     {% include 'partials/buttons.html' %}
     
@@ -108,10 +87,6 @@
                     </div>
 
                 </div>
-
-
-
-
 
                 <!-- Comments Section -->
                 <div>

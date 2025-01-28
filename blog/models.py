@@ -1,13 +1,13 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from django.templatetags.static import static
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
-from django.contrib.auth.models import User
 from tinymce.models import HTMLField
 from django.contrib.auth.models import User
-from django.utils.text import slugify
-from django.templatetags.static import static
+from django.contrib.sites.shortcuts import get_current_site
+
 
 class AuthorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author_profile')
@@ -18,7 +18,7 @@ class AuthorProfile(models.Model):
     linkedin_url = models.URLField(max_length=200, blank=True, null=True)
     instagram_url = models.URLField(max_length=200, blank=True, null=True)
     website_url = models.URLField(max_length=200, blank=True, null=True)
-    display_on_article = models.BooleanField(default=True)  
+    display_on_article = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.user.username} Profile"
@@ -28,7 +28,7 @@ class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True, blank=True)
     show_on_navbar = models.BooleanField(default=False)
-    priority = models.IntegerField(default=0) 
+    priority = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -42,10 +42,9 @@ class Category(models.Model):
         return f'/category/{self.slug}/'
 
 
-
 class BlogPost(models.Model):
     title = models.TextField(blank=True, null=True)
-    content = HTMLField() 
+    content = HTMLField()
     date = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = FilerImageField(null=True, blank=True, on_delete=models.SET_NULL, related_name='blog_images')
@@ -64,16 +63,6 @@ class BlogPost(models.Model):
 
 
 
-
-
-
-from django.db import models
-from django.utils.text import slugify
-from django.utils import timezone
-from django.templatetags.static import static
-from filer.fields.file import FilerFileField
-from tinymce.models import HTMLField
-from django.contrib.auth.models import User
 
 class Trend(models.Model):
     title = models.TextField(blank=True, null=True)
@@ -102,12 +91,19 @@ class Trend(models.Model):
     def is_video(self):
         return self.file and self.file.extension.lower() == 'mp4'
 
-    @property
-    def absolute_file_url(self):
-        """Return the absolute URL for the file or fallback to a default image."""
+    def get_file_url(self):
+        """Return the absolute URL for the file."""
         if self.file:
             return self.file.url
-        return static('images/Breakingnews.png')
+        return None
+
+    def get_absolute_file_url(self):
+        """Returns the absolute URL with the current domain."""
+        if self.file:
+            return get_current_site(self.request).domain + self.file.url
+        return None
+
+
 
 
 
@@ -121,6 +117,7 @@ class Video(models.Model):
     date = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True, null=True)
 
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
@@ -131,6 +128,15 @@ class Video(models.Model):
     
     def get_absolute_url(self):
         return f'/video/{self.slug}/'
+
+    def get_thumbnail_url(self):
+        """Return the thumbnail URL for the video or fallback to default."""
+        if self.video_file:
+            # Assuming we generate a thumbnail for the video using external service or local method
+            return static('images/video-thumbnail.png')  # Replace with actual thumbnail generation logic
+        return static('images/Breakingnews.png')  # Fallback image
+
+
 
 
 class Subscription(models.Model):

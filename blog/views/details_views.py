@@ -70,12 +70,14 @@ def trend_detail(request, slug):
     common_context = get_common_context()
     advert_content = insert_ad_banner(trend.content, common_context['ads'])
 
-    absolute_file_url = request.build_absolute_uri(trend.absolute_file_url)
+    # Use get_file_url() or get_absolute_file_url() depending on the content type
+    if trend.is_image or trend.is_video:
+        absolute_file_url = request.build_absolute_uri(trend.get_file_url())  # For both images and videos
+    else:
+        absolute_file_url = None  # Or a default fallback URL
 
     # Final Open Graph URL adjustments
     og_file_url = absolute_file_url
-    if trend.is_image or trend.is_video:
-        og_file_url = absolute_file_url
 
     context = {
         'trend': trend,
@@ -86,6 +88,7 @@ def trend_detail(request, slug):
     }
 
     return render(request, 'blog_details/trend_detail.html', context)
+
 
 
 

@@ -8,7 +8,7 @@
 <head>
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="{{ trend.title }}" />
-    <meta property="og:description" content="{{ trend.content|truncatewords:30 |safe }}" />
+    <meta property="og:description" content="{{ trend.title }}" />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:type" content="{% if trend.is_video %}video.other{% else %}article{% endif %}" />
 
@@ -29,16 +29,14 @@
         <meta name="twitter:image" content="{{ absolute_file_url }}" />
     {% endif %}
 
-    <!-- Additional Meta Tags -->
-    <meta name="twitter:title" content="{{ trend.title }}" />
-    <meta name="twitter:description" content="{{ trend.content|truncatewords:30 | safe }}" />
-
-    <!-- Styles and Scripts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM0s4HRZ06k6nyJ8Bwhe1g1dZ9IejdBBSskVQ2" crossorigin="anonymous">
-    <script src="{% static 'js/date-utils.js' %}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V80Z4XJ73J"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-V80Z4XJ73J');
+    </script>
     {% tailwind_css %}
-
     <style>
         #contentContainer {
             max-width: 800px;
@@ -62,13 +60,8 @@
 </head>
 
 <body class="bg-white text-gray-900">
-    <!-- Main Content -->
     <main class="container mx-auto px-4 py-8 font-helvetica my-40">
-        <!-- Advertisement -->
-        {% include 'advert/advert.html' with banner=leaderboard_ad %}
-
         <div class="flex flex-wrap -mx-4">
-            <!-- Trend Content Section -->
             <div class="w-full lg:w-8/12 px-4 my-8">
                 <h2 class="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-8">{{ trend.title | title }}</h2>
 
@@ -88,41 +81,37 @@
                     {% endif %}
                 </div>
 
-                <!-- Author and Date -->
-                <div class="flex items-center font-poppins mb-4">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
-                            <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center font-poppins overflow-hidden">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-gray-700 font-medium overflow-hidden">
+                        <div class="flex items-center space-x-2 mb-2 sm:mb-0 overflow-hidden">
+                            <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200">
+                                <img src="{% static 'images/logo2.png' %}" alt="Author's Headshot" class="w-full h-full object-cover">
+                            </div>
+                            <p class="font-semibold text-gray-900 text-sm sm:text-base">Newstropy</p>
                         </div>
-                        <p class="font-semibold text-gray-900 text-sm sm:text-base">Newstropy</p>
-                    </div>
-                    <div class="ml-4 text-gray-600 text-md font-md">
-                        <i class="fas fa-calendar-day text-green-700"></i>
-                        <p>{{ trend.date|date:"F j, Y" }}</p>
+                        <div class="flex items-center space-x-2 text-gray-600 text-sm sm:text-base">
+                            <i class="fas fa-calendar-day text-green-700"></i>
+                            <p>{{ trend.date|date:"F j, Y" }}</p>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Trend Content -->
-                <div id="contentContainer">
+                {% include 'partials/buttons.html' %}
+                <!-- Post Content -->
+                <div id="contentContainer" class="py-0 overflow-hidden my-8">
                     {{ advert|first_letter_richtext | safe | linebreaks }}
                 </div>
 
-                <!-- Related Products -->
                 <div class="shop my-8">
                     {% include 'shop/blog_shop.html' %}
                 </div>
 
-                <!-- Comments -->
                 <div class="mt-6">
                     {% include 'partials/comment&reply.html' %}
                 </div>
             </div>
 
-            <!-- Sidebar Section -->
             <div class="w-full lg:w-4/12 px-4">
                 {% include 'advert/advert.html' with banner=sidebar_ad %}
-
-                <!-- Recommended Posts -->
                 <div class="my-8">
                     <div class="section">
                         <div class="heading">
