@@ -20,6 +20,7 @@ else:
     DEBUG = False
 
 
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'newstropy.onrender.com', 'newstropy.com.ng']
 CSRF_TRUSTED_ORIGINS = ['https://newstropy.onrender.com']
 
@@ -56,9 +57,15 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': '100%',
     'menubar': 'file edit view insert format tools table help',
     'plugins': 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table directionality emoticons template paste textpattern',
-    'toolbar': 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
+    'toolbar': 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen preview save print | insertfile image media template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
     'content_css': 'default',
+    
+    # Allow embedding of Twitter posts and other external content
+    'extended_valid_elements': 'iframe[src|width|height|frameborder|allowfullscreen|allow|scrolling|style|class], script[src|type|async|charset]',
+    'valid_children': '+body[style], +div[iframe], +div[script]',
+    'media_live_embeds': True,
 }
+
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -127,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Localization
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Lagos'
 USE_TZ = True
 
 

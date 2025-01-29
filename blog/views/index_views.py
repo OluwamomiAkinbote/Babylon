@@ -7,8 +7,15 @@ from itertools import chain
 from advert.models import AdBanner
 from shop.models import Product
 from blog.models import BlogPost, Category, Trend, Video
+from django.utils import timezone
+
+
+
 
 def index(request):
+    local_time = timezone.localtime(timezone.now())
+    
+    
     def get_category_posts(category_name, model=BlogPost, limit=None):
         try:
             category = Category.objects.get(name=category_name)
