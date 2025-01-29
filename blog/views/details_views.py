@@ -9,14 +9,13 @@ import random
 from django.templatetags.static import static
 
 def get_common_context():
-    
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
     leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
     sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
     home_ad = AdBanner.objects.filter(category='Home', active=True).first()
     ads = AdBanner.objects.filter(category=AdCategory.INLINE, active=True)
     shop = Product.objects.all().order_by('?')[:10]
-    
+
     return {
         'navbar_categories': navbar_categories,
         'leaderboard_ad': leaderboard_ad,
@@ -30,8 +29,16 @@ def get_common_context():
 
 def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
-    related_posts = BlogPost.objects.filter(category=post.category).exclude(slug=slug)[:5]
-    all_other_posts = BlogPost.objects.exclude(category=post.category).exclude(slug=slug)
+    
+    # Randomly select 5 related posts from the same category
+    related_posts = list(BlogPost.objects.filter(category=post.category).exclude(slug=slug))
+    random.shuffle(related_posts)
+    related_posts = related_posts[:5]
+
+    # Randomly select 5 recommended posts from different categories
+    all_other_posts = list(BlogPost.objects.exclude(category=post.category).exclude(slug=slug))
+    random.shuffle(all_other_posts)
+    recommended_posts = all_other_posts[:5]
 
     # Fallback image URL
     fallback_image_url = request.build_absolute_uri(static('images/Breakingnews.png'))
@@ -39,8 +46,6 @@ def blog_detail(request, slug):
         absolute_image_url = request.build_absolute_uri(post.image.url)
     except AttributeError:
         absolute_image_url = fallback_image_url
-
-    recommended_posts = random.sample(list(all_other_posts), min(len(all_other_posts), 5))
 
     common_context = get_common_context()
     advert_content = insert_ad_banner(post.content, common_context['ads'])
@@ -56,17 +61,14 @@ def blog_detail(request, slug):
 
     return render(request, 'blog_details/blog_detail.html', context)
 
-
-
-
-
-
-
-
 def trend_detail(request, slug):
     trend = get_object_or_404(Trend, slug=slug)
-    posts = BlogPost.objects.all()
-    recommended_posts = sample(list(posts), min(len(posts), 5))
+    
+    # Randomly select 5 recommended posts
+    posts = list(BlogPost.objects.all())
+    random.shuffle(posts)
+    recommended_posts = posts[:5]
+
     common_context = get_common_context()
     advert_content = insert_ad_banner(trend.content, common_context['ads'])
 
@@ -76,18 +78,16 @@ def trend_detail(request, slug):
     else:
         absolute_file_url = None  # Or a default fallback URL
 
-    # Final Open Graph URL adjustments
-    og_file_url = absolute_file_url
-
     context = {
         'trend': trend,
         'recommended_posts': recommended_posts,
         'advert': advert_content,
-        'absolute_file_url': og_file_url,  # Pass the Open Graph URL
+        'absolute_file_url': absolute_file_url,  # Pass the Open Graph URL
         **common_context
     }
 
     return render(request, 'blog_details/trend_detail.html', context)
+
 
 
 

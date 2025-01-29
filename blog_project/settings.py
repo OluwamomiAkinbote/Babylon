@@ -51,20 +51,18 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 2
-
 TINYMCE_DEFAULT_CONFIG = {
     'height': 360,
     'width': '100%',
     'menubar': 'file edit view insert format tools table help',
-    'plugins': 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table directionality emoticons template paste textpattern',
-    'toolbar': 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen preview save print | insertfile image media template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
+    'plugins': 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table directionality emoticons template paste textpattern code',
+    'toolbar': 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen preview save print | insertfile image media template link anchor codesample | code',
+    'extended_valid_elements': 'script[charset|src|type], iframe[src|frameborder|width|height|allowfullscreen], blockquote[class]',
+    'valid_children': '+body[script], +div[script], +div[iframe]',
     'content_css': 'default',
-    
-    # Allow embedding of Twitter posts and other external content
-    'extended_valid_elements': 'iframe[src|width|height|frameborder|allowfullscreen|allow|scrolling|style|class], script[src|type|async|charset]',
-    'valid_children': '+body[style], +div[iframe], +div[script]',
-    'media_live_embeds': True,
 }
+
+
 
 
 TAILWIND_APP_NAME = 'theme'

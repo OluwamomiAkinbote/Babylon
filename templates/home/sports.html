@@ -30,7 +30,7 @@
                     {% endif %}
                     <div class="w-2/3">
                         <a href="{% url 'blog_detail' post.slug %}" class="text-gray-900 md:text-md sm:text-md font-semibold hover:underline tracking-tight">
-                            {{ post.title|truncatechars:60 }}
+                            {{ post.title|truncatechars:75 }}
                         </a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <i class="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
@@ -63,7 +63,7 @@
                     {% endif %}
                     <div class="w-2/3">
                         <a href="{% url 'blog_detail' post.slug %}" class="text-gray-900 md:text-md sm:text-md font-semibold hover:underline tracking-tight">
-                            {{ post.title|truncatechars:60 }}
+                            {{ post.title|truncatechars:75 }}
                         </a>
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <i class="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
