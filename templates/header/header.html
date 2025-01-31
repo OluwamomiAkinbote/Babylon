@@ -6,12 +6,14 @@
 </head>
 
 <body class="font-helvetica">
+
+    
 <!-- top_bar -->
 
      
     <div class="bg-gray-50 shadow-md relative z-20 backdrop-blur-md bg-opacity-75">
         <!-- First Container: Social Links, Logo, and Search Bar -->
-        <div class="py-2 flex justify-evenly items-center px-2 hidden sm:flex">
+        <div class="p-2 flex justify-evenly items-center  hidden sm:flex">
 
             <div class="social-links flex space-x-4 text-gray-900">
                 <!-- Facebook -->
@@ -30,7 +32,7 @@
             
             <!-- logo -->
             <div class="logo">
-                <img src="{% static 'images/logoheader.png' %}" alt="Logo" class="h-20 w-auto md:h-20  object-cover">
+                <img src="{% static 'images/logoheader.png' %}" alt="Logo" class="h-16 w-auto md:h-16  object-cover">
             </div>
             
             <!-- Search Bar -->
@@ -52,30 +54,33 @@
             
         </div>
         <!-- navbar on lg screen -->
-        <div class="navbar md:flex hidden justify-between bg-green-100 text-black items-center p-4 font-semibold mb-4 shadow-md text-sm">
+        <div class="navbar md:flex hidden justify-between bg-green-100 text-black items-center p-2 font-semibold mb-4 shadow-md">
             <div class="home flex items-center space-x-4">
-                <a href="/" class="flex items-center p-2 ">
-                    <div class="flex items-center justify-center bg-green-500 text-white rounded-full w-10 h-10">
-                        <i class="fas fa-home text-xl"></i> <!-- Adjust icon size here -->
-                    </div>
-                    <span class="text-lg ml-2">Home</span>
-                </a>
-            </div>
-            
-            <div class="home flex items-center space-x-4">
-                <a href="{% url 'shop_index' %}" class="flex items-center p-2">
-                    <div class="flex items-center justify-center bg-green-500 text-white rounded-full w-10 h-10">
-                        <i class="fas fa-store text-xl"></i> <!-- Adjust icon size here -->
-                    </div>
-                    <span class="text-lg ml-2">Shop</span>
-                </a>
+
+                <div class="shop flex items-center space-x-4">
+                    <a href="/" class="flex items-center p-2 ">
+                        <div class="flex items-center justify-center bg-green-500 text-white rounded-full w-7 h-7">
+                            <i class="fas fa-home text-sm"></i> <!-- Adjust icon size here -->
+                        </div>
+                        <span class="text-md ml-2">Home</span>
+                    </a>
+                </div>
+
+                <div class="shop flex items-center space-x-4">
+                    <a href="{% url 'shop_index' %}" class="flex items-center p-2">
+                        <div class="flex items-center justify-center bg-green-500 text-white rounded-full w-7 h-7">
+                            <i class="fas fa-store text-sm"></i> <!-- Adjust icon size here -->
+                        </div>
+                        <span class="text-md ml-2">Shop</span>
+                    </a>
+                </div>
             </div>
             
             <div class="category">
                 <ul class="flex space-x-6 capitalize">
                     {% for category in navbar_categories %}
                     <li class="hover:underline hover:text-green-800 transition-colors border-t border-b border-green-900">
-                        <a href="{% url 'category_list' category.slug %}" class="text-lg">{{ category.name }}</a>
+                        <a href="{% url 'category_list' category.slug %}" class="text-md">{{ category.name }}</a>
                     </li>
                     {% endfor %}
                 </ul>
