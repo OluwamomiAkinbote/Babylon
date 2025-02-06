@@ -13,7 +13,7 @@
         <div class="flex flex-col md:flex-row gap-6 px-4">
             <!-- Post Container -->
             <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {% for post in posts_from_five_days_ago %}
+                {% for post in blog_posts_from_five_days_ago %}
                     <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl">
                         <a href="{% url 'blog_detail' post.slug %}">
                             {% if post.image %}
@@ -27,7 +27,29 @@
                                 <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
                             </h2>
                             <p class="text-green-400 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
-                            <a href="{% url 'blog_detail' post.slug %}" 
+                            <a href="{% url 'blog_detail' post.slug %}"
+                               class="inline-block mb-4 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                               Read More
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% for post in trend_posts_from_five_days_ago %}
+                    <div class="bg-gray-800 transition-shadow duration-300 border-b border-gray-700 shadow-lg hover:shadow-xl">
+                        <a href="{% url 'trend_detail' post.slug %}">
+                            {% if post.file and post.is_image %}
+                                <img src="{{ post.file.url }}" alt="{{ post.title }}" class="w-full h-44 object-cover mb-4">
+                            {% else %}
+                                <img src="{% static 'images/Breakingnews.png' %}" alt="Breaking News" class="w-full h-44 object-cover mb-4">
+                            {% endif %}
+                        </a>
+                        <div class="px-2">
+                            <h2 class="text-sm font-bold mb-2 text-white hover:text-green-500">
+                                <a href="{% url 'trend_detail' post.slug %}">{{ post.title }}</a>
+                            </h2>
+                            <p class="text-green-400 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
+                            <a href="{% url 'trend_detail' post.slug %}"
                                class="inline-block mb-4 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
                                Read More
                             </a>

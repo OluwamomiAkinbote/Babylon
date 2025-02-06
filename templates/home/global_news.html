@@ -25,7 +25,7 @@
                     <div class="meta text-sm flex justify-between items-center mt-2">
                         <div class="meta text-xs text-gray-600 flex items-center mt-2">
                             <i class="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
-                            <p class="text-gray-700 text-sm ">{{ post.date|date:"F j, Y" }}</p>
+                            <p class="text-gray-100 text-sm ">{{ post.date|date:"F j, Y" }}</p>
                         </div>
                         <a href="{% url 'blog_detail' post.slug %}" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded transition duration-300 ease-in-out transform hover:scale-105">Read More</a>
                     </div>

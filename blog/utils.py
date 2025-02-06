@@ -20,7 +20,7 @@ def generate_ad_html(ad_banner):
         image_small_url = ad_banner.image_small.url if ad_banner.image_small else ''
         
         ad_html = f'''
-            <div class="ad-banner-container flex justify-center items-center overflow-hidden">
+            <div class="ad-banner-container flex justify-center items-center overflow-hidden w-70 h">
                 <a href="{ad_banner.link}" target="_blank" class="ad-image">
                     <picture>
                         <source srcset="{image_large_url}" media="(min-width: 768px)">

@@ -19,15 +19,15 @@
                                         <source src="{{ post.video.file.url }}" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>
-                                {% elif post.image %}
-                                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-[120px] h-[86px] object-cover mr-4">
+                                {% elif post.file %}
+                                    <img src="{{ post.file.url }}" alt="{{ post.title }}" class="w-[120px] h-[86px] object-cover mr-4">
                                 {% else %}
                                     <img src="{% static 'images/Breakingnews.png' %}" alt="Default image" class="w-[120px] h-[86px] object-cover mr-4">
                                 {% endif %}
                             </div>
                             <div class="md:w-2/3 sm:w-full">
                                 <a href="{% url 'trend_detail' post.slug %}" class="text-sm font-semibold hover:text-red-500">
-                                    {{ post.title|truncatechars:50|title }}
+                                    {{ post.title|truncatechars:80|title }}
                                 </a>
                                 <p class="text-gray-700 text-sm mb-2">{{ post.date|date:"F j, Y" }}</p>
                             </div>
@@ -37,6 +37,42 @@
                     <p>No trending posts at the moment.</p>
                 {% endfor %}
             </div>
+
+                <!-- Pagination Section -->
+            <div class="my-8 flex justify-center items-center space-x-2">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                        &lt; PREV
+                    </a>
+                {% else %}
+                    <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                        &lt; PREV
+                    </span>
+                {% endif %}
+
+                {% for page_num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == page_num %}
+                        <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
+                            {{ page_num }}
+                        </span>
+                    {% else %}
+                        <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100">
+                            {{ page_num }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                        NEXT &gt;
+                    </a>
+                {% else %}
+                    <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                        NEXT &gt;
+                    </span>
+                {% endif %}
+            </div>
+            
         </div>
 
         <!-- Sidebar Section -->
@@ -83,39 +119,6 @@
         </aside>
     </div>
 
-    <!-- Pagination Section -->
-    <div class="my-8 flex justify-center items-center space-x-2">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
-                &lt; PREV
-            </a>
-        {% else %}
-            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
-                &lt; PREV
-            </span>
-        {% endif %}
 
-        {% for page_num in page_obj.paginator.page_range %}
-            {% if page_obj.number == page_num %}
-                <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
-                    {{ page_num }}
-                </span>
-            {% else %}
-                <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100">
-                    {{ page_num }}
-                </a>
-            {% endif %}
-        {% endfor %}
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
-                NEXT &gt;
-            </a>
-        {% else %}
-            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
-                NEXT &gt;
-            </span>
-        {% endif %}
-    </div>
 </main>
 {% endblock %}

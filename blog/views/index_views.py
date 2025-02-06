@@ -13,9 +13,7 @@ from django.utils import timezone
 
 
 def index(request):
-    local_time = timezone.localtime(timezone.now())
-    
-    
+  
     def get_category_posts(category_name, model=BlogPost, limit=None):
         try:
             category = Category.objects.get(name=category_name)
@@ -37,14 +35,12 @@ def index(request):
 
     # Aggregate posts
     five_days_ago = timezone.now() - timedelta(days=5)
-    posts_from_five_days_ago = sorted(
-        chain(
-            BlogPost.objects.filter(date__lt=five_days_ago).order_by('-date')[:12],
-            Trend.objects.filter(date__lt=five_days_ago).order_by('-date')[:12]
-        ),
-        key=lambda post: post.date,
-        reverse=True
-    )
+
+    blog_posts_from_five_days_ago = BlogPost.objects.filter(date__lt=five_days_ago).order_by('-date')[:6]
+    trend_posts_from_five_days_ago = Trend.objects.filter(date__lt=five_days_ago).order_by('-date')[:6]
+
+
+
 
     # Hero posts
     three_days_ago = timezone.now() - timedelta(days=3)
@@ -70,7 +66,8 @@ def index(request):
         'non_exclusive_posts': non_exclusive_posts,
         'exclusive_posts': exclusive_posts,
         'global_news_posts': global_news_posts,
-        'posts_from_five_days_ago': posts_from_five_days_ago,
+        'blog_posts_from_five_days_ago': blog_posts_from_five_days_ago,
+        'trend_posts_from_five_days_ago': trend_posts_from_five_days_ago,
         'categories': Category.objects.all(),
         'navbar_categories': navbar_categories,
         'video_posts': video_posts,
