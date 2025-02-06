@@ -16,10 +16,5 @@ tinymce.init({
     menubar: 'favs file edit view insert format tools table',
     content_style: 'body{font-family:Helvetica,Arial,sans-serif; font-size:16px}',
 
-    // Ensure content is synced with the form
-    setup: function(editor) {
-        editor.on('change', function() {
-            editor.save();
-        });
-    }
+
 });

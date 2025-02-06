@@ -53,7 +53,7 @@
                 <i class="fas fa-align-left text-gray-600 mr-2"></i>
                 Content
             </label>
-            <textarea id="content" name="content" 
+            <textarea id="editor" name="content" 
                 class="w-full p-3 border border-gray-400 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm" 
                 rows="10" placeholder="Write your content here..." required></textarea>
         </div>
@@ -121,18 +121,39 @@
 </script>
 
 
+<script src="{% static 'ckeditor/ckeditor.js' %}"></script>
 
-<!-- Place the first <script> tag in your HTML's <head> -->
-<script src="https://cdn.tiny.cloud/1/d9uysp0by1cu8vi4x7jxl5n1m0brxgoj0foekgxn88vzflkq/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="{% static 'tinymce/tinymce.min.js'%}"></script>
+<script src="{% static 'js/script.js'%}"></script>
 
-<!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+
+
+
 <script>
+
+
     tinymce.init({
-    selector: '#content',
-    width: 800,
-    height: 300,
-    plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        selector: '#editor',
+        width: 800,
+        height: 300,
+        plugins: [
+            'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+            'searchreplace', 'wordcount', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 
+            'table', 'emoticons', 'template', 'codesample'
+        ],
+        toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify |' + 
+        'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
+        'forecolor backcolor emoticons',
+        menu: {
+            favs: {title: 'menu', items: 'code visualaid | searchreplace | emoticons'}
+        },
+        menubar: 'favs file edit view insert format tools table',
+        content_style: 'body{font-family:Helvetica,Arial,sans-serif; font-size:16px}',
+    
+    
     });
+
 </script>
+
+
 {% endblock %}

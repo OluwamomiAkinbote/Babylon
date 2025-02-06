@@ -128,4 +128,18 @@
 <!-- Add TinyMCE script -->
 <script src="{% static 'tinymce/tinymce.min.js'%}"></script>
 <script src="{% static 'js/script.js'%}"></script>
+
+<script>
+    tinymce.init({
+        selector: '#editor',
+        plugins: 'advlist autolink lists link image charmap preview anchor \
+                  searchreplace visualblocks code fullscreen insertdatetime \
+                  media table help wordcount',
+        toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | \
+                  bullist numlist outdent indent | link image media | preview code',
+        height: 400,
+        menubar: true,
+        branding: false
+    });
+</script>
 {% endblock %}

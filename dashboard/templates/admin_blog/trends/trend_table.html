@@ -24,10 +24,10 @@
                 <td class="px-4 py-2 text-sm border border-gray-300">
                     {% if trend.file %}
                         {% if trend.file.get_file_type == "image" %}
-                            <img src="{{ trend.file.file.url }}" alt="Trend Image" class="w-16 h-16 object-cover rounded">
+                            <img src="{{ trend.file.url }}" alt="Trend Image" class="w-16 h-16 object-cover rounded">
                         {% elif trend.file.get_file_type == "video" %}
                             <video class="w-16 h-16 object-cover rounded" controls>
-                                <source src="{{ trend.file.file.url }}" type="video/mp4">
+                                <source src="{{ trend.file.url }}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         {% else %}
