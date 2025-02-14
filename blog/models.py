@@ -85,7 +85,7 @@ class Trend(models.Model):
 
     @property
     def is_image(self):
-        return self.file and self.file.extension.lower() in ['png', 'jpg', 'jpeg', 'gif']
+        return self.file and self.file.extension.lower() in ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tif', 'tiff', 'heic', 'heif', 'jfif', 'jpe', 'jif', 'jfi', 'jp2', 'j2k', 'jpf', 'jpx', 'jpm', 'mj2', 'j2c', 'jpc', 'j2', 'jpc', 'j2k', 'jpx', 'jpm', 'mj2', 'j2c', 'jpc', 'jif', 'jfif', 'jpe', 'jfi']
 
     @property
     def is_video(self):
