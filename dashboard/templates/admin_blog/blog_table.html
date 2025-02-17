@@ -65,45 +65,50 @@
 </div>
 
 <!-- Pagination Controls -->
-<!-- Pagination Controls -->
-<div class="flex justify-center mt-4">
-    <ul class="flex items-center space-x-2">
+<div class="flex justify-center mt-6">
+    <ul class="flex items-center space-x-2 flex-wrap">
+        <!-- Previous Button -->
         {% if page_obj.has_previous %}
-        <li>
-            <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</a>
-        </li>
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}" 
+                   class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition">Prev</a>
+            </li>
         {% else %}
-        <li>
-            <span class="px-3 py-1 bg-gray-300 rounded text-gray-500">Prev</span>
-        </li>
+            <li>
+                <span class="px-4 py-2 bg-gray-300 rounded text-gray-500 cursor-not-allowed">Prev</span>
+            </li>
         {% endif %}
 
+        <!-- Page Numbers -->
         {% for page in page_obj.paginator.page_range %}
-        {% if page <= 5 or page == page_obj.paginator.num_pages %}
-        {% if page == page_obj.number %}
-        <li>
-            <span class="px-3 py-1 bg-blue-500 text-white rounded">{{ page }}</span>
-        </li>
-        {% else %}
-        <li>
-            <a href="?page={{ page }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">{{ page }}</a>
-        </li>
-        {% endif %}
-        {% elif page == 6 %}
-        <li>
-            <span class="px-3 py-1 bg-gray-300 rounded">...</span>
-        </li>
-        {% endif %}
+            {% if page == 1 or page == page_obj.paginator.num_pages or page|add:"-2" <= page_obj.number and page|add:"2" >= page_obj.number %}
+                {% if page == page_obj.number %}
+                    <li>
+                        <span class="px-4 py-2 bg-blue-500 text-white rounded font-bold">{{ page }}</span>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="?page={{ page }}" 
+                           class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition">{{ page }}</a>
+                    </li>
+                {% endif %}
+            {% elif page == 2 or page == page_obj.paginator.num_pages|add:"-1" %}
+                <li>
+                    <span class="px-4 py-2 bg-gray-300 rounded">...</span>
+                </li>
+            {% endif %}
         {% endfor %}
 
+        <!-- Next Button -->
         {% if page_obj.has_next %}
-        <li>
-            <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</a>
-        </li>
+            <li>
+                <a href="?page={{ page_obj.next_page_number }}" 
+                   class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition">Next</a>
+            </li>
         {% else %}
-        <li>
-            <span class="px-3 py-1 bg-gray-300 rounded text-gray-500">Next</span>
-        </li>
+            <li>
+                <span class="px-4 py-2 bg-gray-300 rounded text-gray-500 cursor-not-allowed">Next</span>
+            </li>
         {% endif %}
     </ul>
 </div>

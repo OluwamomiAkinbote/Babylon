@@ -43,39 +43,51 @@
                     
                     <!-- Pagination -->
                     <div class="my-8 flex justify-center items-center space-x-2">
+                        <!-- Previous Button -->
                         {% if page_obj.has_previous %}
-                            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                            <a href="?page={{ page_obj.previous_page_number }}" 
+                               class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center transition">
                                 &lt; PREV
                             </a>
                         {% else %}
-                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center cursor-not-allowed">
                                 &lt; PREV
                             </span>
                         {% endif %}
-
+                    
+                        <!-- Page Numbers -->
                         {% for page_num in page_obj.paginator.page_range %}
-                            {% if page_obj.number == page_num %}
-                                <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
-                                    {{ page_num }}
+                            {% if page_num == 1 or page_num == page_obj.paginator.num_pages or page_num|add:"-2" <= page_obj.number and page_num|add:"2" >= page_obj.number %}
+                                {% if page_obj.number == page_num %}
+                                    <span class="px-4 py-2 border border-transparent rounded-full text-sm text-white bg-green-700 font-bold">
+                                        {{ page_num }}
+                                    </span>
+                                {% else %}
+                                    <a href="?page={{ page_num }}" 
+                                       class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 transition">
+                                        {{ page_num }}
+                                    </a>
+                                {% endif %}
+                            {% elif page_num == 2 or page_num == page_obj.paginator.num_pages|add:"-1" %}
+                                <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-500 bg-gray-100">
+                                    ...
                                 </span>
-                            {% else %}
-                                <a href="?page={{ page_num }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100">
-                                    {{ page_num }}
-                                </a>
                             {% endif %}
                         {% endfor %}
-
+                    
+                        <!-- Next Button -->
                         {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center">
+                            <a href="?page={{ page_obj.next_page_number }}" 
+                               class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white hover:bg-gray-100 flex items-center transition">
                                 NEXT &gt;
                             </a>
                         {% else %}
-                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center">
+                            <span class="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-400 bg-gray-200 flex items-center cursor-not-allowed">
                                 NEXT &gt;
                             </span>
                         {% endif %}
                     </div>
-                </div>
+                    
 
                 <!-- Sidebar -->
                 

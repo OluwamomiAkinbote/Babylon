@@ -7,7 +7,8 @@ def detect_file_type(file_url):
     extension = file_url.split('.')[-1].lower()
     mime_type, _ = guess_type(file_url)
 
-    image_extensions = ['jpg', 'jpeg', 'png', 'gif']
+    image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg', 'ico','jtif', 'jp2', 'j2k', 'jpf', 'jpx', 'jpt']
+
     video_extensions = ['mp4', 'avi', 'mov', 'webm', 'mkv']
     pdf_extensions = ['pdf']
     document_extensions = ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'txt']
