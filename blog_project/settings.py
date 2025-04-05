@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites', 
-   
     "rest_framework", 
     'corsheaders',
     'blog',
