@@ -8,7 +8,7 @@ from datetime import timedelta
 
 
 class StoryListCreateAPIView(APIView):
-   
+    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can create a story
 
     def get(self, request):
         # List all stories
@@ -21,14 +21,15 @@ class StoryListCreateAPIView(APIView):
         serializer = StorySerializer(data=request.data)
         if serializer.is_valid():
             story = serializer.save(user=request.user)
-            story.expires_at = story.created_at + timedelta(days=3)  # Set expiration date
+            # Set expiration date to 3 days after creation (using 'date' field)
+            story.expires_at = story.date + timedelta(days=3)
             story.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StoryDetailAPIView(APIView):
-    
+    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can view/edit a story
 
     def get_object(self, pk):
         try:
@@ -62,7 +63,7 @@ class StoryDetailAPIView(APIView):
 
 
 class StoryMediaListCreateAPIView(APIView):
-  
+    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can create story media
 
     def get(self, request):
         # List all story media
@@ -80,7 +81,7 @@ class StoryMediaListCreateAPIView(APIView):
 
 
 class StoryMediaDetailAPIView(APIView):
-  
+    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can view/edit story media
 
     def get_object(self, pk):
         try:

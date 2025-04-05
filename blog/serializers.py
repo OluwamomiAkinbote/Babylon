@@ -94,19 +94,24 @@ class StoryMediaSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         if instance.media:
             data['media'] = instance.media.url  # Ensure media URL is a complete path
-        return data
+        return datama
 
 class StorySerializer(serializers.ModelSerializer):
     media_files = StoryMediaSerializer(many=True, read_only=True)
 
     class Meta:
         model = Story
-        fields = ['id', 'user', 'title', 'created_at', 'expires_at', 'media_files']
+        fields = ['id', 'user', 'title', 'date', 'expires_at', 'media_files']
 
     def to_representation(self, instance):
+        # Get the default representation first
         data = super().to_representation(instance)
-        data['expires_at'] = instance.expires_at.strftime('%Y-%m-%dT%H:%M:%S')  # Format expires_at
+        
+        # Format the 'expires_at' field into the desired string format
+        data['expires_at'] = instance.expires_at.strftime('%Y-%m-%dT%H:%M:%S') if instance.expires_at else None
+        
         return data
+
 
 
 
