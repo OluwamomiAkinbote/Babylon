@@ -26,17 +26,20 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "newstropy.onrender.com",
     "newstropy.online",
+    "https://ayo.newstropy.online/",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://newstropy.onrender.com",
-    "https://newstropy.online",  # Add your custom domain
+    "https://newstropy.online",
+     "https://ayo.newstropy.online/",
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite local server
     "https://newstropy.onrender.com",
     "https://newstropy.online",
+    "https://ayo.newstropy.online/",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True 
