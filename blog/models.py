@@ -69,11 +69,12 @@ class BlogMedia(models.Model):
         return f'Media for {self.blog_post.title}'
 
 
-# Story: This is the main story model that holds the title and expiration date
+
+
 class Story(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)  # Title of the story
-    date = models.DateTimeField(default=timezone.now)  # Use default to set creation date
+    date = models.DateTimeField(default=timezone.now)  # Use this as the creation date
     expires_at = models.DateTimeField(blank=True, null=True)  # Automatically set expiration
 
     def __str__(self):
@@ -90,15 +91,14 @@ class Story(models.Model):
         if timezone.now() > self.expires_at:
             self.delete()
 
-
-
 class StoryMedia(models.Model):
     story = models.ForeignKey(Story, related_name='media_files', on_delete=models.CASCADE)
-    media = FilerFileField(null=True, blank=True, on_delete=models.CASCADE, related_name="story_media")  # ✅ fixed
-    caption = models.TextField(blank=True, null=True)
+    media = FilerFileField(null=True, blank=True, on_delete=models.CASCADE, related_name="story_media")  # Media file (image/video)
+    caption = models.CharField(max_length=300, blank=True, null=True)  # Changed from TextField to CharField
 
     def __str__(self):
         return f"Media for {self.story.title} - {self.media.name}"
+
 
 
 

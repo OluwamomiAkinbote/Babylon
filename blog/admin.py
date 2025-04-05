@@ -9,6 +9,12 @@ from django.contrib import admin
 from django.contrib import admin
 from .models import Story, StoryMedia
 
+from django.contrib import admin
+from django.utils.html import format_html
+from filer.fields.file import FilerFileField
+from .models import Story, StoryMedia
+from datetime import timedelta
+
 class StoryMediaInline(admin.TabularInline):
     model = StoryMedia
     extra = 1
@@ -35,24 +41,23 @@ class StoryAdmin(admin.ModelAdmin):
     ordering = ('-date',)  # Default ordering by date (descending)
     list_per_page = 20  # Pagination
 
-    readonly_fields = ('date','expires_at')  # Prevent modification of date
+    readonly_fields = ('date', 'expires_at')  # Prevent modification of date and expires_at
 
     fieldsets = (
         (None, {
-            'fields': ('user', 'title', 'expires_at'),  # Remove created_at from here
+            'fields': ('user', 'title', 'expires_at'),
         }),
         ('Timestamps', {
-            'fields': ('date',),  # Place it in its own section as read-only
+            'fields': ('date',),  # Only show the `date` field
         }),
     )
 
     inlines = [StoryMediaInline]
 
-
     def save_model(self, request, obj, form, change):
-        if not obj.expires_at:
-            obj.expires_at = obj.created_at + timedelta(days=3)  # Default expiration is 3 days from creation
+      
         super().save_model(request, obj, form, change)
+
 
 # Other existing admin registrations (as per your previous code)
 @admin.register(AuthorProfile)
