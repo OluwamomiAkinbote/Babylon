@@ -91,11 +91,11 @@ class Story(models.Model):
             self.delete()
 
 
-# StoryMedia: This will store media (image/video) and caption for each story
+
 class StoryMedia(models.Model):
     story = models.ForeignKey(Story, related_name='media_files', on_delete=models.CASCADE)
-    media = models.FileField(upload_to='stories/%Y/%m/%d/')  # Media file (image/video)
-    caption = models.TextField(blank=True, null=True)  # Caption for the media
+    media = FilerFileField(null=True, blank=True, on_delete=models.CASCADE, related_name="story_media")  # ✅ fixed
+    caption = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Media for {self.story.title} - {self.media.name}"
