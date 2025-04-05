@@ -11,38 +11,45 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+import os
+
+# Environment setup
 SECRET_KEY = os.getenv('SECRET_KEY')
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
-if ENVIRONMENT == 'development':
-    DEBUG = True
+# Set DEBUG based on the environment
+DEBUG = ENVIRONMENT == 'development'
+
+# CORS settings
+if DEBUG:
+    # In development, allow all origins for convenience
+    CORS_ALLOW_ALL_ORIGINS = True
 else:
-    DEBUG = False
+    # In production, restrict CORS to specific origins
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = [
+        "https://newstropy.online",
+        "https://ayo.newstropy.online",
+    ]
 
-
-
+# Allowed hosts for your application
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "newstropy.onrender.com",
     "newstropy.online",
-    "https://ayo.newstropy.online/",
+    "ayo.newstropy.online",  # Corrected to the domain only
 ]
 
+# CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = [
     "https://newstropy.onrender.com",
     "https://newstropy.online",
-     "https://ayo.newstropy.online/",
+    "https://ayo.newstropy.online",  # Corrected
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite local server
-    "https://newstropy.onrender.com",
-    "https://newstropy.online",
-    "https://ayo.newstropy.online/",
-]
+# Optionally, you can add more configurations below
 
-CORS_ALLOW_ALL_ORIGINS = True 
 
 INSTALLED_APPS = [
     'django.contrib.admin',
