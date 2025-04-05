@@ -7,7 +7,7 @@ from filer.fields.image import FilerImageField
 from tinymce.models import HTMLField
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-
+from datetime import timedelta
 
 class AuthorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author_profile')
@@ -47,7 +47,6 @@ class BlogPost(models.Model):
     content = HTMLField()
     date = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = FilerImageField(null=True, blank=True, on_delete=models.SET_NULL, related_name='blog_images')
     slug = models.SlugField(max_length=200, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -60,6 +59,55 @@ class BlogPost(models.Model):
     
     def get_absolute_url(self):
         return f'/blog/{self.slug}/'
+class BlogMedia(models.Model):
+    """Stores both images and videos as media files"""
+    blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='media')
+    media = FilerFileField(null=True, blank=True, on_delete=models.SET_NULL, related_name='blog_media')
+    caption = models.CharField(max_length=300, blank=True, null=True)  # Added caption field
+
+    def __str__(self):
+        return f'Media for {self.blog_post.title}'
+
+
+# Story: This is the main story model that holds the title and expiration date
+class Story(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)  # Title of the story
+    date = models.DateTimeField(default=timezone.now)  # Use default to set creation date
+    expires_at = models.DateTimeField(blank=True, null=True)  # Automatically set expiration
+
+    def __str__(self):
+        return f"Story by {self.user.username}: {self.title}"
+
+    def save(self, *args, **kwargs):
+        # Automatically set the expiration date to 7 days after creation
+        if not self.expires_at:
+            self.expires_at = self.date + timedelta(days=7)
+        super().save(*args, **kwargs)
+
+    def delete_expired_story(self):
+        # Check if the story has expired
+        if timezone.now() > self.expires_at:
+            self.delete()
+
+
+# StoryMedia: This will store media (image/video) and caption for each story
+class StoryMedia(models.Model):
+    story = models.ForeignKey(Story, related_name='media_files', on_delete=models.CASCADE)
+    media = models.FileField(upload_to='stories/%Y/%m/%d/')  # Media file (image/video)
+    caption = models.TextField(blank=True, null=True)  # Caption for the media
+
+    def __str__(self):
+        return f"Media for {self.story.title} - {self.media.name}"
+
+
+
+
+
+
+
+
+
 
 
 
@@ -97,10 +145,10 @@ class Trend(models.Model):
             return self.file.url
         return None
 
-    def get_absolute_file_url(self):
+    def get_absolute_file_url(self, request):
         """Returns the absolute URL with the current domain."""
         if self.file:
-            return get_current_site(self.request).domain + self.file.url
+            return f"https://{get_current_site(request).domain}{self.file.url}"
         return None
 
 

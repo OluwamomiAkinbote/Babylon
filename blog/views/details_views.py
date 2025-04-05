@@ -1,116 +1,109 @@
-from django.shortcuts import render, get_object_or_404
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from random import sample
+from django.templatetags.static import static
+import random
 from blog.models import BlogPost, Category, Video, Trend
 from advert.models import AdBanner, AdCategory
 from blog.utils import insert_ad_banner
 from shop.models import Product
-import random
-from django.templatetags.static import static
+from blog.serializers import BlogPostSerializer, TrendSerializer, VideoSerializer,CategorySerializer 
+
+from advert.serializers import AdBannerSerializer  # Import the serializer
 
 def get_common_context():
-    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
-    leaderboard_ad = AdBanner.objects.filter(category='Leaderboard', active=True).first()
-    sidebar_ad = AdBanner.objects.filter(category='Sidebar', active=True).first()
-    home_ad = AdBanner.objects.filter(category='Home', active=True).first()
+    navbar_categories = Category.objects.filter(show_on_navbar=True).order_by("priority")
+    leaderboard_ad = AdBanner.objects.filter(category="Leaderboard", active=True).first()
+    sidebar_ad = AdBanner.objects.filter(category="Sidebar", active=True).first()
+    home_ad = AdBanner.objects.filter(category="Home", active=True).first()
     ads = AdBanner.objects.filter(category=AdCategory.INLINE, active=True)
-    shop = Product.objects.all().order_by('?')[:10]
 
     return {
-        'navbar_categories': navbar_categories,
-        'leaderboard_ad': leaderboard_ad,
-        'sidebar_ad': sidebar_ad,
-        'home_ad': home_ad,
-        'ads': ads,
-        'shop': shop,
-        'email': 'contact@scodynatenews.com',
-        'current_time': timezone.now()
+        "navbar_categories": CategorySerializer(navbar_categories, many=True).data,
+        "leaderboard_ad": AdBannerSerializer(leaderboard_ad).data if leaderboard_ad else None,
+        "sidebar_ad": AdBannerSerializer(sidebar_ad).data if sidebar_ad else None,
+        "home_ad": AdBannerSerializer(home_ad).data if home_ad else None,
+        "ads": AdBannerSerializer(ads, many=True).data,
+        "email": "contact@scodynatenews.com",
+        "current_time": timezone.now(),
     }
 
-def blog_detail(request, slug):
-    post = get_object_or_404(BlogPost, slug=slug)
-    
-    # Randomly select 5 related posts from the same category
-    related_posts = list(BlogPost.objects.filter(category=post.category).exclude(slug=slug))
-    random.shuffle(related_posts)
-    related_posts = related_posts[:5]
 
-    # Randomly select 5 recommended posts from different categories
-    all_other_posts = list(BlogPost.objects.exclude(category=post.category).exclude(slug=slug))
-    random.shuffle(all_other_posts)
-    recommended_posts = all_other_posts[:5]
+class BlogDetailAPIView(APIView):
+    def get(self, request, slug):
+        post = get_object_or_404(BlogPost, slug=slug)
 
-    # Fallback image URL
-    fallback_image_url = request.build_absolute_uri(static('images/Breakingnews.png'))
-    try:
-        absolute_image_url = request.build_absolute_uri(post.image.url)
-    except AttributeError:
-        absolute_image_url = fallback_image_url
+        related_posts = BlogPost.objects.filter(category=post.category).exclude(slug=slug)[:5]
+        recommended_posts = BlogPost.objects.exclude(category=post.category).exclude(slug=slug)[:5]
 
-    common_context = get_common_context()
-    advert_content = insert_ad_banner(post.content, common_context['ads'])
+        fallback_image_url = request.build_absolute_uri(static("images/Breakingnews.png"))
 
-    context = {
-        'post': post,
-        'related_posts': related_posts,
-        'recommended_posts': recommended_posts,
-        'advert': advert_content,
-        'absolute_image_url': absolute_image_url,
-        **common_context
-    }
+        # Get first media item (image or video) from related BlogMedia
+        first_media = post.media.first()
+        if first_media and first_media.media:
+            absolute_image_url = request.build_absolute_uri(first_media.media.url)
+        else:
+            absolute_image_url = fallback_image_url
 
-    return render(request, 'blog_details/blog_detail.html', context)
+        common_context = get_common_context()
+        advert_content = insert_ad_banner(post.content, common_context["ads"])
 
-def trend_detail(request, slug):
-    trend = get_object_or_404(Trend, slug=slug)
-    
-    # Randomly select 5 recommended posts
-    posts = list(BlogPost.objects.all())
-    random.shuffle(posts)
-    recommended_posts = posts[:5]
+        response_data = {
+            "post": BlogPostSerializer(post).data,
+            "related_posts": BlogPostSerializer(related_posts, many=True).data,
+            "recommended_posts": BlogPostSerializer(recommended_posts, many=True).data,
+            "advert": advert_content,
+            "absolute_image_url": absolute_image_url,
+            **common_context,
+        }
 
-    common_context = get_common_context()
-    advert_content = insert_ad_banner(trend.content, common_context['ads'])
-
-    # Use get_file_url() or get_absolute_file_url() depending on the content type
-    if trend.is_image or trend.is_video:
-        absolute_file_url = request.build_absolute_uri(trend.get_file_url())  # For both images and videos
-    else:
-        absolute_file_url = None  # Or a default fallback URL
-
-    context = {
-        'trend': trend,
-        'recommended_posts': recommended_posts,
-        'advert': advert_content,
-        'absolute_file_url': absolute_file_url,  # Pass the Open Graph URL
-        **common_context
-    }
-
-    return render(request, 'blog_details/trend_detail.html', context)
+        return Response(response_data)
 
 
 
 
+class TrendDetailAPIView(APIView):
+    def get(self, request, slug):
+        trend = get_object_or_404(Trend, slug=slug)
 
-def video_detail(request, slug):
-    video = get_object_or_404(Video, slug=slug)
-    trends = Trend.objects.all().order_by('-date')[:10]
+        posts = list(BlogPost.objects.all())
+        random.shuffle(posts)
+        recommended_posts = posts[:5]
 
-    common_context = get_common_context()
-    advert_content = insert_ad_banner(video.description, common_context['ads'])
-    
-    fallback_image_url = request.build_absolute_uri(static('images/Breakingnews.png'))
-    try:
-        absolute_video_url = request.build_absolute_uri(video.file.url)
-    except AttributeError:
-        absolute_video_url = fallback_image_url
+        common_context = get_common_context()
+        advert_content = insert_ad_banner(trend.content, common_context["ads"])
 
-    context = {
-        'video': video,
-        'trends': trends,
-        'advert': advert_content,
-        'absolute_video_url': absolute_video_url,
-        **common_context
-    }
+        absolute_file_url = request.build_absolute_uri(trend.get_file_url()) if (trend.is_image or trend.is_video) else None
 
-    return render(request, 'blog_details/video_details.html', context)
+        return Response(
+            {
+                "trend": TrendSerializer(trend).data,
+                "recommended_posts": BlogPostSerializer(recommended_posts, many=True).data,
+                "advert": advert_content,
+                "absolute_file_url": absolute_file_url,
+                **common_context,
+            }
+        )
+
+
+class VideoDetailAPIView(APIView):
+    def get(self, request, slug):
+        video = get_object_or_404(Video, slug=slug)
+        trends = Trend.objects.all().order_by("-date")[:10]
+
+        common_context = get_common_context()
+        advert_content = insert_ad_banner(video.description, common_context["ads"])
+
+        fallback_image_url = request.build_absolute_uri(static("images/Breakingnews.png"))
+        absolute_video_url = request.build_absolute_uri(video.file.url) if video.file else fallback_image_url
+
+        return Response(
+            {
+                "video": VideoSerializer(video).data,
+                "trends": TrendSerializer(trends, many=True).data,
+                "advert": advert_content,
+                "absolute_video_url": absolute_video_url,
+                **common_context,
+            }
+        )

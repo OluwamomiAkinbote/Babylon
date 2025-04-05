@@ -1,15 +1,17 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from datetime import timedelta, datetime
+from datetime import timedelta
 from itertools import chain
 import random
 
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.generics import get_object_or_404
+
 from blog.models import BlogPost, Category, Video, Trend
-from advert.models import AdBanner, AdCategory
-from blog.utils import insert_ad_banner
+from advert.models import AdBanner
 from shop.models import Product
-from django.http import JsonResponse
+from blog.serializers import BlogPostSerializer, VideoSerializer, TrendSerializer
 
 
 def get_common_context():
@@ -20,112 +22,118 @@ def get_common_context():
     shop = Product.objects.all().order_by('?')[:10]
     
     return {
-        'navbar_categories': navbar_categories,
-        'leaderboard_ad': leaderboard_ad,
-        'sidebar_ad': sidebar_ad,
-        'home_ad': home_ad,
-        'shop': shop,
+        'navbar_categories': list(navbar_categories.values()),
+        'leaderboard_ad': leaderboard_ad.id if leaderboard_ad else None,
+        'sidebar_ad': sidebar_ad.id if sidebar_ad else None,
+        'home_ad': home_ad.id if home_ad else None,
+        'shop': list(shop.values()),
         'email': 'contact@scodynatenews.com',
         'current_time': timezone.now()
     }
 
 
-def video_reels(request):
-    video_posts = Video.objects.all().order_by('-date')
-    context = {
-        'video_posts': video_posts,
-        **get_common_context()
-    }
-    return render(request, 'pages/video_reels.html', context)
+class VideoReelsAPIView(APIView):
+    def get(self, request):
+        video_posts = Video.objects.all().order_by('-date')
+        context = {
+            'video_posts': list(video_posts.values()),
+            **get_common_context()
+        }
+        return Response(context)
 
 
-def more_stories(request):
-    today = timezone.now() - timedelta(days=1)
-    
-    blogpost = BlogPost.objects.filter(date__lt=today).order_by('-date')
-    trendpost = Trend.objects.filter(date__lt=today).order_by('-date')
-    
-    posts = sorted(
-        chain(blogpost, trendpost),
-        key=lambda post: post.date,
-        reverse=True
-    )
+class MoreStoriesAPIView(APIView):
+    def get(self, request):
+        today = timezone.now() - timedelta(days=1)
+        
+        blogpost = BlogPost.objects.filter(date__lt=today).order_by('-date')
+        trendpost = Trend.objects.filter(date__lt=today).order_by('-date')
+        
+        posts = sorted(
+            chain(blogpost, trendpost),
+            key=lambda post: post.date,
+            reverse=True
+        )
 
-    paginator = Paginator(posts, 18)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        paginator = Paginator(posts, 18)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    context = {
-        'page_obj': page_obj,
-        **get_common_context()
-    }
-
-    return render(request, 'pages/more_stories.html', context)
-
-
-def category_list(request, slug):
-    category = get_object_or_404(Category, slug=slug)
-    
-    all_other_category = BlogPost.objects.exclude(category=category).exclude(slug=slug)
-    recommended_posts = random.sample(list(all_other_category), min(len(all_other_category), 5))
-
-    blog_posts = BlogPost.objects.filter(category=category)
-    video_posts = Video.objects.filter(category=category)
-
-    posts = sorted(
-        chain(blog_posts, video_posts),
-        key=lambda post: post.date if hasattr(post, 'date') else post.title,
-        reverse=True
-    )
-
-    paginator = Paginator(posts, 18)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'posts': posts,
-        'page_obj': page_obj,
-        'category': category,
-        'recommended_posts': recommended_posts,
-        **get_common_context()
-    }
-
-    return render(request, 'pages/category_list.html', context)
+        context = {
+            'posts': list(page_obj.object_list.values()),
+            'page_number': page_number,
+            'has_next': page_obj.has_next(),
+            **get_common_context()
+        }
+        return Response(context)
 
 
-def trend_page(request):
-    trend = Trend.objects.all().order_by('-date')
-    posts = BlogPost.objects.all()
-    recommended_posts = random.sample(list(posts), min(len(posts), 5))
+class CategoryListAPIView(APIView):
+    def get(self, request, slug):
+        category = get_object_or_404(Category, slug=slug)
+        
+        all_other_category = BlogPost.objects.exclude(category=category).exclude(slug=slug)
+        recommended_posts = random.sample(list(all_other_category), min(len(all_other_category), 5))
 
-    paginator = Paginator(trend, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        blog_posts = BlogPost.objects.filter(category=category)
+        video_posts = Video.objects.filter(category=category)
 
-    context = {
-        'trend': trend,
-        'page_obj': page_obj,
-        'recommended_posts': recommended_posts,
-        **get_common_context()
-    }
+        posts = sorted(
+            chain(blog_posts, video_posts),
+            key=lambda post: post.date if hasattr(post, 'date') else post.title,
+            reverse=True
+        )
 
-    return render(request, 'pages/trend_page.html', context)
+        paginator = Paginator(posts, 18)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-
-def privacy_policy(request):
-    posts = BlogPost.objects.all()
-    recommended_posts = random.sample(list(posts), min(len(posts), 5))
-
-    context = {
-        'recommended_posts': recommended_posts,
-        **get_common_context()
-    }
-
-    return render(request, 'pages/privacy_policy.html', context)
+        context = {
+            'posts': list(page_obj.object_list.values()),
+            'page_number': page_number,
+            'has_next': page_obj.has_next(),
+            'category': category.name,
+            'recommended_posts': list(recommended_posts),
+            **get_common_context()
+        }
+        return Response(context)
 
 
-def data_deletion(request):
-    return JsonResponse({
-        "url": "https://newstropy.com.ng/data-deletion",
-        "message": "Data deletion request received. We will process your request shortly.",
-    })
+class TrendPageAPIView(APIView):
+    def get(self, request):
+        trend = Trend.objects.all().order_by('-date')
+        posts = BlogPost.objects.all()
+        recommended_posts = random.sample(list(posts), min(len(posts), 5))
+
+        paginator = Paginator(trend, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            'trend': list(page_obj.object_list.values()),
+            'page_number': page_number,
+            'has_next': page_obj.has_next(),
+            'recommended_posts': list(recommended_posts),
+            **get_common_context()
+        }
+        return Response(context)
+
+
+class PrivacyPolicyAPIView(APIView):
+    def get(self, request):
+        posts = BlogPost.objects.all()
+        recommended_posts = random.sample(list(posts), min(len(posts), 5))
+
+        context = {
+            'recommended_posts': list(recommended_posts),
+            **get_common_context()
+        }
+        return Response(context)
+
+
+class DataDeletionAPIView(APIView):
+    def get(self, request):
+        return Response({
+            "url": "https://newstropy.com.ng/data-deletion",
+            "message": "Data deletion request received. We will process your request shortly."
+        })

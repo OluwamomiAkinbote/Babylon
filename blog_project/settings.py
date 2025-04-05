@@ -21,8 +21,25 @@ else:
 
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'newstropy.onrender.com', 'newstropy.com.ng']
-CSRF_TRUSTED_ORIGINS = ['https://newstropy.onrender.com']
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "newstropy.onrender.com",
+    "newstropy.online",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://newstropy.onrender.com",
+    "https://newstropy.online",  # Add your custom domain
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Vite local server
+    "https://newstropy.onrender.com",
+    "https://newstropy.online",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True 
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -33,6 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites', 
+   
+    "rest_framework", 
+    'corsheaders',
     'blog',
     'shop',
     'advert',
@@ -91,6 +111,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'blog_project.urls'
