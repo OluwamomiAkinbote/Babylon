@@ -21,7 +21,7 @@ class StoryListCreateAPIView(APIView):
         if serializer.is_valid():
             story = serializer.save(user=request.user)
             # Set expiration date to 3 days after creation (using 'date' field)
-            story.expires_at = story.date + timedelta(days=3)
+            story.expires_at = story.date + timedelta(days=7)
             story.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

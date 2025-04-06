@@ -86,10 +86,6 @@ class Story(models.Model):
             self.expires_at = self.date + timedelta(days=7)
         super().save(*args, **kwargs)
 
-    def delete_expired_story(self):
-        # Check if the story has expired
-        if timezone.now() > self.expires_at:
-            self.delete()
 
 class StoryMedia(models.Model):
     story = models.ForeignKey(Story, related_name='media_files', on_delete=models.CASCADE)
