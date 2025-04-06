@@ -8,7 +8,6 @@ from datetime import timedelta
 
 
 class StoryListCreateAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can create a story
 
     def get(self, request):
         # List all stories
@@ -29,7 +28,7 @@ class StoryListCreateAPIView(APIView):
 
 
 class StoryDetailAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can view/edit a story
+   
 
     def get_object(self, pk):
         try:
@@ -63,7 +62,7 @@ class StoryDetailAPIView(APIView):
 
 
 class StoryMediaListCreateAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can create story media
+   
 
     def get(self, request):
         # List all story media
@@ -81,7 +80,6 @@ class StoryMediaListCreateAPIView(APIView):
 
 
 class StoryMediaDetailAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can view/edit story media
 
     def get_object(self, pk):
         try:

@@ -17,38 +17,38 @@ import os
 SECRET_KEY = os.getenv('SECRET_KEY')
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
-# Set DEBUG based on the environment
 DEBUG = ENVIRONMENT == 'development'
 
-# CORS settings
 if DEBUG:
-    # In development, allow all origins for convenience
     CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",
+    ]
 else:
-    # In production, restrict CORS to specific origins
     CORS_ALLOW_ALL_ORIGINS = False
     CORS_ALLOWED_ORIGINS = [
         "https://newstropy.online",
         "https://ayo.newstropy.online",
     ]
 
-# Allowed hosts for your application
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "newstropy.onrender.com",
     "newstropy.online",
-    "ayo.newstropy.online",  # Corrected to the domain only
+    "ayo.newstropy.online",
 ]
 
-# CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = [
     "https://newstropy.onrender.com",
     "https://newstropy.online",
-    "https://ayo.newstropy.online",  # Corrected
+    "https://ayo.newstropy.online",
+    "http://localhost:5173",
 ]
 
-# Optionally, you can add more configurations below
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+
 
 
 INSTALLED_APPS = [

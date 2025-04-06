@@ -94,7 +94,7 @@ class StoryMediaSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         if instance.media:
             data['media'] = instance.media.url  # Ensure media URL is a complete path
-        return datama
+        return data  # Corrected: return 'data' instead of 'datama'
 
 class StorySerializer(serializers.ModelSerializer):
     media_files = StoryMediaSerializer(many=True, read_only=True)
