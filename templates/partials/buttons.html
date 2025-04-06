@@ -1,20 +1,4 @@
-<head>
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="{% if post.title %}{{ post.title }}{% else %}{{ trend.title }}{% endif %}">
-    <meta property="og:description" content="{% if post.excerpt %}{{ post.excerpt }}{% else %}{{ trend.excerpt }}{% endif %}">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:type" content="article">
-    <meta property="og:image" content="{% if post.image %}{{ post.image.url }}{% else %}{{ trend.image.url }}{% endif %}">
-    <meta property="og:site_name" content="Your Website Name">
 
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% if post.title %}{{ post.title }}{% else %}{{ trend.title }}{% endif %}">
-    <meta name="twitter:description" content="{% if post.excerpt %}{{ post.excerpt }}{% else %}{{ trend.excerpt }}{% endif %}">
-    <meta name="twitter:image" content="{% if post.image %}{{ post.image.url }}{% else %}{{ trend.image.url }}{% endif %}">
-    <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
-    <meta name="twitter:site" content="@YourTwitterHandle">
-</head>
 
 <div class="flex flex-wrap items-center justify-start mb-2 space-x-4">
     <!-- Share Button -->

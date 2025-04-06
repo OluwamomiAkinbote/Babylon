@@ -83,7 +83,7 @@ class Story(models.Model):
     def save(self, *args, **kwargs):
         # Automatically set the expiration date to 7 days after creation
         if not self.expires_at:
-            self.expires_at = self.date + timedelta(days=7)
+            self.expires_at = self.date + timedelta(days=3)
         super().save(*args, **kwargs)
 
 
