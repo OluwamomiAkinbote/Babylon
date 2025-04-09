@@ -48,6 +48,8 @@ class BlogPost(models.Model):
     date = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
+    tweeted = models.BooleanField(default=False)
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -63,7 +65,7 @@ class BlogMedia(models.Model):
     """Stores both images and videos as media files"""
     blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='media')
     media = FilerFileField(null=True, blank=True, on_delete=models.SET_NULL, related_name='blog_media')
-    caption = models.CharField(max_length=300, blank=True, null=True)  # Added caption field
+    caption = models.CharField(max_length=300, blank=True, null=True)  
 
     def __str__(self):
         return f'Media for {self.blog_post.title}'

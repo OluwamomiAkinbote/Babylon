@@ -102,15 +102,17 @@ class BlogMediaInline(admin.TabularInline):
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date', 'category')
+    list_display = ('title', 'date', 'category', 'tweeted')
     search_fields = ('title', 'content')
     list_filter = ('date', 'category')
     ordering = ('-date',)
-    fields = ('title', 'content', 'category', 'slug')
+    fields = ('title', 'content', 'category', 'slug', 'tweeted')  
+    readonly_fields = ('tweeted',)
     prepopulated_fields = {'slug': ('title',)}
     list_per_page = 20
 
-    inlines = [BlogMediaInline]  # ← This line adds BlogMedia as inline
+    inlines = [BlogMediaInline] 
+
 
 
 @admin.register(Trend)

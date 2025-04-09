@@ -11,7 +11,7 @@ class StoryListCreateAPIView(APIView):
 
     def get(self, request):
         # List all stories
-        stories = Story.objects.all()
+        stories = Story.objects.all().order_by('-date')
         serializer = StorySerializer(stories, many=True)
         return Response(serializer.data)
 
@@ -66,7 +66,7 @@ class StoryMediaListCreateAPIView(APIView):
 
     def get(self, request):
         # List all story media
-        media = StoryMedia.objects.all()
+        media = StoryMedia.objects.all().order_by('-date')
         serializer = StoryMediaSerializer(media, many=True)
         return Response(serializer.data)
 
