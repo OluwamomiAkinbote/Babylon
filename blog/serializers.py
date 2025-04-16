@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from blog.models import (
     AuthorProfile, Category, BlogPost, Story, StoryMedia,
-    Trend, Video, Subscription, BlogMedia
+    Trend,  Subscription, BlogMedia
 )
 from django.contrib.auth.models import User
 
@@ -23,10 +23,14 @@ class AuthorProfileSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['user']
 
+
 class CategorySerializer(serializers.ModelSerializer):
+    # Optionally, include the parent category's details (e.g., name or slug) in the serialized data
+    parent = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), required=False, allow_null=True)
+    
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'show_on_navbar', 'priority']
+        fields = ['id', 'name', 'slug', 'show_on_navbar', 'priority', 'parent']
         read_only_fields = ['slug']
 
 class BlogPostSerializer(serializers.ModelSerializer):
@@ -155,31 +159,3 @@ class TrendSerializer(serializers.ModelSerializer):
             return 'video'
         return None
 
-class VideoSerializer(serializers.ModelSerializer):
-    author = UserSerializer()
-    category = CategorySerializer()
-    video_url = serializers.SerializerMethodField()
-    thumbnail_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Video
-        fields = [
-            'id', 'title', 'description', 'author',
-            'video_url', 'category', 'date', 'slug',
-            'thumbnail_url'
-        ]
-        read_only_fields = ['slug', 'date']
-
-    def get_video_url(self, obj):
-        if obj.video_file:
-            return obj.video_file.url
-        return None
-
-    def get_thumbnail_url(self, obj):
-        return obj.get_thumbnail_url()
-
-class SubscriptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subscription
-        fields = ['id', 'name', 'email', 'date_subscribed']
-        read_only_fields = ['date_subscribed']

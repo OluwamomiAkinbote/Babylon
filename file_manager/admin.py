@@ -1,8 +1,6 @@
 from django.contrib import admin
 from .models import Folder, File
 
-
-
 class FileAdmin(admin.ModelAdmin):
     list_display = ('name', 'file', 'date')
     search_fields = ['name']
@@ -13,3 +11,4 @@ class FolderAdmin(admin.ModelAdmin):
 
 admin.site.register(Folder, FolderAdmin)
 admin.site.register(File, FileAdmin)
+

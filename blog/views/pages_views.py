@@ -8,10 +8,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
-from blog.models import BlogPost, Category, Video, Trend
+from blog.models import BlogPost, Category, Trend
 from advert.models import AdBanner
 from shop.models import Product
-from blog.serializers import BlogPostSerializer, VideoSerializer, TrendSerializer
+from blog.serializers import BlogPostSerializer, TrendSerializer
 
 
 def get_common_context():
@@ -32,14 +32,6 @@ def get_common_context():
     }
 
 
-class VideoReelsAPIView(APIView):
-    def get(self, request):
-        video_posts = Video.objects.all().order_by('-date')
-        context = {
-            'video_posts': list(video_posts.values()),
-            **get_common_context()
-        }
-        return Response(context)
 
 
 class MoreStoriesAPIView(APIView):
@@ -71,15 +63,15 @@ class MoreStoriesAPIView(APIView):
 class CategoryListAPIView(APIView):
     def get(self, request, slug):
         category = get_object_or_404(Category, slug=slug)
-        
+
         all_other_category = BlogPost.objects.exclude(category=category).exclude(slug=slug)
         recommended_posts = random.sample(list(all_other_category), min(len(all_other_category), 5))
 
         blog_posts = BlogPost.objects.filter(category=category)
-        video_posts = Video.objects.filter(category=category)
+       
 
         posts = sorted(
-            chain(blog_posts, video_posts),
+        
             key=lambda post: post.date if hasattr(post, 'date') else post.title,
             reverse=True
         )

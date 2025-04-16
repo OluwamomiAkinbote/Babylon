@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
-from .views import IndexAPIView,MainExclusiveAPIView, BlogDetailAPIView, VideoDetailAPIView, TrendDetailAPIView
-from .views import MoreStoriesAPIView, VideoReelsAPIView, TrendPageAPIView
+from .views import IndexAPIView,MainExclusiveAPIView, BlogDetailAPIView, TrendDetailAPIView, FeaturedCategoryPostsView
+from .views import MoreStoriesAPIView, TrendPageAPIView
 from .views import PrivacyPolicyAPIView, DataDeletionAPIView, CategoryListAPIView, HeroPostsAPIView
 from .views import GlobalNewsAPIView, SportsTechAPIView, TrendAPIView
 from .views import StoryListCreateAPIView, StoryDetailAPIView, StoryMediaListCreateAPIView, StoryMediaDetailAPIView, HeaderAPIView
@@ -15,6 +15,7 @@ urlpatterns = [
     path("main-exclusive/", MainExclusiveAPIView.as_view(), name="main-exclusive"),
     path("global-news/",GlobalNewsAPIView.as_view(), name="global-news"),
     path("sports-tech/", SportsTechAPIView.as_view(), name="sports-tech"),
+    path("featured-categories/", FeaturedCategoryPostsView.as_view(), name="featured-categories"),
     path("trends/", TrendAPIView.as_view(), name="trends"),
     path('story/', StoryListCreateAPIView.as_view(), name='story-list-create'),
     path('story/<int:pk>/', StoryDetailAPIView.as_view(), name='story-detail'),
@@ -25,13 +26,12 @@ urlpatterns = [
     path('data-deletion/', DataDeletionAPIView.as_view(), name='data_deletion'),
     path('subscribe/', views.subscribe, name='subscribe'),
     path('search/', views.search_view, name='search_view'),
-    path('video_reels', VideoReelsAPIView.as_view(), name='video_reels'),
+
     path('trend_page', TrendPageAPIView.as_view(), name='trend_page'),
     path('get-suggestions/', views.get_suggestions, name='get_suggestions'),
     path('more_stories/', MoreStoriesAPIView.as_view(), name='more_stories'),  
     path('trend/<slug:slug>/', TrendDetailAPIView.as_view(), name='trend_detail'),
     path('category/<slug:slug>/', CategoryListAPIView.as_view(), name='category_list'),
-    path('videos/<slug:slug>/', VideoDetailAPIView.as_view(), name='video_details'),
     path('news/<slug:slug>/', BlogDetailAPIView.as_view(), name='blog_detail'),
 
 ]

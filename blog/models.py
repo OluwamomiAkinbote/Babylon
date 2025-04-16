@@ -24,8 +24,16 @@ class AuthorProfile(models.Model):
         return f"{self.user.username} Profile"
 
 
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='subcategories'
+    )
     slug = models.SlugField(max_length=50, unique=True, blank=True)
     show_on_navbar = models.BooleanField(default=False)
     priority = models.IntegerField(default=0)
@@ -36,10 +44,13 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
+        if self.parent:
+            return f"{self.parent.name} > {self.name}"
         return self.name
-    
+
     def get_absolute_url(self):
         return f'/category/{self.slug}/'
+
 
 
 class BlogPost(models.Model):
@@ -154,33 +165,7 @@ class Trend(models.Model):
 
 
 
-class Video(models.Model):
-    title = models.CharField(max_length=255)
-    description = HTMLField()
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, default=1, null=True, related_name="videos") 
-    video_file = FilerFileField(null=True, blank=True, on_delete=models.SET_NULL, related_name='video_files')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None, related_name='videos')
-    date = models.DateTimeField(default=timezone.now)
-    slug = models.SlugField(unique=True, blank=True, null=True)
 
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super(Video, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-    
-    def get_absolute_url(self):
-        return f'/video/{self.slug}/'
-
-    def get_thumbnail_url(self):
-        """Return the thumbnail URL for the video or fallback to default."""
-        if self.video_file:
-            # Assuming we generate a thumbnail for the video using external service or local method
-            return static('images/video-thumbnail.png')  # Replace with actual thumbnail generation logic
-        return static('images/Breakingnews.png')  # Fallback image
 
 
 

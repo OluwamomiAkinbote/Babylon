@@ -13,7 +13,10 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 import os
 
-# Environment setup
+# settings.py
+
+import os
+
 SECRET_KEY = os.getenv('SECRET_KEY')
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
@@ -29,6 +32,7 @@ else:
     CORS_ALLOWED_ORIGINS = [
         "https://newstropy.online",
         "https://ayo.newstropy.online",
+        "https://www.newstropy.online",
     ]
 
 ALLOWED_HOSTS = [
@@ -37,17 +41,22 @@ ALLOWED_HOSTS = [
     "newstropy.onrender.com",
     "newstropy.online",
     "ayo.newstropy.online",
+    "www.newstropy.online",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
     "https://newstropy.onrender.com",
     "https://newstropy.online",
     "https://ayo.newstropy.online",
-    "http://localhost:5173",
+    "https://www.newstropy.online",
 ]
 
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
+
+CORS_ALLOW_CREDENTIALS = True
+
 
 
 

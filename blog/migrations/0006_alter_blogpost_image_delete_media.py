@@ -7,7 +7,6 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_manager', '0002_image'),
         ('blog', '0005_alter_blogpost_image'),
     ]
 

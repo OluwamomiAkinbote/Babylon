@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BlogPost, Trend, Category, Video, Subscription, AuthorProfile, Story, StoryMedia, BlogMedia
+from .models import BlogPost, Trend, Category, Subscription, AuthorProfile, Story, StoryMedia, BlogMedia
 from datetime import timedelta
 
 from django.utils.html import format_html
@@ -18,21 +18,10 @@ from datetime import timedelta
 class StoryMediaInline(admin.TabularInline):
     model = StoryMedia
     extra = 1
-    fields = ('media', 'caption', 'preview')  # Add a preview field
-    readonly_fields = ('preview',)  # Make the preview field non-editable
+    fields = ('media', 'caption', )  # Add a preview field
 
-    def preview(self, obj):
-        if obj.media:
-            if obj.media.url.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
-                return format_html(f'<img src="{obj.media.url}" width="100" height="100" style="object-fit: cover;"/>')
-            elif obj.media.url.endswith(('.mp4', '.webm', '.ogg')):
-                return format_html(f'<video width="100" height="100" controls><source src="{obj.media.url}" type="video/mp4">Your browser does not support the video tag.</video>')
-        return "No media"
 
-    preview.short_description = "Preview"
-
-    class Media:
-        js = ('admin/js/vendor/jquery/jquery.js', 'admin/js/actions.js', 'js/preview_update.js')  
+   
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
@@ -86,14 +75,26 @@ class AuthorProfileAdmin(admin.ModelAdmin):
             obj.user = request.user
         super().save_model(request, obj, form, change)
 
-# Admin registrations for other models...
+# Admin registrations for other models...from django.contrib import admin
+from .models import Category
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'show_on_navbar', 'priority')
+    list_display = ('name', 'parent', 'show_on_navbar', 'priority','slug' )
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
     ordering = ('priority',)
     list_per_page = 20
+
+    # This allows admins to filter by parent category
+    list_filter = ('parent',)
+
+    # Optionally add a hierarchical view for easier management of subcategories
+    def parent_category(self, obj):
+        return obj.parent.name if obj.parent else 'No Parent'
+    parent_category.short_description = 'Parent Category'
+
+
 
 class BlogMediaInline(admin.TabularInline):
     model = BlogMedia
@@ -124,14 +125,6 @@ class TrendAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     list_per_page = 20
 
-@admin.register(Video)
-class VideoAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'video_file', 'category', 'date')
-    search_fields = ('title', 'description', 'author__username')
-    list_filter = ('category', 'date', 'author')
-    ordering = ('-date',)
-    fields = ('title', 'description', 'author', 'video_file', 'category', 'slug')
-    list_per_page = 20
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):

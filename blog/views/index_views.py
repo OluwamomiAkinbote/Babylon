@@ -1,6 +1,7 @@
 from datetime import timedelta
 import random
 from itertools import chain
+from django.db.models import Q
 
 from django.utils import timezone
 from rest_framework.response import Response
@@ -8,8 +9,8 @@ from rest_framework.views import APIView
 
 from advert.models import AdBanner
 from shop.models import Product
-from blog.models import BlogPost, Category, Trend, Video
-from blog.serializers import BlogPostSerializer, VideoSerializer, TrendSerializer
+from blog.models import BlogPost, Category, Trend
+from blog.serializers import BlogPostSerializer, TrendSerializer
 
 class IndexAPIView(APIView):
     def get_category_posts(self, category_name, model=BlogPost, limit=None):
@@ -22,7 +23,6 @@ class IndexAPIView(APIView):
 
     def get(self, request):
         # Fetch video posts
-        video_posts = self.get_category_posts('Videos', model=Video)
 
         # Fetch ads
         ads = {
@@ -42,7 +42,6 @@ class IndexAPIView(APIView):
         data = {
             "blog_posts_from_five_days_ago": BlogPostSerializer(blog_posts_five_days_ago, many=True).data,
             "categories": [category.name for category in Category.objects.all()],
-            "video_posts": VideoSerializer(video_posts, many=True).data,
             "shop": [{"name": product.name, "price": product.price} for product in shop_products],
             "current_time": timezone.now(),
             "email": "contact@scodynatenews.com",
@@ -120,37 +119,60 @@ class SportsTechAPIView(APIView):
 
 
 
-class MainExclusiveAPIView(APIView):
-    def get_category_posts(self, category_name, limit=None):
-        """Fetch posts for a given category."""
-        try:
-            category = Category.objects.get(name=category_name)
-            return BlogPost.objects.filter(category=category).order_by('-date')[:limit], category
-        except Category.DoesNotExist:
-            return BlogPost.objects.none(), None
 
+
+
+
+
+class FeaturedCategoryPostsView(APIView):
     def get(self, request):
-        # Categories to exclude
-        excluded_categories = Category.objects.filter(name__in=["Exclusive", "Global News"]).values_list("id", flat=True)
+        parent_categories = ['Business', 'Entertainment', 'Health', 'Energy']
+        data = {}
 
-        # Fetch exclusive posts
-        exclusive_posts, _ = self.get_category_posts('Exclusive', limit=20)
+        for parent_name in parent_categories:
+            try:
+                # Get parent category
+                parent = Category.objects.get(name__iexact=parent_name)
 
-        # Fetch non-exclusive posts, excluding specified categories
-        non_exclusive_posts = BlogPost.objects.exclude(category_id__in=excluded_categories).order_by('-date')[:20]
+                # Get all subcategories
+                subcategories = parent.subcategories.all()
 
-        # Select a random main post from combined posts
-        combined_posts = list(chain(exclusive_posts, non_exclusive_posts))
-        main_post = random.choice(combined_posts) if combined_posts else None
+                # Collect category IDs: parent + its subcategories
+                category_ids = [parent.id] + [sub.id for sub in subcategories]
 
-        # Prepare response data
-        data = {
-            "main_post": BlogPostSerializer(main_post).data if main_post else None,
-            "exclusive_posts": BlogPostSerializer(exclusive_posts, many=True).data,
-            "non_exclusive_posts": BlogPostSerializer(non_exclusive_posts, many=True).data,
-        }
+                # Filter posts that belong to any of these categories
+                posts = BlogPost.objects.filter(category__id__in=category_ids).order_by('-date')[:3]
+
+                serializer = BlogPostSerializer(posts, many=True, context={'request': request})
+                data[parent_name] = serializer.data
+
+            except Category.DoesNotExist:
+                data[parent_name] = []
 
         return Response(data)
+
+
+
+
+class MainExclusiveAPIView(APIView):
+    def get(self, request):
+        try:
+            politics_category = Category.objects.get(name__iexact='Politics')
+            exclusive_category = Category.objects.get(name__iexact='Exclusive')
+        except Category.DoesNotExist:
+            return Response({'error': 'Required categories not found.'}, status=404)
+
+        politics_queryset = BlogPost.objects.filter(category=politics_category).order_by('-date')[:20]
+        exclusive_queryset = BlogPost.objects.filter(category=exclusive_category).order_by('-date')[:20]
+
+        combined_posts = list(politics_queryset) + list(exclusive_queryset)
+        main_post = random.choice(combined_posts) if combined_posts else None
+
+        return Response({
+            'main_post': BlogPostSerializer(main_post, context={'request': request}).data if main_post else None,
+            'non_exclusive_posts': BlogPostSerializer(politics_queryset, many=True, context={'request': request}).data,
+            'exclusive_posts': BlogPostSerializer(exclusive_queryset, many=True, context={'request': request}).data,
+        })
 
 
 

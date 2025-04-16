@@ -1,6 +1,6 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
-from blog.models import BlogPost, Video, Category, Trend  # Assuming you have these models.
+from blog.models import BlogPost,  Category, Trend  # Assuming you have these models.
 
 class StaticViewSitemap(Sitemap):
     priority = 0.5
@@ -29,13 +29,6 @@ class BlogSitemap(Sitemap):
     def items(self):
         return BlogPost.objects.all()[:100]
 
-
-class VideoSitemap(Sitemap):
-    changefreq = 'weekly'
-    priority = 0.7
-
-    def items(self):
-        return Video.objects.all()
 
 
 class CategorySitemap(Sitemap):

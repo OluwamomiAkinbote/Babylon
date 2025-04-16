@@ -29,10 +29,6 @@ urlpatterns = [
     path('edit/<slug:slug>/', views.edit_trend, name='edit_trend'),
     path('delete/<slug:slug>/', views.delete_trend, name='delete_trend'),
 
-    path('video', views.video_table, name='video_table'),
-    path('create-video/', views.create_video, name='create_video'),
-    path('<slug:slug>/edit/', views.edit_video, name='edit_video'),
-    path('<slug:slug>/delete/', views.delete_video, name='delete_video'),
 
     # Password reset
     path('password-reset/', views.reset_password_view, name='password_reset'),

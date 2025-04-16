@@ -4,11 +4,11 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.templatetags.static import static
 import random
-from blog.models import BlogPost, Category, Video, Trend
+from blog.models import BlogPost, Category, Trend
 from advert.models import AdBanner, AdCategory
 from blog.utils import insert_ad_banner
 from shop.models import Product
-from blog.serializers import BlogPostSerializer, TrendSerializer, VideoSerializer,CategorySerializer 
+from blog.serializers import BlogPostSerializer, TrendSerializer, CategorySerializer 
 
 from advert.serializers import AdBannerSerializer  # Import the serializer
 
@@ -87,23 +87,3 @@ class TrendDetailAPIView(APIView):
         )
 
 
-class VideoDetailAPIView(APIView):
-    def get(self, request, slug):
-        video = get_object_or_404(Video, slug=slug)
-        trends = Trend.objects.all().order_by("-date")[:10]
-
-        common_context = get_common_context()
-        advert_content = insert_ad_banner(video.description, common_context["ads"])
-
-        fallback_image_url = request.build_absolute_uri(static("images/Breakingnews.png"))
-        absolute_video_url = request.build_absolute_uri(video.file.url) if video.file else fallback_image_url
-
-        return Response(
-            {
-                "video": VideoSerializer(video).data,
-                "trends": TrendSerializer(trends, many=True).data,
-                "advert": advert_content,
-                "absolute_video_url": absolute_video_url,
-                **common_context,
-            }
-        )

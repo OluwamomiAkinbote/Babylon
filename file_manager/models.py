@@ -1,8 +1,6 @@
 from django.db import models
 import mimetypes
 import os
-import logging
-
 
 def upload_to(instance, filename):
     """Dynamic upload path based on the folder structure."""
@@ -60,11 +58,29 @@ class File(models.Model):
     def get_file_type(self):
         """
         Determine the type of file based on MIME type.
+        Returns "image", "video", "audio", "text", "application", or "unknown".
         """
         mime_type, _ = mimetypes.guess_type(self.file.name)
-        logging.debug(f"File: {self.file.name}, MIME Type: {mime_type}")
         if mime_type:
-            main_type = mime_type.split('/')[0]
-            if main_type in ['image', 'video', 'audio', 'application', 'text']:
-                return main_type
+            return mime_type.split('/')[0]  # Extract the category from the MIME type
         return "unknown"
+
+    def is_image(self):
+        """Check if the file is an image."""
+        return self.get_file_type() == "image"
+
+    def is_video(self):
+        """Check if the file is a video."""
+        return self.get_file_type() == "video"
+
+    def is_audio(self):
+        """Check if the file is an audio file."""
+        return self.get_file_type() == "audio"
+
+    def extension(self):
+        """Get the file extension."""
+        return os.path.splitext(self.file.name)[1].lower()
+
+    def size_in_mb(self):
+        """Get the file size in MB, rounded to 2 decimal places."""
+        return round(self.file.size / (1024 * 1024), 2)

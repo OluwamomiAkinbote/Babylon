@@ -5,13 +5,12 @@ from django.urls import path, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
-from blog_project.sitemaps import StaticViewSitemap, BlogSitemap, VideoSitemap, CategorySitemap, TrendSitemap
+from blog_project.sitemaps import StaticViewSitemap, BlogSitemap,  CategorySitemap, TrendSitemap
 from django.views.generic.base import TemplateView
 
 sitemaps = {
     'static': StaticViewSitemap,
     'blogs': BlogSitemap,
-    'videos': VideoSitemap,
     'categories': CategorySitemap,
     'trends': TrendSitemap,
 }
