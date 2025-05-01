@@ -103,12 +103,11 @@ class BlogMediaInline(admin.TabularInline):
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date', 'category', 'tweeted')
+    list_display = ('title', 'date', 'category')
     search_fields = ('title', 'content')
     list_filter = ('date', 'category')
     ordering = ('-date',)
-    fields = ('title', 'content', 'category', 'slug', 'tweeted')  
-    readonly_fields = ('tweeted',)
+    fields = ('title', 'lead', 'content', 'category', 'slug' )  
     prepopulated_fields = {'slug': ('title',)}
     list_per_page = 20
 
@@ -121,7 +120,7 @@ class TrendAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'date')
     search_fields = ('title', 'content', 'author__username')
     ordering = ('-date',)
-    fields = ('title', 'content', 'author', 'file', 'slug')
+    fields = ('title', 'content', 'author', 'file', 'slug', )
     prepopulated_fields = {'slug': ('title',)}
     list_per_page = 20
 

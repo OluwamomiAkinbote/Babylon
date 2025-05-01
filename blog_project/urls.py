@@ -21,6 +21,7 @@ urlpatterns = [
     path('news-admin/', admin.site.urls),
     path('', include('blog.urls')), 
     path('advert/', include('advert.urls')), 
+    path('user_auth/', include('user_auth.urls')), 
     path('shop/', include('shop.urls')), 
     path('dashboard/', include('dashboard.urls')), 
     path('file_manager/', include('file_manager.urls')), 

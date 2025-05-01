@@ -53,14 +53,18 @@ class Category(models.Model):
 
 
 
+from django.utils import timezone
+from django.utils.text import slugify
+from django.db import models
+from tinymce.models import HTMLField  # Assuming you're using TinyMCE
+
 class BlogPost(models.Model):
     title = models.TextField(blank=True, null=True)
+    lead = models.TextField(blank=True, null=True)
     content = HTMLField()
     date = models.DateTimeField(default=timezone.now)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
-    tweeted = models.BooleanField(default=False)
-
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -69,9 +73,10 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
         return f'/blog/{self.slug}/'
+
 class BlogMedia(models.Model):
     """Stores both images and videos as media files"""
     blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='media')
