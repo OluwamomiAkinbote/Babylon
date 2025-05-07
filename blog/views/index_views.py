@@ -85,17 +85,25 @@ class TrendAPIView(APIView):
 
 class GlobalNewsAPIView(APIView):
     def get(self, request):
-        """Fetch Global News posts."""
         try:
-            category = Category.objects.get(name='Global News')
-            global_news_posts = BlogPost.objects.filter(category=category).order_by('-date')[:20]
-        except Category.DoesNotExist:
-            global_news_posts = BlogPost.objects.none()
+            # Get parent category and its subcategories
+            global_news = Category.objects.get(name='Global News')
+            subcategories = global_news.subcategories.all()
+            category_ids = [global_news.id] + [sub.id for sub in subcategories]
 
-        data = {
-            "global_news_posts": BlogPostSerializer(global_news_posts, many=True).data,
-        }
-        return Response(data)
+            # Fetch posts from parent + subcategories
+            posts = BlogPost.objects.filter(
+                category__id__in=category_ids
+            ).order_by('-date')[:20]
+
+        except Category.DoesNotExist:
+            posts = BlogPost.objects.none()
+
+        return Response({
+            "global_news_posts": BlogPostSerializer(posts, many=True).data,
+            # Optional: Include subcategory breakdown
+            "subcategories": [sub.name for sub in subcategories]
+        })
 
 
 class SportsTechAPIView(APIView):
@@ -157,23 +165,39 @@ class FeaturedCategoryPostsView(APIView):
 class MainExclusiveAPIView(APIView):
     def get(self, request):
         try:
+            # Get main categories and their subcategories
             politics_category = Category.objects.get(name__iexact='Politics')
             exclusive_category = Category.objects.get(name__iexact='Exclusive')
+            
+            # Get all subcategories for each main category
+            politics_subcategories = politics_category.subcategories.all()
+            exclusive_subcategories = exclusive_category.subcategories.all()
+            
+            # Collect all relevant category IDs
+            politics_category_ids = [politics_category.id] + [sub.id for sub in politics_subcategories]
+            exclusive_category_ids = [exclusive_category.id] + [sub.id for sub in exclusive_subcategories]
+
         except Category.DoesNotExist:
             return Response({'error': 'Required categories not found.'}, status=404)
 
-        politics_queryset = BlogPost.objects.filter(category=politics_category).order_by('-date')[:20]
-        exclusive_queryset = BlogPost.objects.filter(category=exclusive_category).order_by('-date')[:20]
+        # Get posts including those from subcategories
+        politics_queryset = BlogPost.objects.filter(
+            category__id__in=politics_category_ids
+        ).order_by('-date')[:20]
+        
+        exclusive_queryset = BlogPost.objects.filter(
+            category__id__in=exclusive_category_ids
+        ).order_by('-date')[:20]
 
+        # Combine posts for random main post selection
         combined_posts = list(politics_queryset) + list(exclusive_queryset)
         main_post = random.choice(combined_posts) if combined_posts else None
 
         return Response({
             'main_post': BlogPostSerializer(main_post, context={'request': request}).data if main_post else None,
-            'non_exclusive_posts': BlogPostSerializer(politics_queryset, many=True, context={'request': request}).data,
+            'politics_posts': BlogPostSerializer(politics_queryset, many=True, context={'request': request}).data,
             'exclusive_posts': BlogPostSerializer(exclusive_queryset, many=True, context={'request': request}).data,
         })
-
 
 
 

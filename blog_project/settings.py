@@ -91,7 +91,7 @@ INSTALLED_APPS = [
 
 SITE_ID = 2
 TINYMCE_DEFAULT_CONFIG = {
-    'height': 360,
+    'height': '450px',
     'width': '100%',
     'menubar': 'file edit view insert format tools table help',
     'plugins': 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table directionality emoticons template paste textpattern code',
