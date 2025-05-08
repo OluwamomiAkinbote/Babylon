@@ -56,14 +56,38 @@ class IndexAPIView(APIView):
 
 
 
-
 class HeaderAPIView(APIView):
     def get(self, request):
-        navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
-        data = {
-            "navbar_categories": [category.name for category in navbar_categories]
-        }
-        return Response(data)
+        navbar_categories = Category.objects.filter(
+            show_on_navbar=True, 
+            parent__isnull=True
+        ).order_by('priority')
+
+        categories_data = []
+        for category in navbar_categories:
+            subcategories = category.subcategories.all()
+            subcategory_ids = list(subcategories.values_list('id', flat=True))
+            subcategory_ids.append(category.id)
+
+            latest_posts = BlogPost.objects.filter(
+                category_id__in=subcategory_ids
+            ).order_by('-date')[:4]
+
+            categories_data.append({
+                'name': category.name,
+                'slug': category.slug,
+                'has_subcategories': subcategories.exists(),
+                'subcategories': [
+                    {'name': sub.name, 'slug': sub.slug}
+                    for sub in subcategories.order_by('priority')
+                ],
+                'latest_posts': BlogPostSerializer(latest_posts, many=True).data
+            })
+
+        return Response({
+            "navbar_categories": categories_data
+        })
+
 
 
 class TrendAPIView(APIView):

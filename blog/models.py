@@ -53,10 +53,7 @@ class Category(models.Model):
 
 
 
-from django.utils import timezone
-from django.utils.text import slugify
-from django.db import models
-from tinymce.models import HTMLField  # Assuming you're using TinyMCE
+
 
 class BlogPost(models.Model):
     title = models.TextField(blank=True, null=True)
