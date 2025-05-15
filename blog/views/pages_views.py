@@ -62,32 +62,45 @@ class MoreStoriesAPIView(APIView):
 
 class CategoryListAPIView(APIView):
     def get(self, request, slug):
+        # Get the main category
         category = get_object_or_404(Category, slug=slug)
-
-        all_other_category = BlogPost.objects.exclude(category=category).exclude(slug=slug)
-        recommended_posts = random.sample(list(all_other_category), min(len(all_other_category), 5))
-
-        blog_posts = BlogPost.objects.filter(category=category)
-       
-
-        posts = sorted(
         
-            key=lambda post: post.date if hasattr(post, 'date') else post.title,
-            reverse=True
+        # Get all subcategories of this category
+        subcategories = category.subcategories.all()
+        
+        # Get IDs of the main category and all its subcategories
+        category_ids = [category.id] + list(subcategories.values_list('id', flat=True))
+        
+        # Get all posts from this category and its subcategories
+        blog_posts = BlogPost.objects.filter(category_id__in=category_ids).order_by('-date')[:30]
+        
+        # Get recommended posts (excluding current category and its subcategories)
+        all_other_category_posts = BlogPost.objects.exclude(category_id__in=category_ids)
+        recommended_posts = random.sample(
+            list(all_other_category_posts), 
+            min(len(all_other_category_posts), 5)
         )
 
-        paginator = Paginator(posts, 18)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
+        # Serialize the data
         context = {
-            'posts': list(page_obj.object_list.values()),
-            'page_number': page_number,
-            'has_next': page_obj.has_next(),
-            'category': category.name,
-            'recommended_posts': list(recommended_posts),
+            'category': {
+                'name': category.name,
+                'slug': category.slug,
+                'description': getattr(category, 'description', ''),
+            },
+            'subcategories': [
+                {
+                    'name': sub.name,
+                    'slug': sub.slug,
+                    'description': getattr(sub, 'description', ''),
+                } 
+                for sub in subcategories
+            ],
+            'posts': BlogPostSerializer(blog_posts, many=True).data,
+            'recommended_posts': BlogPostSerializer(recommended_posts, many=True).data,
             **get_common_context()
         }
+        
         return Response(context)
 
 
