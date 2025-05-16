@@ -72,7 +72,7 @@ class BlogPost(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return f'/blog/{self.slug}/'
+        return f'/news/{self.slug}/'
 
 class BlogMedia(models.Model):
     """Stores both images and videos as media files"""
