@@ -12,6 +12,14 @@ from blog.serializers import BlogPostSerializer, TrendSerializer, CategorySerial
 
 from advert.serializers import AdBannerSerializer  # Import the serializer
 
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
+
+
+
 def get_common_context():
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by("priority")
     leaderboard_ad = AdBanner.objects.filter(category="Leaderboard", active=True).first()
@@ -28,6 +36,37 @@ def get_common_context():
         "email": "contact@scodynatenews.com",
         "current_time": timezone.now(),
     }
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+@method_decorator(cache_page(60 * 15), name='dispatch')  # Cache for 15 minutes
+class NewsListView(ListAPIView):
+    """
+    Basic API endpoint that lists all news posts
+    """
+    serializer_class = BlogPostSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        queryset = BlogPost.objects.all().order_by('-date')
+        
+        # Optional category filter
+        category = self.request.query_params.get('category', None)
+        if category:
+            queryset = queryset.filter(category__slug=category)
+            
+        return queryset
+
+    def get_serializer_context(self):
+        return {
+            **super().get_serializer_context(),
+            'request': self.request
+        }
+
 
 
 class BlogDetailAPIView(APIView):

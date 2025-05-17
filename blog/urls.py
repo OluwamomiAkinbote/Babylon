@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import IndexAPIView,MainExclusiveAPIView, BlogDetailAPIView, TrendDetailAPIView, FeaturedCategoryPostsView
+from .views import IndexAPIView,MainExclusiveAPIView, NewsListView, BlogDetailAPIView, TrendDetailAPIView, FeaturedCategoryPostsView
 from .views import MoreStoriesAPIView, TrendPageAPIView
 from .views import PrivacyPolicyAPIView, DataDeletionAPIView, CategoryListAPIView, HeroPostsAPIView
 from .views import GlobalNewsAPIView, SportsTechAPIView, TrendAPIView
@@ -32,6 +32,7 @@ urlpatterns = [
     path('more_stories/', MoreStoriesAPIView.as_view(), name='more_stories'),  
     path('trend/<slug:slug>/', TrendDetailAPIView.as_view(), name='trend_detail'),
     path('category/<slug:slug>/', CategoryListAPIView.as_view(), name='category_list'),
+    path('news/', NewsListView.as_view(), name='news_list'),
     path('news/<slug:slug>/', BlogDetailAPIView.as_view(), name='blog_detail'),
 
 ]
