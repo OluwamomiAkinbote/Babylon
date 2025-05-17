@@ -37,28 +37,25 @@ class BlogDetailAPIView(APIView):
         related_posts = BlogPost.objects.filter(category=post.category).exclude(slug=slug)[:5]
         recommended_posts = BlogPost.objects.exclude(category=post.category).exclude(slug=slug)[:5]
 
-        fallback_image_url = request.build_absolute_uri(static("images/seo-logo.png"))
+        # Fallback static image
+        fallback_image_url = request.build_absolute_uri(static("images/Breakingnews.png"))
 
-        # Check if the post has media
-        media_items = post.media.all()
-        absolute_image_url = fallback_image_url  # Default image
+        # Use seo_image if available, otherwise fallback
+        if post.seo_image and post.seo_image.url:
+            absolute_image_url = request.build_absolute_uri(post.seo_image.url)
+        else:
+            absolute_image_url = fallback_image_url
 
-        for media_item in media_items:
-            if media_item.media and media_item.media.url:
-                if media_item.media.url.endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp', '.heif', '.heic')): 
-                    # Check if the media item is an image
-                    absolute_image_url = request.build_absolute_uri(media_item.media.url)
-                    break  # Stop the loop once we find an image
-
-        # Get common context
+        # Common context
         common_context = get_common_context()
-        # Generate advert content
+
+        # Insert ad banner into content
         advert_content = insert_ad_banner(post.content, common_context["ads"])
 
         # SEO data
         seo_data = {
             "title": post.title,
-            "description": advert_content[:20],  # Use advert_content as the description
+            "description": advert_content[:20],
             "image_url": absolute_image_url,
             "url": request.build_absolute_uri(post.get_absolute_url())
         }
@@ -68,11 +65,12 @@ class BlogDetailAPIView(APIView):
             "related_posts": BlogPostSerializer(related_posts, many=True).data,
             "recommended_posts": BlogPostSerializer(recommended_posts, many=True).data,
             "advert": advert_content,
-            "seo": seo_data,  # Include SEO data with advert content as description
+            "seo": seo_data,
             **common_context,
         }
 
         return Response(response_data)
+
 
 
 

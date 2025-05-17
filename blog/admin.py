@@ -107,7 +107,7 @@ class BlogPostAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content')
     list_filter = ('date', 'category')
     ordering = ('-date',)
-    fields = ('title', 'lead', 'content', 'category', 'slug' )  
+    fields = ('title', 'lead', 'content', 'category','seo_image', 'slug' )  
     prepopulated_fields = {'slug': ('title',)}
     list_per_page = 20
 

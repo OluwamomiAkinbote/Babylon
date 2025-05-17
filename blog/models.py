@@ -59,6 +59,7 @@ class BlogPost(models.Model):
     title = models.TextField(blank=True, null=True)
     lead = models.TextField(blank=True, null=True)
     content = HTMLField()
+    seo_image = FilerImageField(null=True, blank=True, on_delete=models.SET_NULL, related_name='blog_post_seo_image')
     date = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
