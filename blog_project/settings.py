@@ -34,7 +34,7 @@ else:
         "https://newstropy.online",
         "https://ayo.newstropy.online",
         "https://www.newstropy.online",
-        "https://babylon-next.vercel.app/",
+        "https://babylon-next.vercel.app",
     ]
 
 ALLOWED_HOSTS = [
@@ -54,7 +54,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://newstropy.online",
     "https://ayo.newstropy.online",
     "https://www.newstropy.online",
-    "https://babylon-next.vercel.app/",
+    "https://babylon-next.vercel.app",
 ]
 
 CSRF_COOKIE_SECURE = not DEBUG
