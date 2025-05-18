@@ -16,7 +16,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+from django.utils.html import strip_tags
 
 
 
@@ -90,13 +90,18 @@ class BlogDetailAPIView(APIView):
 
         # Insert ad banner into content
         advert_content = insert_ad_banner(post.content, common_context["ads"])
+        
+        clean_lead = strip_tags(post.lead) if post.lead else None
 
-        # SEO data
+        # Improved SEO data
         seo_data = {
             "title": post.title,
-            "description": advert_content[:20],
+            "description": clean_lead if clean_lead else strip_tags(advert_content)[:160],   
             "image_url": absolute_image_url,
-            "url": request.build_absolute_uri(post.get_absolute_url())
+            "url": request.build_absolute_uri(post.get_absolute_url()),
+            "date": post.date.isoformat() if post.date else None,  # Add publication date
+            "type": "article",
+            "author": post.author.get_full_name() if post.author else None  # Add author if available
         }
 
         response_data = {
