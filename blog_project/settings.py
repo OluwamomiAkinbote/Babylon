@@ -22,6 +22,33 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG = ENVIRONMENT == 'development'
 
+# Hosts allowed to access the backend
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "newstropy.onrender.com",
+    "newstropy.online",
+    "ayo.newstropy.online",
+    "www.newstropy.online",
+    "babylon-next.vercel.app",
+]
+
+# CSRF trusted domains
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://newstropy.onrender.com",
+    "https://newstropy.online",
+    "https://ayo.newstropy.online",
+    "https://www.newstropy.online",
+    "https://babylon-next.vercel.app",
+]
+
+# Secure cookie settings
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+
+# CORS setup
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
     CORS_ALLOWED_ORIGINS = [
@@ -37,30 +64,13 @@ else:
         "https://babylon-next.vercel.app",
     ]
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "newstropy.onrender.com",
-    "newstropy.online",
-    "ayo.newstropy.online",
-    "www.newstropy.online",
-    "babylon-next.vercel.app",
-]
+# No credentials unless you're using cookies/auth headers
+CORS_ALLOW_CREDENTIALS = False
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://newstropy.onrender.com",
-    "https://newstropy.online",
-    "https://ayo.newstropy.online",
-    "https://www.newstropy.online",
-    "https://babylon-next.vercel.app",
-]
+# Required when behind proxy (Render)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = not DEBUG
 
-CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-
-CORS_ALLOW_CREDENTIALS = True
 
 
 
