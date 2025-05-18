@@ -100,8 +100,7 @@ class BlogDetailAPIView(APIView):
             "image_url": absolute_image_url,
             "url": request.build_absolute_uri(post.get_absolute_url()),
             "date": post.date.isoformat() if post.date else None,  # Add publication date
-            "type": "article",
-            "author": post.author.get_full_name() if post.author else None  # Add author if available
+            "type": "article",            
         }
 
         response_data = {
