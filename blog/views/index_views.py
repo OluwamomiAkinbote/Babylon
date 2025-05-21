@@ -129,16 +129,24 @@ class GlobalNewsAPIView(APIView):
             "subcategories": [sub.name for sub in subcategories]
         })
 
-
 class SportsTechAPIView(APIView):
     def get(self, request):
-        """Fetch Sports and Technology posts together."""
+        """Fetch Sports and Technology posts together, including their subcategories."""
         try:
+            # Get Sports category and its subcategories
             sport_category = Category.objects.get(name='Sports')
+            sport_subcategories = sport_category.subcategories.all()
+            sport_category_ids = [sport_category.id] + [sub.id for sub in sport_subcategories]
+            
+            # Get Technology category and its subcategories
             tech_category = Category.objects.get(name='Technology')
+            tech_subcategories = tech_category.subcategories.all()
+            tech_category_ids = [tech_category.id] + [sub.id for sub in tech_subcategories]
 
-            sport_posts = BlogPost.objects.filter(category=sport_category).order_by('-date')[:5]
-            tech_posts = BlogPost.objects.filter(category=tech_category).order_by('-date')[:5]
+            # Get posts for both categories including their subcategories
+            sport_posts = BlogPost.objects.filter(category__id__in=sport_category_ids).order_by('-date')[:5]
+            tech_posts = BlogPost.objects.filter(category__id__in=tech_category_ids).order_by('-date')[:5]
+            
         except Category.DoesNotExist:
             sport_posts = BlogPost.objects.none()
             tech_posts = BlogPost.objects.none()
@@ -173,7 +181,7 @@ class FeaturedCategoryPostsView(APIView):
                 category_ids = [parent.id] + [sub.id for sub in subcategories]
 
                 # Filter posts that belong to any of these categories
-                posts = BlogPost.objects.filter(category__id__in=category_ids).order_by('-date')[:3]
+                posts = BlogPost.objects.filter(category__id__in=category_ids).order_by('-date')[:2]
 
                 serializer = BlogPostSerializer(posts, many=True, context={'request': request})
                 data[parent_name] = serializer.data
