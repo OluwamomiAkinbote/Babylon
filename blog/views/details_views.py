@@ -73,8 +73,12 @@ class BlogDetailAPIView(APIView):
     def get(self, request, slug):
         post = get_object_or_404(BlogPost, slug=slug)
 
-        related_posts = BlogPost.objects.filter(category=post.category).exclude(slug=slug)[:5]
-        recommended_posts = BlogPost.objects.exclude(category=post.category).exclude(slug=slug)[:5]
+                # 
+        category_ids = [post.category.id] + [sub.id for sub in post.category.subcategories.all()]
+
+        # Get related posts from category and subcategories
+        related_posts = BlogPost.objects.filter(category__id__in=category_ids).exclude(slug=slug).order_by('-date')[:5]
+        recommended_posts = BlogPost.objects.exclude(category=post.category).exclude(slug=slug).order_by('-date')[:5]
 
         # Fallback static image
         fallback_image_url = request.build_absolute_uri(static("images/Breakingnews.png"))
