@@ -3,4 +3,4 @@ from .admin_user import user_login, reset_password_view, user_logout
 from .admin_home import dashboard_home
 from .analytics_view  import analytics_view
 from .admin_category import user_table, category_table, create_category, edit_user, edit_category, delete_category
-from .admin_trend import trend_table, create_trend, edit_trend, delete_trend
+

@@ -24,12 +24,6 @@ urlpatterns = [
     path('categories/<slug:slug>/edit/', views.edit_category, name='edit_category'),
     path('categories/<slug:slug>/delete/', views.delete_category, name='delete_category'),
 
-    path('trend/', views.trend_table, name='trend_table'),
-    path('create/', views.create_trend, name='create_trend'),
-    path('edit/<slug:slug>/', views.edit_trend, name='edit_trend'),
-    path('delete/<slug:slug>/', views.delete_trend, name='delete_trend'),
-
-
     # Password reset
     path('password-reset/', views.reset_password_view, name='password_reset'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password-reset-done.html'), name='password_reset_done'),

@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.db.models import Q
-from blog.models import BlogPost, Trend, Category, Subscription
+from blog.models import BlogPost, Category, Subscription
 from advert.models import AdBanner
 from datetime import datetime
 
@@ -55,16 +55,16 @@ def subscribe(request):
 def search_view(request):
     query = request.GET.get('query', '')
     blogpost_results = BlogPost.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
-    trend_results = Trend.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
+ 
 
-    results = list(blogpost_results) + list(trend_results)
+    results = list(blogpost_results) 
     paginator = Paginator(results, 18)
     page_obj = paginator.get_page(request.GET.get('page'))
 
     context = {
         'results': results,
         'query': query,
-        'trends': Trend.objects.all().order_by('-date')[:10],
+       
         'page_obj': page_obj,
         **get_common_context()
     }
@@ -77,7 +77,7 @@ def get_suggestions(request):
 
     if query:
         blogpost_suggestions = BlogPost.objects.filter(Q(title__icontains=query)).values_list('title', flat=True)[:5]
-        trend_suggestions = Trend.objects.filter(Q(title__icontains=query)).values_list('title', flat=True)[:5]
-        suggestions = list(blogpost_suggestions) + list(trend_suggestions)
+       
+        suggestions = list(blogpost_suggestions) 
 
     return JsonResponse(suggestions, safe=False)

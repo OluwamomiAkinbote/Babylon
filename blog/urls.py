@@ -1,9 +1,9 @@
 from django.urls import path
 from . import views
-from .views import IndexAPIView,MainExclusiveAPIView, NewsListView, BlogDetailAPIView, TrendDetailAPIView, FeaturedCategoryPostsView
-from .views import MoreStoriesAPIView, TrendPageAPIView
+from .views import IndexAPIView,MainExclusiveAPIView, NewsListView, BlogDetailAPIView, FeaturedCategoryPostsView
+from .views import MoreStoriesAPIView
 from .views import PrivacyPolicyAPIView, DataDeletionAPIView, CategoryListAPIView, HeroPostsAPIView
-from .views import GlobalNewsAPIView, SportsTechAPIView, TrendAPIView
+from .views import WorldAPIView, SportsTechAPIView, TrendAPIView
 from .views import StoryListCreateAPIView, StoryDetailAPIView, StoryMediaListCreateAPIView, StoryMediaDetailAPIView, HeaderAPIView
 
 
@@ -13,7 +13,7 @@ urlpatterns = [
     path('header', HeaderAPIView.as_view(), name='header'),
     path("hero-posts/", HeroPostsAPIView.as_view(), name="hero-posts"),
     path("main-exclusive/", MainExclusiveAPIView.as_view(), name="main-exclusive"),
-    path("global-news/",GlobalNewsAPIView.as_view(), name="global-news"),
+    path("world-news/",WorldAPIView.as_view(), name="world-news"),
     path("sports-tech/", SportsTechAPIView.as_view(), name="sports-tech"),
     path("featured-categories/", FeaturedCategoryPostsView.as_view(), name="featured-categories"),
     path("trends/", TrendAPIView.as_view(), name="trends"),
@@ -27,10 +27,8 @@ urlpatterns = [
     path('subscribe/', views.subscribe, name='subscribe'),
     path('search/', views.search_view, name='search_view'),
 
-    path('trend_page', TrendPageAPIView.as_view(), name='trend_page'),
     path('get-suggestions/', views.get_suggestions, name='get_suggestions'),
     path('more_stories/', MoreStoriesAPIView.as_view(), name='more_stories'),  
-    path('trend/<slug:slug>/', TrendDetailAPIView.as_view(), name='trend_detail'),
     path('category/<slug:slug>/', CategoryListAPIView.as_view(), name='category_list'),
     path('news/', NewsListView.as_view(), name='news_list'),
     path('news/<slug:slug>/', BlogDetailAPIView.as_view(), name='blog_detail'),

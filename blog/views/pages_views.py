@@ -8,10 +8,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
-from blog.models import BlogPost, Category, Trend
+from blog.models import BlogPost, Category
 from advert.models import AdBanner
 from shop.models import Product
-from blog.serializers import BlogPostSerializer, TrendSerializer
+from blog.serializers import BlogPostSerializer
 
 
 def get_common_context():
@@ -39,10 +39,10 @@ class MoreStoriesAPIView(APIView):
         today = timezone.now() - timedelta(days=1)
         
         blogpost = BlogPost.objects.filter(date__lt=today).order_by('-date')
-        trendpost = Trend.objects.filter(date__lt=today).order_by('-date')
+       
         
         posts = sorted(
-            chain(blogpost, trendpost),
+            chain(blogpost),
             key=lambda post: post.date,
             reverse=True
         )
@@ -104,24 +104,7 @@ class CategoryListAPIView(APIView):
         return Response(context)
 
 
-class TrendPageAPIView(APIView):
-    def get(self, request):
-        trend = Trend.objects.all().order_by('-date')
-        posts = BlogPost.objects.all()
-        recommended_posts = random.sample(list(posts), min(len(posts), 5))
 
-        paginator = Paginator(trend, 12)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        context = {
-            'trend': list(page_obj.object_list.values()),
-            'page_number': page_number,
-            'has_next': page_obj.has_next(),
-            'recommended_posts': list(recommended_posts),
-            **get_common_context()
-        }
-        return Response(context)
 
 
 class PrivacyPolicyAPIView(APIView):

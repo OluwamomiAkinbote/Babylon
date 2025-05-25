@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from blog.models import (
-    AuthorProfile, Category, BlogPost, Story, StoryMedia,
-    Trend,  Subscription, BlogMedia
+    AuthorProfile, Category, BlogPost, Story, StoryMedia,  Subscription, BlogMedia
 )
 from django.contrib.auth.models import User
 
@@ -117,45 +116,4 @@ class StorySerializer(serializers.ModelSerializer):
         return data
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class TrendSerializer(serializers.ModelSerializer):
-    author = UserSerializer()
-    file_url = serializers.SerializerMethodField()
-    file_type = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Trend
-        fields = [
-            'id', 'title', 'content', 'author', 
-            'file_url', 'file_type', 'date', 'slug'
-        ]
-        read_only_fields = ['slug', 'date']
-
-    def get_file_url(self, obj):
-        request = self.context.get('request')
-        if request:
-            return obj.get_absolute_file_url(request)
-        return obj.get_file_url()
-
-
-    def get_file_type(self, obj):
-        if obj.is_image:
-            return 'image'
-        elif obj.is_video:
-            return 'video'
-        return None
 

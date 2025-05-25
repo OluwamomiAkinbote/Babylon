@@ -1,6 +1,6 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
-from blog.models import BlogPost, Category, Trend  # Assuming you have these models.
+from blog.models import BlogPost, Category  # Assuming you have these models.
 
 
 class StaticViewSitemap(Sitemap):
@@ -44,14 +44,3 @@ class CategorySitemap(Sitemap):
         return Category.objects.all()
 
 
-class TrendSitemap(Sitemap):
-    changefreq = 'daily'
-    priority = 0.9
-
-    def items(self):
-        return Trend.objects.order_by('-date')[:100]
-    
-    def lastmod(self, obj):
-        # Return the publish date for sitemap lastmod
-        return obj.date
-  

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BlogPost, Trend, Category, Subscription, AuthorProfile, Story, StoryMedia, BlogMedia
+from .models import BlogPost, Category, Subscription, AuthorProfile, Story, StoryMedia, BlogMedia
 from datetime import timedelta
 
 from django.utils.html import format_html
@@ -114,15 +114,6 @@ class BlogPostAdmin(admin.ModelAdmin):
     inlines = [BlogMediaInline] 
 
 
-
-@admin.register(Trend)
-class TrendAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'date')
-    search_fields = ('title', 'content', 'author__username')
-    ordering = ('-date',)
-    fields = ('title', 'content', 'author', 'file', 'slug', )
-    prepopulated_fields = {'slug': ('title',)}
-    list_per_page = 20
 
 
 @admin.register(Subscription)

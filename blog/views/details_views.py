@@ -4,11 +4,11 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.templatetags.static import static
 import random
-from blog.models import BlogPost, Category, Trend
+from blog.models import BlogPost, Category
 from advert.models import AdBanner, AdCategory
 from blog.utils import insert_ad_banner
 from shop.models import Product
-from blog.serializers import BlogPostSerializer, TrendSerializer, CategorySerializer 
+from blog.serializers import BlogPostSerializer, CategorySerializer 
 
 from advert.serializers import AdBannerSerializer  # Import the serializer
 
@@ -122,27 +122,5 @@ class BlogDetailAPIView(APIView):
 
 
 
-class TrendDetailAPIView(APIView):
-    def get(self, request, slug):
-        trend = get_object_or_404(Trend, slug=slug)
-
-        posts = list(BlogPost.objects.all())
-        random.shuffle(posts)
-        recommended_posts = posts[:5]
-
-        common_context = get_common_context()
-        advert_content = insert_ad_banner(trend.content, common_context["ads"])
-
-        absolute_file_url = request.build_absolute_uri(trend.get_file_url()) if (trend.is_image or trend.is_video) else None
-
-        return Response(
-            {
-                "trend": TrendSerializer(trend).data,
-                "recommended_posts": BlogPostSerializer(recommended_posts, many=True).data,
-                "advert": advert_content,
-                "absolute_file_url": absolute_file_url,
-                **common_context,
-            }
-        )
 
 

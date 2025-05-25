@@ -124,53 +124,6 @@ class StoryMedia(models.Model):
 
 
 
-class Trend(models.Model):
-    title = models.TextField(blank=True, null=True)
-    content = HTMLField()
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, default=1, null=True, related_name="trends")
-    file = FilerFileField(null=True, blank=True, on_delete=models.SET_NULL, related_name='trend_file')
-    date = models.DateTimeField(default=timezone.now)
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return f'/trend/{self.slug}/'
-
-    @property
-    def is_image(self):
-        return self.file and self.file.extension.lower() in ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tif', 'tiff', 'heic', 'heif', 'jfif', 'jpe', 'jif', 'jfi', 'jp2', 'j2k', 'jpf', 'jpx', 'jpm', 'mj2', 'j2c', 'jpc', 'j2', 'jpc', 'j2k', 'jpx', 'jpm', 'mj2', 'j2c', 'jpc', 'jif', 'jfif', 'jpe', 'jfi']
-
-    @property
-    def is_video(self):
-        return self.file and self.file.extension.lower() == 'mp4'
-
-    def get_file_url(self):
-        """Return the absolute URL for the file."""
-        if self.file:
-            return self.file.url
-        return None
-
-    def get_absolute_file_url(self, request):
-        """Returns the absolute URL with the current domain."""
-        if self.file:
-            return f"https://{get_current_site(request).domain}{self.file.url}"
-        return None
-
-
-
-
-
-
-
-
-
 
 
 class Subscription(models.Model):
