@@ -54,3 +54,43 @@ def insert_ad_banner(content, ads):
                     target_paragraph.insert_after(ad_soup)
 
     return str(soup)
+
+
+
+def inject_banner(html_content):
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html_content, "html.parser")
+    paragraphs = soup.find_all('p')
+
+    if len(paragraphs) >= 2:
+        # Create banner HTML with centered image and small spacing
+        banner_html = '''
+        <div class="web-banner" style="margin:5px auto;padding:0;line-height:0;text-align:center;">
+            <a href="https://maxonex-system.vercel.app/" target="_blank" style="display:inline-block;margin:0;padding:0;">
+                <img src="https://boltzmann.s3.us-east-1.amazonaws.com/Abstract/Inline-web-banner.png" 
+                     alt="Ad Banner" 
+                     style="display:block;max-width:100%;height:auto;margin:0 auto;padding:0;border:0;">
+            </a>
+        </div>
+        '''.strip()
+
+        # Parse the banner HTML
+        banner_soup = BeautifulSoup(banner_html, "html.parser")
+        banner_div = banner_soup.find('div')
+        
+        if not banner_div:
+            return str(soup)  # Return original if banner couldn't be created
+
+        # Insert after the target paragraph
+        target_paragraph = paragraphs[1]
+        target_paragraph.insert_after(banner_div)
+
+        # Clean up surrounding whitespace (safer method)
+        for sibling in [banner_div.next_sibling, banner_div.previous_sibling]:
+            if sibling and isinstance(sibling, str) and sibling.strip() == '':
+                sibling.extract()
+
+    return str(soup)
+
+

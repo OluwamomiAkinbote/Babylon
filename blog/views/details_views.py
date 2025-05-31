@@ -6,7 +6,7 @@ from django.templatetags.static import static
 import random
 from blog.models import BlogPost, Category
 from advert.models import AdBanner, AdCategory
-from blog.utils import insert_ad_banner
+from blog.utils import inject_banner
 from shop.models import Product
 from blog.serializers import BlogPostSerializer, CategorySerializer 
 
@@ -93,7 +93,7 @@ class BlogDetailAPIView(APIView):
         common_context = get_common_context()
 
         # Insert ad banner into content
-        advert_content = insert_ad_banner(post.content, common_context["ads"])
+        advert_content = inject_banner(post.content)
         
         clean_lead = strip_tags(post.lead) if post.lead else None
 
