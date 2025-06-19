@@ -6,7 +6,8 @@ from django.templatetags.static import static
 import random
 from blog.models import BlogPost, Category
 from advert.models import AdBanner, AdCategory
-from blog.utils import inject_banner
+from blog.utils import inject_banner, inject_internal_links, extract_keywords
+from django.conf import settings
 from shop.models import Product
 from blog.serializers import BlogPostSerializer, CategorySerializer 
 
@@ -69,55 +70,47 @@ class NewsListView(ListAPIView):
 
 
 
+
+
+
+
 class BlogDetailAPIView(APIView):
     def get(self, request, slug):
         post = get_object_or_404(BlogPost, slug=slug)
 
-                # 
         category_ids = [post.category.id] + [sub.id for sub in post.category.subcategories.all()]
-
-        # Get related posts from category and subcategories
-        related_posts = BlogPost.objects.filter(category__id__in=category_ids).exclude(slug=slug).order_by('-date')[:5]
+        related_posts = BlogPost.objects.filter(category__id__in=category_ids).exclude(slug=slug).order_by('-date')[:10]
         recommended_posts = BlogPost.objects.exclude(category=post.category).exclude(slug=slug).order_by('-date')[:5]
 
-        # Fallback static image
         fallback_image_url = request.build_absolute_uri(static("images/Breakingnews.png"))
-
-        # Use seo_image if available, otherwise fallback
-        if post.seo_image and post.seo_image.url:
-            absolute_image_url = request.build_absolute_uri(post.seo_image.url)
-        else:
-            absolute_image_url = fallback_image_url
-
-        # Common context
+        absolute_image_url = request.build_absolute_uri(post.seo_image.url) if post.seo_image and post.seo_image.url else fallback_image_url
         common_context = get_common_context()
 
-        # Insert ad banner into content
-        advert_content = inject_banner(post.content)
-        
+        # Process content with internal links
+        content_with_links = inject_internal_links(post.content, post, related_posts)
+        final_advert_content = inject_banner(content_with_links)
+
         clean_lead = strip_tags(post.lead) if post.lead else None
 
-        # Improved SEO data
         seo_data = {
             "title": post.title,
-            "description": clean_lead if clean_lead else strip_tags(advert_content)[:160],   
+            "description": clean_lead if clean_lead else strip_tags(final_advert_content)[:160],
             "image_url": absolute_image_url,
             "url": request.build_absolute_uri(post.get_absolute_url()),
-            "date": post.date.isoformat() if post.date else None,  # Add publication date
-            "type": "article",            
+            "date": post.date.isoformat() if post.date else None,
+            "type": "article",
         }
 
         response_data = {
             "post": BlogPostSerializer(post).data,
-            "related_posts": BlogPostSerializer(related_posts, many=True).data,
+            "related_posts": BlogPostSerializer(related_posts[:5], many=True).data,
             "recommended_posts": BlogPostSerializer(recommended_posts, many=True).data,
-            "advert": advert_content,
+            "advert": final_advert_content,  # Use the final content with banners
             "seo": seo_data,
             **common_context,
         }
 
         return Response(response_data)
-
 
 
 
