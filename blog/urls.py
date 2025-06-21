@@ -5,7 +5,7 @@ from .views import MoreStoriesAPIView
 from .views import PrivacyPolicyAPIView, DataDeletionAPIView, CategoryListAPIView, HeroPostsAPIView
 from .views import WorldAPIView, SportsTechAPIView, TrendAPIView
 from .views import StoryListCreateAPIView, StoryDetailAPIView, StoryMediaListCreateAPIView, StoryMediaDetailAPIView, HeaderAPIView
-
+from .views.search_views import search_api, suggestions_api
 
 
 urlpatterns = [
@@ -25,9 +25,9 @@ urlpatterns = [
     path('privacy-policy/', PrivacyPolicyAPIView.as_view(), name='privacy_policy'),
     path('data-deletion/', DataDeletionAPIView.as_view(), name='data_deletion'),
     path('subscribe/', views.subscribe, name='subscribe'),
-    path('search/', views.search_view, name='search_view'),
+    path('search/', views.search_api, name='search_view'),
 
-    path('get-suggestions/', views.get_suggestions, name='get_suggestions'),
+    path('get-suggestions/', views.suggestions_api, name='get_suggestions'),
     path('more_stories/', MoreStoriesAPIView.as_view(), name='more_stories'),  
     path('category/<slug:slug>/', CategoryListAPIView.as_view(), name='category_list'),
     path('news/', NewsListView.as_view(), name='news_list'),

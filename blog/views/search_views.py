@@ -10,6 +10,14 @@ from blog.models import BlogPost, Category, Subscription
 from advert.models import AdBanner
 from datetime import datetime
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
+from blog.models import BlogPost
+from blog.serializers import BlogPostSerializer
+
+
 
 def get_common_context():
     navbar_categories = Category.objects.filter(show_on_navbar=True).order_by('priority')
@@ -52,32 +60,30 @@ def subscribe(request):
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 
-def search_view(request):
+
+@api_view(['GET'])
+def search_api(request):
     query = request.GET.get('query', '')
-    blogpost_results = BlogPost.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
- 
+    blogpost_results = BlogPost.objects.filter(Q(title__icontains=query) | Q(content__icontains=query)).distinct().order_by('-date')
 
-    results = list(blogpost_results) 
-    paginator = Paginator(results, 18)
-    page_obj = paginator.get_page(request.GET.get('page'))
+    paginator = PageNumberPagination()
+    paginator.page_size = 9
+    page = paginator.paginate_queryset(blogpost_results, request)
+    serializer = BlogPostSerializer(page, many=True)
 
-    context = {
-        'results': results,
-        'query': query,
-       
-        'page_obj': page_obj,
-        **get_common_context()
-    }
-    return render(request, 'pages/search_results.html', context)
+    return paginator.get_paginated_response(serializer.data)
 
-
-def get_suggestions(request):
+@api_view(['GET'])
+def suggestions_api(request):
     query = request.GET.get('query', '')
     suggestions = []
 
     if query:
-        blogpost_suggestions = BlogPost.objects.filter(Q(title__icontains=query)).values_list('title', flat=True)[:5]
-       
-        suggestions = list(blogpost_suggestions) 
+        suggestions = list(
+            BlogPost.objects.filter(title__icontains=query)
+            .values_list('title', flat=True)
+            .distinct()[:5]
+        )
+    
+    return Response(suggestions)
 
-    return JsonResponse(suggestions, safe=False)
