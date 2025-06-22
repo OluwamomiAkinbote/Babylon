@@ -1,19 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets
-from django.contrib.auth import authenticate
+from rest_framework import status, viewsets
 from django.contrib.auth.hashers import make_password
-from user_auth.models import NewsUser, Interest, ComposeNews
-from user_auth.serializers import ComposeNewsSerializer, NewsUserSerializer
-import uuid
-from user_auth.serializers import InterestSerializer
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from django.http import JsonResponse
 
+from .models import Member, Interest
+from .serializers import MemberSerializer, InterestSerializer
 
-# Register Step 1 (with CSRF protection)
+import uuid
+
+# Register Step 1
 @method_decorator(csrf_protect, name='dispatch')
 class RegisterStepOneView(APIView):
     def post(self, request):
@@ -31,10 +29,9 @@ class RegisterStepOneView(APIView):
         if password != confirm_password:
             return Response({"error": "Passwords do not match."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if NewsUser.objects.filter(email=email).exists():
+        if Member.objects.filter(email=email).exists():
             return Response({"error": "Email already registered."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Temporary save in session or return data for frontend to move to next step
         request.session['register_step_one'] = {
             "first_name": first_name,
             "last_name": last_name,
@@ -45,7 +42,7 @@ class RegisterStepOneView(APIView):
         return Response({"message": "Step 1 complete. Proceed to Step 2."}, status=status.HTTP_200_OK)
 
 
-# Register Step 2 (with interests serialization)
+# Register Step 2
 @method_decorator(csrf_protect, name='dispatch')
 class RegisterStepTwoView(APIView):
     def post(self, request):
@@ -58,7 +55,7 @@ class RegisterStepTwoView(APIView):
         profile_image = request.data.get('profile_image')
         interest_ids = request.data.get('interests', [])
 
-        user = NewsUser.objects.create(
+        user = Member.objects.create(
             id=uuid.uuid4(),
             username=step_one_data['email'].split('@')[0],
             email=step_one_data['email'],
@@ -75,15 +72,13 @@ class RegisterStepTwoView(APIView):
 
         user.save()
 
-        # Clear session
         request.session.pop('register_step_one', None)
 
-        # Return the user data along with interests
-        user_serializer = NewsUserSerializer(user)
+        user_serializer = MemberSerializer(user)
         return Response({"message": "Registration completed. You can now sign in.", "user": user_serializer.data}, status=status.HTTP_201_CREATED)
 
 
-# Sign In (remains unchanged)
+# Sign In
 @method_decorator(csrf_protect, name='dispatch')
 class SignInView(APIView):
     def post(self, request):
@@ -91,9 +86,8 @@ class SignInView(APIView):
         password = request.data.get('password')
 
         try:
-            user = NewsUser.objects.get(email=email)
+            user = Member.objects.get(email=email)
             if user.check_password(password):
-                # Fake token / session set up for frontend (you can improve later)
                 return Response({
                     "message": "Login successful",
                     "redirect_url": "/my-news",
@@ -102,42 +96,31 @@ class SignInView(APIView):
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
-        except NewsUser.DoesNotExist:
+        except Member.DoesNotExist:
             return Response({"error": "User does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
 
-# My News Timeline (based on interests)
-@method_decorator(csrf_protect, name='dispatch')
+# Timeline View (example only if ComposeNews exists)@method_decorator(csrf_protect, name='dispatch')
 class MyNewsTimelineView(APIView):
     def get(self, request, user_id):
         try:
-            user = NewsUser.objects.get(id=user_id)
+            user = Member.objects.get(id=user_id)
             interests = user.interests.all()
-
-            # Fetch ComposeNews based on matching interests
-            news_posts = ComposeNews.objects.filter(
-                author__interests__in=interests
-            ).distinct()
-
-            # Serialize news posts including author details
-            serializer = ComposeNewsSerializer(news_posts, many=True)
+            serializer = InterestSerializer(interests, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except NewsUser.DoesNotExist:
+        except Member.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-# Interest ViewSet for listing, retrieving, creating, and updating interests
+
+# Interest ViewSet
 @method_decorator(csrf_protect, name='dispatch')
 class InterestViewSet(viewsets.ModelViewSet):
     queryset = Interest.objects.all()
     serializer_class = InterestSerializer
 
-    def list(self, request):
-        interests = self.get_queryset()
-        serializer = self.get_serializer(interests, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+# CSRF Token Set
 @ensure_csrf_cookie
 def get_csrf_token(request):
     return JsonResponse({"message": "CSRF cookie set."})

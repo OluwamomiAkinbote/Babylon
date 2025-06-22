@@ -91,7 +91,7 @@ INSTALLED_APPS = [
     'dashboard',
     'advert',
     'user_auth',
-    'comment'
+    'comment',
     'file_manager',
     'tailwind',
     'theme',
