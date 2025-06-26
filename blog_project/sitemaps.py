@@ -14,7 +14,7 @@ class StaticViewSitemap(Sitemap):
             'data_deletion',
             'subscribe',
             'search_view',
-            'trend_page',
+            'trends', 
             'get_suggestions',
             'more_stories',
         ]
