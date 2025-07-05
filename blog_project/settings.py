@@ -52,7 +52,6 @@ SESSION_COOKIE_SECURE = not DEBUG
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
     CORS_ALLOWED_ORIGINS = [
-        "http://localhost:5173",
         "http://localhost:3000",
     ]
 else:
@@ -65,7 +64,7 @@ else:
     ]
 
 # No credentials unless you're using cookies/auth headers
-CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_CREDENTIALS = True
 
 # Required when behind proxy (Render)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

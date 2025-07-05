@@ -107,17 +107,20 @@ class CategoryListAPIView(APIView):
 
 
 
+
 class PrivacyPolicyAPIView(APIView):
     def get(self, request):
-        posts = BlogPost.objects.all()
-        recommended_posts = random.sample(list(posts), min(len(posts), 5))
-
-        context = {
-            'recommended_posts': list(recommended_posts),
-            **get_common_context()
+        data = {
+            "title": "Privacy Policy",
+            "last_updated": "2024-09-28",
+            "sections": [
+                {
+                    "title": "Information We Collect",
+                    "content": "We collect comments via Facebook..."
+                }
+            ]
         }
-        return Response(context)
-
+        return Response(data)  
 
 class DataDeletionAPIView(APIView):
     def get(self, request):
